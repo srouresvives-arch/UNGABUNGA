@@ -365,7 +365,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
   <!-- Main view -->
   <div id="view">
 
-    <!-- ══ HOME ══ -->
+    <!-- HOME -->
     <div class="page on" id="page-home">
       <div class="logobar">
         <div>
@@ -377,15 +377,13 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
           <button class="btn btn-g btn-sm" onclick="openModal('m-backup')">BACKUP</button>
         </div>
       </div>
-
-      <div class="stats-row">
-        <div class="stat"><div class="stat-val" id="h-streak">0</div><div class="stat-lbl">Racha</div></div>
-        <div class="stat"><div class="stat-val" id="h-total">0</div><div class="stat-lbl">Entrenos</div></div>
-        <div class="stat"><div class="stat-val" id="h-prs">0</div><div class="stat-lbl">PRs</div></div>
+      <div id="home-next-widget"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px;margin-bottom:10px">
+        <div class="stat"><div class="stat-val" id="h-kghoy">0</div><div class="stat-lbl">kg HOY</div></div>
+        <div class="stat"><div class="stat-val" id="h-kgtotal">0</div><div class="stat-lbl">kg TOTAL</div></div>
+        <div class="stat"><div class="stat-val" id="h-dias">0</div><div class="stat-lbl">DIAS GYM</div></div>
+        <div class="stat"><div class="stat-val" id="h-kcal">0</div><div class="stat-lbl">kcal HOY</div></div>
       </div>
-
-      <div id="home-last"></div>
-
       <div class="px16 mt8">
         <button class="btn btn-y btn-w" style="font-size:16px;padding:14px" onclick="startWorkout()">+ NUEVO ENTRENO</button>
       </div>
@@ -558,7 +556,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     <div class="tags mb12" id="sets-ex-tags"></div>
     <div class="sets-wrap">
       <table class="sets-tbl">
-        <thead><tr><th>#</th><th id="sets-col-w">PESO (kg)</th><th id="sets-col-r">REPS</th><th>✓</th></tr></thead>
+        <thead><tr><th>#</th><th id="sets-col-w">PESO (kg)</th><th id="sets-col-r">REPS</th><th style="color:var(--muted);font-size:9px">COPIA</th></tr></thead>
         <tbody id="sets-tbody"></tbody>
       </table>
     </div>
@@ -628,6 +626,7 @@ let activeWo  = null;
 let timerIv   = null;
 let editExId  = null;
 let editRtId  = null;
+let editWoId  = null;   // workout being edited from calendar
 let pickTarget = 'workout'; // 'workout' | 'routine'
 let logExId   = null;
 let logAeId   = null;
@@ -811,55 +810,91 @@ window.nav = function(page) {
 window.showPage = function(page) { nav(page); }
 
 // ── HOME ──────────────────────────────────────────────────────
-function renderHome() {
-  qs('home-date').textContent = new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
-  qs('h-streak').textContent = calcStreak();
-  qs('h-total').textContent  = workouts.length;
-  qs('h-prs').textContent    = calcPRs();
-
-  const last = qs('home-last');
-  if(workouts.length===0){
-    last.innerHTML='<div class="empty"><div class="empty-ico">💪</div><div class="empty-txt">Sin entrenos aún<br>Pulsa + Nuevo Entreno</div></div>';
-    return;
-  }
-  const w = [...workouts].sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
-  const vol = calcVol(w);
-  last.innerHTML=`
-    <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;padding:0 16px;margin-bottom:6px">ÚLTIMO ENTRENO</div>
-    <div class="wo-item" onclick="showWoDetail('${w.id}')">
-      <div class="wo-date">${new Date(w.date).toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'short'})}</div>
-      <div class="wo-exs">${w.exercises.map(e=>e.name).join(' · ')}</div>
-      <div class="tags mt8">
-        <span class="tag tag-y">${w.exercises.length} ejercicios</span>
-        <span class="tag tag-y">${fmt(w.duration)}</span>
-        ${vol>0?`<span class="tag tag-y">${vol} kg vol.</span>`:''}
-      </div>
-    </div>`;
-}
-
-function calcStreak() {
-  const days=[...new Set(workouts.map(w=>w.date.split('T')[0]))].sort().reverse();
-  let s=0; let check=new Date(); check.setHours(0,0,0,0);
-  for(const d of days){
-    const wd=new Date(d);wd.setHours(0,0,0,0);
-    if((check-wd)/86400000<=1){s++;check=wd;}else break;
-  }
-  return s;
-}
-function calcPRs() { return exercises.filter(e=>getPR(e.id)>0).length; }
 function calcVol(w) {
-  let v=0; w.exercises.forEach(ae=>ae.sets.forEach(s=>{if(s.done&&s.weight&&s.reps)v+=s.weight*s.reps;}));
+  let v=0; w.exercises.forEach(ae=>ae.sets.forEach(s=>{if(s.weight&&s.reps)v+=parseFloat(s.weight||0)*parseFloat(s.reps||0);}));
   return Math.round(v);
 }
 function getPR(exId) {
   let m=0;
   workouts.forEach(w=>w.exercises.forEach(ae=>{
-    if(ae.exerciseId===exId) ae.sets.forEach(s=>{if(s.done&&s.weight)m=Math.max(m,s.weight);});
+    if(ae.exerciseId===exId) ae.sets.forEach(s=>{if(s.weight)m=Math.max(m,parseFloat(s.weight)||0);});
   }));
   return m;
 }
+function calcTotalKg() {
+  let v=0; workouts.forEach(w=>v+=calcVol(w)); return Math.round(v);
+}
+function calcKgToday() {
+  const t=today();
+  let v=0; workouts.filter(w=>w.date.startsWith(t)).forEach(w=>v+=calcVol(w)); return Math.round(v);
+}
+function calcKcalToday() {
+  // rough estimate: 1 kg moved 1 rep ≈ 0.05 kcal (simplified MET approach)
+  const t=today(); let kcal=0;
+  workouts.filter(w=>w.date.startsWith(t)).forEach(w=>{
+    w.exercises.forEach(ae=>ae.sets.forEach(s=>{
+      if(s.weight&&s.reps) kcal+=parseFloat(s.weight||0)*parseFloat(s.reps||0)*0.05;
+    }));
+    // add ~5 kcal/min for duration
+    if(w.duration) kcal+=Math.floor(w.duration/60000)*5;
+  });
+  return Math.round(kcal);
+}
+
+// Next workout widget — cycles routines 1→2→3→4→1...
+function calcNextRoutine() {
+  if(!routines.length) return null;
+  if(!workouts.length) return { routine: routines[0], label:'PRIMER ENTRENO' };
+  // find last workout that was from a routine
+  const sorted=[...workouts].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const lastWithRoutine=sorted.find(w=>w.routineId);
+  if(!lastWithRoutine) return { routine: routines[0], label:'PRÓXIMO' };
+  const idx=routines.findIndex(r=>r.id===lastWithRoutine.routineId);
+  const nextIdx=(idx+1)%routines.length;
+  return { routine: routines[nextIdx], label:'PRÓXIMO' };
+}
+
+function renderHome() {
+  qs('home-date').textContent = new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
+
+  // gorilla stats
+  qs('h-kghoy').textContent  = (calcKgToday()/1000>1 ? (calcKgToday()/1000).toFixed(1)+'t' : calcKgToday()+'kg').replace('kg','');
+  qs('h-kghoy').title = calcKgToday()+'kg';
+  qs('h-kgtotal').textContent = calcTotalKg()>9999 ? (calcTotalKg()/1000).toFixed(0)+'t' : calcTotalKg();
+  qs('h-dias').textContent    = new Set(workouts.map(w=>w.date.split('T')[0])).size;
+  qs('h-kcal').textContent    = calcKcalToday();
+  // fix labels
+  qs('h-kghoy').parentElement.querySelector('.stat-lbl').textContent='kg HOY';
+  qs('h-kgtotal').parentElement.querySelector('.stat-lbl').textContent='kg TOTAL';
+
+  // Next workout widget
+  const nxt=calcNextRoutine();
+  const w=qs('home-next-widget');
+  if(!nxt){
+    w.innerHTML='';return;
+  }
+  const exNames=nxt.routine.exerciseIds.map(id=>exercises.find(e=>e.id===id)?.name).filter(Boolean);
+  w.innerHTML=`
+    <div style="margin:0 16px 12px;background:linear-gradient(135deg,rgba(212,255,0,.08),rgba(212,255,0,.03));border:1px solid rgba(212,255,0,.2);border-radius:var(--r);padding:14px;position:relative;overflow:hidden">
+      <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:6px">${nxt.label}</div>
+      <div style="font-family:var(--font-display);font-size:24px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">${nxt.routine.name}</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">${exNames.slice(0,4).join(' · ')}${exNames.length>4?' +'+( exNames.length-4)+' más':''}</div>
+      <button class="btn btn-y" style="font-size:13px;padding:9px 18px" onclick="startWorkout('${nxt.routine.id}')">▶ EMPEZAR</button>
+      <div style="position:absolute;right:-10px;bottom:-10px;font-size:64px;opacity:.04;line-height:1">🦍</div>
+    </div>`;
+}
 
 // ── WORKOUT ───────────────────────────────────────────────────
+// Get last sets used for an exercise (for pre-fill)
+function getLastSets(exId) {
+  const past=[...workouts].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  for(const w of past){
+    const ae=w.exercises.find(e=>e.exerciseId===exId);
+    if(ae&&ae.sets.length) return ae.sets.map(s=>({weight:s.weight||'',reps:s.reps||''}));
+  }
+  return [{weight:'',reps:''},{weight:'',reps:''},{weight:'',reps:''}];
+}
+
 window.startWorkout = function(routineId) {
   if(activeWo && !confirm('Ya hay un entreno activo. ¿Descartarlo?')) return;
   clearInterval(timerIv);
@@ -868,7 +903,10 @@ window.startWorkout = function(routineId) {
     const rt = routines.find(r=>r.id===routineId);
     if(rt) rt.exerciseIds.forEach(exId=>{
       const ex=exercises.find(e=>e.id===exId);
-      if(ex) activeWo.exercises.push({id:uid(),exerciseId:exId,name:ex.name,sets:[{weight:'',reps:'',done:false}]});
+      if(ex) {
+        const lastSets=getLastSets(exId);
+        activeWo.exercises.push({id:uid(),exerciseId:exId,name:ex.name,sets:lastSets});
+      }
     });
   }
   qs('active-bar').classList.add('on');
@@ -912,14 +950,14 @@ function renderWorkout() {
     return;
   }
   c.innerHTML=activeWo.exercises.map(ae=>{
-    const done=ae.sets.filter(s=>s.done).length;
-    const maxW=Math.max(...ae.sets.filter(s=>s.done&&s.weight).map(s=>s.weight),0);
+    const filledSets=ae.sets.filter(s=>s.weight||s.reps).length;
+    const maxW=Math.max(...ae.sets.filter(s=>s.weight).map(s=>parseFloat(s.weight)||0),0);
     const pr=getPR(ae.exerciseId);
-    const isPR=maxW>0&&maxW>=pr&&pr>0;
+    const isPR=maxW>0&&maxW>pr&&pr>0;
     return `<div class="ex-item" onclick="openLogSets('${ae.exerciseId}','${ae.id}')">
       <div>
         <div class="ex-name">${ae.name}</div>
-        <div class="ex-meta">${done} series${maxW?' · '+maxW+'kg':''}</div>
+        <div class="ex-meta">${ae.sets.length} series${maxW?' · '+maxW+'kg':''}</div>
       </div>
       <div class="row">
         ${isPR?'<span class="tag tag-y">PR 🏆</span>':''}
@@ -963,7 +1001,6 @@ window.openLogSets = function(exId, aeId) {
   qs('sets-ex-name').textContent=ex.name;
   qs('sets-ex-tags').innerHTML=`<span class="tag tag-g">${ex.muscle}</span><span class="tag tag-g">${ex.type}</span>`;
 
-  // column headers
   if(ex.type==='tiempo'){
     qs('sets-col-w').textContent='TIEMPO';qs('sets-col-r').textContent='NOTAS';
   } else if(ex.type==='bodyweight'){
@@ -972,8 +1009,9 @@ window.openLogSets = function(exId, aeId) {
     qs('sets-col-w').textContent='PESO (kg)';qs('sets-col-r').textContent='REPS';
   }
 
-  const ae=activeWo?.exercises.find(e=>e.id===aeId);
-  curSets=(ae?ae.sets:[{weight:'',reps:'',done:false}]).map(s=>({...s}));
+  const ae=activeWo?.exercises.find(e=>e.id===aeId)
+          || (editWoId ? workouts.find(w=>w.id===editWoId)?.exercises.find(e=>e.id===aeId) : null);
+  curSets=(ae?ae.sets:[{weight:'',reps:''},{weight:'',reps:''},{weight:'',reps:''}]).map(s=>({weight:s.weight||'',reps:s.reps||''}));
   renderSetsTable();
   updateORM();
   openModal('m-sets');
@@ -985,23 +1023,25 @@ function renderSetsTable() {
     <tr>
       <td class="set-num">${i+1}</td>
       <td><input type="${exType==='tiempo'?'text':'number'}" inputmode="${exType==='tiempo'?'text':'decimal'}" placeholder="${exType==='tiempo'?'1:00':'0'}" value="${s.weight||''}" onchange="updSet(${i},'weight',this.value)" oninput="updateORM()"></td>
-      <td><input type="${exType==='bodyweight'?'number':'text'}" inputmode="${exType==='bodyweight'?'numeric':'text'}" placeholder="${exType==='bodyweight'?'0':'0'}" value="${s.reps||''}" onchange="updSet(${i},'reps',this.value)" oninput="updateORM()"></td>
-      <td><button class="chk-btn ${s.done?'on':''}" onclick="toggleSet(${i})">
-        ${s.done?'<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>':''}
-      </button></td>
+      <td><input type="number" inputmode="numeric" placeholder="0" value="${s.reps||''}" onchange="updSet(${i},'reps',this.value)" oninput="updateORM()"></td>
+      <td><button onclick="copySet(${i})" style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r);color:var(--muted);padding:4px 7px;font-size:11px;cursor:pointer" title="Copiar serie">⧉</button></td>
     </tr>`).join('');
 }
 
-window.updSet    = (i,k,v) => { curSets[i][k]=parseFloat(v)||v; };
-window.toggleSet = (i) => { curSets[i].done=!curSets[i].done; renderSetsTable(); updateORM(); };
-window.addSet    = ()  => { curSets.push({weight:'',reps:'',done:false}); renderSetsTable(); };
+window.updSet  = (i,k,v) => { curSets[i][k]=v; };
+window.copySet = (i) => { curSets.splice(i+1,0,{...curSets[i]}); renderSetsTable(); updateORM(); };
+window.addSet  = ()  => {
+  const last=curSets[curSets.length-1];
+  curSets.push({weight:last?.weight||'',reps:last?.reps||''});
+  renderSetsTable();
+};
 
 function updateORM() {
   const ex=exercises.find(e=>e.id===logExId);
   if(!ex||ex.type!=='fuerza'){qs('orm-live').textContent='';return;}
   let best=0;
   curSets.forEach(s=>{
-    const w=parseFloat(s.weight),r=parseFloat(s.reps);
+    const w=parseFloat(s.weight)||0, r=parseFloat(s.reps)||0;
     if(w&&r) best=Math.max(best,epley(w,r));
   });
   if(!best){qs('orm-live').textContent='';return;}
@@ -1015,9 +1055,17 @@ window.saveSets = function() {
   if(activeWo){
     const ae=activeWo.exercises.find(e=>e.id===logAeId);
     if(ae) ae.sets=[...curSets];
+    closeModal('m-sets');
+    renderWorkout();
+  } else if(editWoId){
+    const w=workouts.find(x=>x.id===editWoId);
+    if(w){ const ae=w.exercises.find(e=>e.id===logAeId); if(ae) ae.sets=[...curSets]; }
+    save();
+    closeModal('m-sets');
+    showWoEdit(editWoId);
+  } else {
+    closeModal('m-sets');
   }
-  closeModal('m-sets');
-  renderWorkout();
 }
 
 // ── EXERCISES PAGE ────────────────────────────────────────────
@@ -1117,46 +1165,88 @@ window.calSelectDay = function(ds, el) {
   el.classList.add('sel');
   const dayWos=workouts.filter(w=>w.date.startsWith(ds));
   const det=qs('cal-day-detail');
-  if(dayWos.length===0){det.innerHTML='<div class="card mt8"><div style="font-family:var(--font-mono);font-size:9px;color:var(--muted)">Sin entrenos este día</div></div>';return;}
+  if(dayWos.length===0){
+    det.innerHTML='<div class="card mt8"><div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-bottom:10px">Sin entrenos este día</div></div>';
+    return;
+  }
   det.innerHTML=`<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin:12px 0 6px">${dayWos.length} entreno(s)</div>`+
-    dayWos.map(w=>`<div class="wo-item" onclick="showWoDetail('${w.id}')">
+    dayWos.map(w=>`<div class="wo-item" onclick="showWoEdit('${w.id}')">
+      <div class="wo-date">${new Date(w.date).toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'short'})}</div>
       <div class="wo-exs">${w.exercises.map(e=>e.name).join(' · ')}</div>
       <div class="tags mt8">
-        <span class="tag tag-y">${fmt(w.duration)}</span>
         <span class="tag tag-y">${calcVol(w)} kg vol.</span>
+        <span class="tag tag-b">✏ EDITAR</span>
       </div>
     </div>`).join('');
 }
 
-// ── WORKOUT DETAIL ────────────────────────────────────────────
-window.showWoDetail = function(wId) {
+// Editable workout detail (from calendar)
+window.showWoEdit = function(wId) {
+  editWoId=wId;
   const w=workouts.find(x=>x.id===wId); if(!w) return;
   const d=new Date(w.date);
-  let html=`<div style="font-family:var(--font-display);font-size:26px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Detalle</div>
-    <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:12px">${d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase()}</div>
+  let html=`
+    <div class="row-between mb12">
+      <div>
+        <div style="font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:1px;text-transform:uppercase">Editar entreno</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:2px">${d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}).toUpperCase()}</div>
+      </div>
+      <button class="btn btn-r btn-sm" onclick="deleteWorkout('${wId}')">BORRAR</button>
+    </div>
     <div class="tags mb12">
-      <span class="tag tag-y">${fmt(w.duration)}</span>
       <span class="tag tag-y">${calcVol(w)} kg vol.</span>
       <span class="tag tag-y">${w.exercises.length} ejercicios</span>
     </div>`;
-  w.exercises.forEach(ae=>{
-    const done=ae.sets.filter(s=>s.done);
+  w.exercises.forEach((ae,aei)=>{
     html+=`<div class="card" style="margin:0 0 8px">
-      <div class="card-title">${ae.name}</div>
+      <div class="row-between mb8">
+        <div class="card-title" style="margin:0">${ae.name}</div>
+        <button class="btn btn-r btn-sm" style="padding:4px 8px;font-size:9px" onclick="removeExFromWo('${wId}','${ae.id}')">✕</button>
+      </div>
       <table class="sets-tbl">
-        <thead><tr><th>#</th><th>PESO</th><th>REPS</th><th>VOL.</th></tr></thead>
-        <tbody>${done.map((s,i)=>`<tr>
-          <td class="set-num">${i+1}</td>
-          <td style="font-family:var(--font-mono);font-size:12px">${s.weight??'—'} ${s.weight?'kg':''}</td>
-          <td style="font-family:var(--font-mono);font-size:12px">${s.reps??'—'}</td>
-          <td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">${s.weight&&s.reps?(s.weight*s.reps).toFixed(0)+' kg':'—'}</td>
+        <thead><tr><th>#</th><th>PESO (kg)</th><th>REPS</th><th>⧉</th></tr></thead>
+        <tbody>${ae.sets.map((s,si)=>`<tr>
+          <td class="set-num">${si+1}</td>
+          <td><input type="number" inputmode="decimal" value="${s.weight||''}" onchange="updWoSet('${wId}','${ae.id}',${si},'weight',this.value)" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:6px 3px;color:var(--text);font-family:var(--font-mono);font-size:13px;text-align:center;outline:none"></td>
+          <td><input type="number" inputmode="numeric" value="${s.reps||''}" onchange="updWoSet('${wId}','${ae.id}',${si},'reps',this.value)" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:6px 3px;color:var(--text);font-family:var(--font-mono);font-size:13px;text-align:center;outline:none"></td>
+          <td><button onclick="copyWoSet('${wId}','${ae.id}',${si})" style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r);color:var(--muted);padding:4px 7px;font-size:11px;cursor:pointer">⧉</button></td>
         </tr>`).join('')}</tbody>
       </table>
+      <button class="btn btn-g btn-w mt8" style="font-size:11px;padding:7px" onclick="addSetToWoEx('${wId}','${ae.id}')">+ SERIE</button>
     </div>`;
   });
   qs('wo-detail-body').innerHTML=html;
   openModal('m-wo-detail');
 }
+
+window.updWoSet = function(wId,aeId,si,key,val) {
+  const w=workouts.find(x=>x.id===wId); if(!w) return;
+  const ae=w.exercises.find(e=>e.id===aeId); if(!ae) return;
+  ae.sets[si][key]=val; save();
+}
+window.copyWoSet = function(wId,aeId,si) {
+  const w=workouts.find(x=>x.id===wId); if(!w) return;
+  const ae=w.exercises.find(e=>e.id===aeId); if(!ae) return;
+  ae.sets.splice(si+1,0,{...ae.sets[si]}); save(); showWoEdit(wId);
+}
+window.addSetToWoEx = function(wId,aeId) {
+  const w=workouts.find(x=>x.id===wId); if(!w) return;
+  const ae=w.exercises.find(e=>e.id===aeId); if(!ae) return;
+  const last=ae.sets[ae.sets.length-1];
+  ae.sets.push({weight:last?.weight||'',reps:last?.reps||''}); save(); showWoEdit(wId);
+}
+window.removeExFromWo = function(wId,aeId) {
+  const w=workouts.find(x=>x.id===wId); if(!w) return;
+  w.exercises=w.exercises.filter(e=>e.id!==aeId); save(); showWoEdit(wId);
+}
+window.deleteWorkout = function(wId) {
+  if(!confirm('¿Eliminar este entreno?')) return;
+  workouts=workouts.filter(w=>w.id!==wId); save();
+  closeModal('m-wo-detail'); renderCalendar(); renderHome();
+}
+
+// ── WORKOUT DETAIL (read-only, still used from home) ──────────
+window.showWoDetail = function(wId) { showWoEdit(wId); }
 
 // ── ROUTINES ──────────────────────────────────────────────────
 function renderRoutines() {
