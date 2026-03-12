@@ -210,11 +210,11 @@ select.inp{appearance:none}
 /* ── CALENDAR ── */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px}
 .cal-month{font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:0 16px;margin-bottom:16px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:0 12px;margin-bottom:16px}
 .cal-dh{font-family:var(--font-mono);font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 0}
 .cal-d{
-  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
-  border-radius:var(--r);font-family:var(--font-mono);font-size:11px;
+  height:38px;display:flex;align-items:center;justify-content:center;
+  border-radius:var(--r);font-family:var(--font-mono);font-size:12px;
   color:var(--muted);cursor:pointer;position:relative;transition:all .1s;
 }
 .cal-d.has{color:var(--text);background:var(--s1);border:1px solid var(--border)}
@@ -1165,19 +1165,33 @@ window.calSelectDay = function(ds, el) {
   el.classList.add('sel');
   const dayWos=workouts.filter(w=>w.date.startsWith(ds));
   const det=qs('cal-day-detail');
+  const dateLabel=new Date(ds+'T12:00:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
+  let html=`<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin:12px 0 8px">${dateLabel}</div>`;
   if(dayWos.length===0){
-    det.innerHTML='<div class="card mt8"><div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-bottom:10px">Sin entrenos este día</div></div>';
-    return;
-  }
-  det.innerHTML=`<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin:12px 0 6px">${dayWos.length} entreno(s)</div>`+
-    dayWos.map(w=>`<div class="wo-item" onclick="showWoEdit('${w.id}')">
-      <div class="wo-date">${new Date(w.date).toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'short'})}</div>
+    html+=`<div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-bottom:12px">Sin entrenos</div>`;
+  } else {
+    html+=dayWos.map(w=>`<div class="wo-item" onclick="showWoEdit('${w.id}')">
       <div class="wo-exs">${w.exercises.map(e=>e.name).join(' · ')}</div>
       <div class="tags mt8">
         <span class="tag tag-y">${calcVol(w)} kg vol.</span>
         <span class="tag tag-b">✏ EDITAR</span>
       </div>
     </div>`).join('');
+  }
+  html+=`<button class="btn btn-g btn-w mt8" style="font-size:12px" onclick="startWorkoutOnDate('${ds}')">+ AÑADIR ENTRENO ESTE DÍA</button>`;
+  det.innerHTML=html;
+}
+
+// Start a workout backdated to a specific day
+window.startWorkoutOnDate = function(ds) {
+  if(activeWo && !confirm('Hay un entreno activo. ¿Descartarlo?')) return;
+  clearInterval(timerIv);
+  const isoDate = new Date(ds+'T12:00:00').toISOString();
+  activeWo = { id:uid(), date:isoDate, startTime:Date.now(), exercises:[], backdated:true };
+  qs('active-bar').classList.add('on');
+  startTimer();
+  nav('workout');
+  renderWorkout();
 }
 
 // Editable workout detail (from calendar)
