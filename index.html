@@ -579,12 +579,19 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
   <div class="modal">
     <div class="drag-handle"></div>
     <div class="modal-title">Ajustos</div>
-    <div class="card" style="margin:0 0 10px;display:flex;align-items:center;justify-content:space-between">
-      <div>
-        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:2px">Sessió activa</div>
-        <div id="backup-username" style="font-family:var(--font-display);font-size:18px;font-weight:800;letter-spacing:1px;text-transform:uppercase"></div>
+    <div class="card" style="margin:0 0 10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:2px">Sessió activa</div>
+          <div id="backup-username" style="font-family:var(--font-display);font-size:18px;font-weight:800;letter-spacing:1px;text-transform:uppercase"></div>
+        </div>
+        <button class="btn btn-r btn-sm" onclick="logoutUser()">↩ SORTIR</button>
       </div>
-      <button class="btn btn-r btn-sm" onclick="logoutUser()">↩ SORTIR</button>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <input class="inp" id="edit-username-inp" placeholder="Nou nom..." style="flex:1">
+        <button class="btn btn-y btn-sm" onclick="saveUsername()">✓</button>
+      </div>
+      <div id="edit-username-status" style="font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-top:6px;min-height:14px"></div>
     </div>
     <div class="card" style="margin:0 0 10px">
       <div class="card-title">Exportar</div>
@@ -1927,6 +1934,36 @@ window.logoutUser = function() {
   if(!confirm('Tancar sessió de '+currentUser.name+'?')) return;
   localStorage.removeItem('ub_current_user');
   location.reload();
+}
+
+window.saveUsername = async function() {
+  const inp = qs('edit-username-inp');
+  const newName = (inp.value||'').trim();
+  const status = qs('edit-username-status');
+  if(!newName) { status.textContent = 'Escriu un nom!'; return; }
+
+  let users = [];
+  try {
+    const snap = await getDoc(USERS_DOC);
+    if(snap.exists()) users = snap.data().list || [];
+  } catch(e) { users = JSON.parse(localStorage.getItem('ub_users')||'[]'); }
+
+  if(users.find(u=>u.id!==currentUser.id && u.name.toLowerCase()===newName.toLowerCase())) {
+    status.textContent = 'Aquest nom ja existeix!'; return;
+  }
+
+  users = users.map(u => u.id===currentUser.id ? {...u, name:newName} : u);
+  currentUser = {...currentUser, name:newName};
+
+  try { await setDoc(USERS_DOC, {list:users}); } catch(e){}
+  localStorage.setItem('ub_users', JSON.stringify(users));
+
+  qs('backup-username').textContent = newName;
+  renderUserBadge();
+  inp.value = '';
+  status.style.color = 'var(--accent)';
+  status.textContent = '✓ Nom actualitzat!';
+  setTimeout(()=>{ status.textContent=''; status.style.color='var(--muted)'; }, 2000);
 }
 
 // ── LOADER ────────────────────────────────────────────────────
