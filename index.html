@@ -434,13 +434,16 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <div class="ph">
         <div class="ph-title">ESTA<em>DÍSTICAS</em></div>
       </div>
-      <div class="ig px16 mb8">
-        <label class="lbl">Ejercicio</label>
-        <select class="inp" id="stats-sel" onchange="renderStats()">
-          <option value="">— Selecciona —</option>
+      <div id="stats-global"></div>
+      <div style="padding:0 16px 6px;display:flex;align-items:center;gap:8px">
+        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;flex:1">DETALLE POR EJERCICIO</div>
+      </div>
+      <div style="padding:0 16px 12px">
+        <select class="inp" id="stats-sel" onchange="renderStatsDetail()">
+          <option value="">— Selecciona ejercicio —</option>
         </select>
       </div>
-      <div id="stats-body"></div>
+      <div id="stats-detail"></div>
     </div>
 
   </div><!-- /view -->
@@ -481,7 +484,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <div id="bk-summary" style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.9"></div>
       <button class="btn btn-y btn-w" onclick="exportData()">↓ DESCARGAR .JSON</button>
     </div>
-    <div class="card" style="margin:0 0 16px">
+    <div class="card" style="margin:0 0 10px">
       <div class="card-title">Importar</div>
       <p style="font-family:var(--font-mono);font-size:9px;color:var(--accent2);letter-spacing:1px;margin-bottom:10px;line-height:1.8">⚠ REEMPLAZA TODOS LOS DATOS ACTUALES</p>
       <label class="btn btn-g btn-w" style="cursor:pointer">
@@ -489,6 +492,12 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <input type="file" accept=".json" onchange="importData(event)" style="display:none">
       </label>
       <div id="bk-status" style="font-family:var(--font-mono);font-size:9px;text-align:center;margin-top:8px"></div>
+    </div>
+    <div class="card" style="margin:0 0 16px">
+      <div class="card-title">Reset biblioteca + rutines</div>
+      <p style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:10px;line-height:1.8">Substitueix exercicis i rutines pels del pla d'Arnau.<br>Els entrenos registrats NO s'esborren.</p>
+      <button class="btn btn-w" style="background:var(--accent2);color:#fff;border:none" onclick="resetExercisesAndRoutines()">↺ RESET EXERCICIS + RUTINES</button>
+      <div id="reset-status" style="font-family:var(--font-mono);font-size:9px;text-align:center;margin-top:8px"></div>
     </div>
     <button class="btn btn-g btn-w" onclick="closeModal('m-backup')">CERRAR</button>
   </div>
@@ -687,7 +696,8 @@ async function saveRemote() {
 }
 
 function setSyncStatus(s) {
-  const el = qs('sync-status');
+  const el = document.getElementById('sync-status');
+  if(!el) return;
   el.className = 'sync ' + s;
   el.textContent = s==='ok'?'● synced':s==='err'?'● offline':'● sync...';
 }
@@ -732,37 +742,53 @@ function save() {
 function getDefaultExercises() {
   const mk = (name,muscle,type) => ({id:uid(),name,muscle,type});
   return [
-    // Hombros
-    mk('Shoulder Press','hombros','fuerza'),
-    mk('Apertura Lateral Hombro','hombros','fuerza'),
-    mk('Rear Shoulder Machine','hombros','fuerza'),
-    // Pecho
-    mk('Press Bench Inclinado','pecho','fuerza'),
-    mk('Press Bench Máquina','pecho','fuerza'),
-    mk('Pec Flies','pecho','fuerza'),
-    // Tríceps
-    mk('Tríceps Normals','tricep','fuerza'),
-    mk('Tríceps Rear Head','tricep','fuerza'),
-    // Pierna
-    mk('Sentadillas','pierna','fuerza'),
-    mk('Deadlifts','pierna','fuerza'),
-    mk('Sumo Squats','pierna','fuerza'),
-    mk('Bulgarian Squats','pierna','fuerza'),
-    mk('Gemelos','gemelos','fuerza'),
-    // Glúteo
-    mk('Culo (Hip Thrust)','gluteo','fuerza'),
-    mk('Nórdicas','pierna','bodyweight'),
-    // Core
+    // ── ESQUENA (Sessió 1) ──
+    mk('Dominades','esquena','bodyweight'),
+    mk('Rem Màquina','esquena','fuerza'),
+    mk('One Arm Row','esquena','fuerza'),
+    mk('Pullover Politja','esquena','fuerza'),
+    // ── BÍCEPS (Sessió 1) ──
+    mk('Bíceps Mancuernes Martell','bicep','fuerza'),
+    mk('Bíceps Barra Z','bicep','fuerza'),
+    // ── CAMES (Sessió 2 + 5) ──
+    mk('Sentadilles Lliures','pierna','fuerza'),
+    mk('Pes Mort Barra','pierna','fuerza'),
+    mk('Sumo Squat','pierna','fuerza'),
+    mk('Squat Búlgar','pierna','fuerza'),
+    mk('Hip Thrust Màquina','gluteo','fuerza'),
+    mk('Nordic Curl','pierna','bodyweight'),
+    mk('Elevació Bessons Step','gemelos','fuerza'),
+    // ── ESPATLLES (Sessió 2) ──
+    mk('Press Militar Mancuernes','hombros','fuerza'),
+    mk('Elevació Lateral Politja','hombros','fuerza'),
+    // ── PECTORAL (Sessió 4) ──
+    mk('Press Banca Inclinat','pecho','fuerza'),
+    mk('Dips','pecho','bodyweight'),
+    mk('Flexions Plus','pecho','bodyweight'),
+    // ── TRÍCEPS (Sessió 4) ──
+    mk('Extensió Tríceps Politja','tricep','fuerza'),
+    // ── CORE ──
     mk('Hangtime','core','tiempo'),
     mk('Plancha','core','tiempo'),
-    // Cardio HEAT
-    mk('Cordes (Saltar a la cuerda)','cardio','tiempo'),
-    mk('Balanceo Kettlebell','cardio','fuerza'),
-    mk('Saco Hombros','cardio','fuerza'),
-    mk('Medicinal S2S','cardio','fuerza'),
-    mk('Abs Kettlebell S2S','core','fuerza'),
-    mk('Lunges Kettlebell','pierna','fuerza'),
     mk('Climbers','core','tiempo'),
+    mk('Abdominals Russos','core','fuerza'),
+    mk('Plank Shoulder Taps','core','tiempo'),
+    // ── HIIT TREN INFERIOR (Sessió 1) ──
+    mk('Salts Corda','cardio','tiempo'),
+    mk('Arrossegar Trineu','cardio','tiempo'),
+    mk('Box Jumps','cardio','tiempo'),
+    mk('Goblet Squat','pierna','fuerza'),
+    mk('Skippings','cardio','tiempo'),
+    mk('Squat Jumps','cardio','tiempo'),
+    mk('Lunges Saltant','pierna','tiempo'),
+    // ── HIIT TREN SUPERIOR (Sessió 2 + 5) ──
+    mk('Battle Ropes','cardio','tiempo'),
+    mk('Swing Kettlebell','cardio','fuerza'),
+    mk('Press Militar Sandbag','cardio','fuerza'),
+    mk('Llançament Wallball','cardio','fuerza'),
+    mk('Burpees','cardio','tiempo'),
+    // ── HIIT CORE (Sessió 4) ──
+    mk('Farmer Walk Kettlebell','core','fuerza'),
   ];
 }
 
@@ -789,26 +815,21 @@ function getSeedWorkouts(exs) {
 
   return [
     mkWo(0, [
-      ['Hangtime',           [{weight:null,reps:null,time:'1:00'},{weight:null,reps:null,time:'0:52'},{weight:null,reps:null,time:'0:40'}]],
-      ['Shoulder Press',     [{weight:18,reps:10},{weight:26,reps:10},{weight:26,reps:10}]],
-      ['Apertura Lateral Hombro',[{weight:5.7,reps:10},{weight:5.7,reps:10},{weight:5.7,reps:10}]],
-      ['Rear Shoulder Machine',  [{weight:67,reps:10},{weight:67,reps:10},{weight:67,reps:10}]],
-      ['Sentadillas',        [{weight:80,reps:10},{weight:80,reps:10},{weight:80,reps:10}]],
-      ['Deadlifts',          [{weight:80,reps:10},{weight:80,reps:10},{weight:80,reps:10}]],
+      ['Dominades',            [{weight:null,reps:6},{weight:null,reps:6},{weight:null,reps:5}]],
+      ['Rem Màquina',          [{weight:60,reps:8},{weight:60,reps:8},{weight:60,reps:7}]],
+      ['One Arm Row',          [{weight:24,reps:10},{weight:24,reps:10},{weight:24,reps:10}]],
+      ['Bíceps Barra Z',       [{weight:20,reps:12},{weight:20,reps:11},{weight:20,reps:10}]],
     ]),
     mkWo(2, [
-      ['Press Bench Inclinado',  [{weight:70,reps:8},{weight:60,reps:10},{weight:60,reps:8}]],
-      ['Press Bench Máquina',    [{weight:66,reps:10},{weight:66,reps:10},{weight:66,reps:7}]],
-      ['Pec Flies',              [{weight:46,reps:10},{weight:46,reps:9},{weight:36,reps:10}]],
-      ['Tríceps Normals',        [{weight:45,reps:10},{weight:45,reps:10},{weight:45,reps:10}]],
-      ['Tríceps Rear Head',      [{weight:18,reps:10},{weight:14,reps:10},{weight:18,reps:8}]],
+      ['Sentadilles Lliures',  [{weight:60,reps:8},{weight:60,reps:8},{weight:60,reps:7}]],
+      ['Pes Mort Barra',       [{weight:70,reps:8},{weight:70,reps:8},{weight:70,reps:6}]],
+      ['Press Militar Mancuernes',[{weight:16,reps:12},{weight:16,reps:10},{weight:16,reps:10}]],
+      ['Elevació Lateral Politja',[{weight:8,reps:12},{weight:8,reps:12},{weight:8,reps:10}]],
     ]),
     mkWo(4, [
-      ['Gemelos',            [{weight:15,reps:10},{weight:15,reps:10},{weight:15,reps:10}]],
-      ['Sumo Squats',        [{weight:24,reps:10},{weight:24,reps:10},{weight:24,reps:10}]],
-      ['Bulgarian Squats',   [{weight:30,reps:10},{weight:30,reps:10},{weight:30,reps:10}]],
-      ['Culo (Hip Thrust)',  [{weight:80,reps:10},{weight:90,reps:10},{weight:100,reps:10}]],
-      ['Nórdicas',           [{weight:null,reps:10},{weight:null,reps:10},{weight:null,reps:10}]],
+      ['Press Banca Inclinat', [{weight:50,reps:10},{weight:50,reps:9},{weight:50,reps:8}]],
+      ['Dips',                 [{weight:null,reps:12},{weight:null,reps:10},{weight:null,reps:9}]],
+      ['Extensió Tríceps Politja',[{weight:20,reps:15},{weight:20,reps:13},{weight:20,reps:12}]],
     ]),
   ];
 }
@@ -816,18 +837,38 @@ function getSeedWorkouts(exs) {
 function getDefaultRoutines(exs) {
   const mk = (name,desc,names) => ({id:uid(),name,desc,exerciseIds:names.map(n=>exId(exs,n)).filter(Boolean)});
   return [
-    mk('Día 1 — Hombros + Pierna','Shoulder press, laterals, sentadillas, deadlifts',
-      ['Hangtime','Shoulder Press','Apertura Lateral Hombro','Rear Shoulder Machine','Sentadillas','Deadlifts']),
-    mk('Día 2 — Pecho + Tríceps','Press bench, pec flies, triceps',
-      ['Press Bench Inclinado','Press Bench Máquina','Pec Flies','Tríceps Normals','Tríceps Rear Head']),
-    mk('Día 3 — Pierna + Glúteo','Gemelos, squats, hip thrust, nórdicas',
-      ['Gemelos','Sumo Squats','Bulgarian Squats','Culo (Hip Thrust)','Nórdicas']),
-    mk('HEAT Día 1','30s trabajo + 15s descanso · Cordes, Kettlebell, Saco, Medicinal',
-      ['Cordes (Saltar a la cuerda)','Balanceo Kettlebell','Saco Hombros','Medicinal S2S']),
-    mk('HEAT Día 2','30s trabajo + 15s descanso · Plancha, Abs, Lunges, Climbers',
-      ['Plancha','Abs Kettlebell S2S','Lunges Kettlebell','Climbers']),
-    mk('HEAT Día 3','30s trabajo + 15s descanso · Plancha, Abs, Lunges, Climbers',
-      ['Plancha','Abs Kettlebell S2S','Lunges Kettlebell','Climbers']),
+    // ── SESSIONS DE FORÇA (PDF Arnau) ──
+    mk('Sessió 1 — Esquena + Bíceps',
+      'Força: esquena/bíceps · HIIT: tren inferior',
+      ['Dominades','Rem Màquina','One Arm Row','Pullover Politja',
+       'Bíceps Mancuernes Martell','Bíceps Barra Z']),
+    mk('Sessió 2 — Cames + Espatlles',
+      'Força: cames/espatlles · HIIT: tren superior',
+      ['Sentadilles Lliures','Pes Mort Barra','Press Militar Mancuernes','Elevació Lateral Politja']),
+    mk('Sessió 4 — Pectoral + Tríceps',
+      'Força: pectoral/tríceps · HIIT: core',
+      ['Press Banca Inclinat','Dips','Flexions Plus','Press Militar Mancuernes','Extensió Tríceps Politja']),
+    mk('Sessió 5 — Cames',
+      'Força: cames · HIIT: tren superior',
+      ['Sumo Squat','Squat Búlgar','Hip Thrust Màquina','Nordic Curl','Elevació Bessons Step']),
+    // ── HIIT TREN INFERIOR (Sessió 1) ──
+    mk('HIIT — Tren Inferior A',
+      '3-4 × 30s all out / 15s rest · Corda, Trineu, Box, Medicinal',
+      ['Salts Corda','Arrossegar Trineu','Box Jumps','Goblet Squat']),
+    mk('HIIT — Tren Inferior B',
+      '3-4 × 30s all out / 15s rest · Corda, Skippings, Jumps',
+      ['Salts Corda','Skippings','Squat Jumps','Lunges Saltant']),
+    // ── HIIT TREN SUPERIOR (Sessió 2 + 5) ──
+    mk('HIIT — Tren Superior A',
+      '3-4 × 30s all out / 20s rest · Battle ropes, Kettlebell, Sandbag, Wallball',
+      ['Battle Ropes','Swing Kettlebell','Press Militar Sandbag','Llançament Wallball']),
+    mk('HIIT — Tren Superior B',
+      '3-4 × 30s all out / 15s rest · Burpees, Plancha, Climbers',
+      ['Burpees','Plancha','Climbers']),
+    // ── HIIT CORE (Sessió 4) ──
+    mk('HIIT — Core',
+      '3-4 × 30s all out / 15s rest · Escaladors, Russos, Farmer, Planxa',
+      ['Climbers','Abdominals Russos','Farmer Walk Kettlebell','Plank Shoulder Taps']),
   ];
 }
 
@@ -1509,133 +1550,298 @@ window.deleteRoutine = function() {
 }
 
 // ── STATS ─────────────────────────────────────────────────────
-function renderStatsSelect() {
-  const sel=qs('stats-sel');
-  sel.innerHTML='<option value="">— Selecciona —</option>'+
-    exercises.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+// ── STATS ─────────────────────────────────────────────────────
+
+function weekKey(dateStr) {
+  const d = new Date(dateStr);
+  const mon = new Date(d);
+  mon.setDate(d.getDate() - ((d.getDay()+6)%7));
+  return mon.toISOString().slice(0,10);
 }
 
-window.renderStats = function() {
-  const exId=qs('stats-sel').value;
-  const c=qs('stats-body');
-  if(!exId){c.innerHTML='<div class="empty"><div class="empty-ico">📊</div><div class="empty-txt">Selecciona un ejercicio</div></div>';return;}
-  const ex=exercises.find(e=>e.id===exId);
-  const pts=[];
-  workouts.forEach(w=>{
-    w.exercises.forEach(ae=>{
+function renderStats() {
+  renderStatsGlobal();
+  const sel = qs('stats-sel');
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">— Selecciona ejercicio —</option>' +
+    exercises
+      .filter(e => workouts.some(w => w.exercises.some(ae => ae.exerciseId===e.id)))
+      .sort((a,b) => a.name.localeCompare(b.name))
+      .map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+  if(prev) sel.value = prev;
+  if(sel.value) renderStatsDetail(); else qs('stats-detail').innerHTML = '';
+}
+
+function renderStatsGlobal() {
+  const c = qs('stats-global');
+  if(!workouts.length) {
+    c.innerHTML = '<div class="empty"><div class="empty-ico">📊</div><div class="empty-txt">Sin entrenos aún</div></div>';
+    return;
+  }
+
+  const totalDays = new Set(workouts.map(w => w.date.slice(0,10))).size;
+  const totalKg   = Math.round(workouts.reduce((a,w) => a+calcVol(w), 0));
+  const totalSets = workouts.reduce((a,w) => a+w.exercises.reduce((b,ae)=>b+ae.sets.length,0), 0);
+  const wosWithDur = workouts.filter(w=>w.duration>0);
+  const avgMin    = wosWithDur.length ? Math.round(wosWithDur.reduce((a,w)=>a+w.duration,0)/wosWithDur.length/60000) : 0;
+
+  // weekly volume (last 10 weeks)
+  const weekVol = {}, weekCount = {};
+  workouts.forEach(w => {
+    const k = weekKey(w.date);
+    weekVol[k]   = (weekVol[k]||0)   + calcVol(w);
+    weekCount[k] = (weekCount[k]||0) + 1;
+  });
+  const allWeeks  = Object.keys(weekVol).sort().slice(-10);
+  const volData   = allWeeks.map(k => Math.round(weekVol[k]));
+  const freqData  = allWeeks.map(k => weekCount[k]);
+  const weekLbls  = allWeeks.map(k => {
+    const d = new Date(k+'T12:00:00');
+    return d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+  });
+
+  // top PRs — pick exercises with data, sorted by PR weight desc
+  const prs = exercises
+    .map(e => ({e, pr:getPR(e.id), reps:getPRReps(e.id)}))
+    .filter(x => x.pr>0)
+    .sort((a,b) => b.pr-a.pr)
+    .slice(0,8);
+
+  c.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 16px 14px">
+      <div class="stat" style="padding:10px 6px">
+        <div class="stat-val" style="font-size:20px">${totalDays}</div>
+        <div class="stat-lbl" style="font-size:8px">días gym</div>
+      </div>
+      <div class="stat" style="padding:10px 6px">
+        <div class="stat-val" style="font-size:20px">${totalKg>9999?(totalKg/1000).toFixed(1)+'t':totalKg+'k'}</div>
+        <div class="stat-lbl" style="font-size:8px">kg total</div>
+      </div>
+      <div class="stat" style="padding:10px 6px">
+        <div class="stat-val" style="font-size:20px">${totalSets}</div>
+        <div class="stat-lbl" style="font-size:8px">series</div>
+      </div>
+      <div class="stat" style="padding:10px 6px">
+        <div class="stat-val" style="font-size:20px">${avgMin||'—'}</div>
+        <div class="stat-lbl" style="font-size:8px">min/día</div>
+      </div>
+    </div>
+
+    <div class="chart-wrap" style="margin:0 16px 10px">
+      <div class="chart-title">Volumen semanal <span style="color:var(--accent);font-size:10px">(kg)</span></div>
+      <div class="chart-sub">CARGA TOTAL LEVANTADA POR SEMANA</div>
+      <canvas id="cg-vol" height="130"></canvas>
+    </div>
+
+    <div class="chart-wrap" style="margin:0 16px 14px">
+      <div class="chart-title">Frecuencia semanal <span style="color:var(--accent3);font-size:10px">(sesiones)</span></div>
+      <div class="chart-sub">ENTRENOS POR SEMANA</div>
+      <canvas id="cg-freq" height="110"></canvas>
+    </div>
+
+    ${prs.length ? `
+    <div style="padding:0 16px 4px">
+      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">🏆 MIS RÉCORDS</div>
+      ${prs.map((x,i)=>`
+        <div onclick="qs('stats-sel').value='${x.e.id}';renderStatsDetail();qs('stats-detail').scrollIntoView({behavior:'smooth'})"
+          style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin-bottom:4px;cursor:pointer;active:opacity:.7">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-family:var(--font-mono);font-size:9px;color:${i===0?'var(--accent)':i===1?'#aaa':i===2?'#cd7f32':'var(--muted)'};width:14px;text-align:center">${i===0?'●':i===1?'●':i===2?'●':'·'}</div>
+            <div style="font-size:13px;font-weight:500">${x.e.name}</div>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:12px;color:var(--accent);font-weight:600">${x.pr}kg${x.reps?' ×'+x.reps:''}
+            <span style="color:var(--muted);font-size:9px;margin-left:4px">›</span>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div style="height:8px"></div>
+    ` : ''}
+    <div style="margin:0 16px 14px;border-top:1px solid var(--border)"></div>
+  `;
+
+  setTimeout(() => {
+    if(volData.length)  drawBarChart('cg-vol',  weekLbls, volData,  '#d4ff00');
+    if(freqData.length) drawBarChart('cg-freq', weekLbls, freqData, '#00cfff', true);
+  }, 60);
+}
+
+window.renderStatsDetail = function() {
+  const exId = qs('stats-sel').value;
+  const c    = qs('stats-detail');
+  if(!exId) { c.innerHTML=''; return; }
+  const ex = exercises.find(e=>e.id===exId);
+
+  const pts = [];
+  workouts.forEach(w => {
+    w.exercises.forEach(ae => {
       if(ae.exerciseId!==exId) return;
-      // accept sets regardless of done flag — done was removed in new version
-      const valid=ae.sets.filter(s=>{
-        const w2=parseFloat(s.weight||s.time||0), r=parseFloat(s.reps||0);
-        return w2>0 || r>0;
-      });
+      const valid = ae.sets.filter(s => parseFloat(s.weight||0)>0 || parseFloat(s.reps||0)>0);
       if(!valid.length) return;
-      const maxW=Math.max(...valid.map(s=>parseFloat(s.weight)||0));
-      const vol=valid.reduce((a,s)=>a+(parseFloat(s.weight)||0)*(parseFloat(s.reps)||0),0);
-      const orm=Math.max(...valid.map(s=>{
-        const w2=parseFloat(s.weight)||0, r=parseFloat(s.reps)||0;
-        return w2&&r?epley(w2,r):0;
-      }));
-      pts.push({date:w.date,maxW,vol,orm,sets:valid.length});
+      const maxW = Math.max(...valid.map(s=>parseFloat(s.weight)||0));
+      const vol  = valid.reduce((a,s)=>a+(parseFloat(s.weight)||0)*(parseFloat(s.reps)||0),0);
+      const orm  = Math.max(...valid.map(s=>{const w=parseFloat(s.weight)||0,r=parseFloat(s.reps)||0;return w&&r?epley(w,r):0;}));
+      const maxR = Math.max(...valid.map(s=>parseFloat(s.reps)||0));
+      pts.push({date:w.date, maxW, vol, orm, maxR, sets:valid.length});
     });
   });
   pts.sort((a,b)=>new Date(a.date)-new Date(b.date));
 
-  if(!pts.length){c.innerHTML='<div class="empty"><div class="empty-ico">🏋️</div><div class="empty-txt">Sin datos aún<br>Registra este ejercicio</div></div>';return;}
-
-  const pr=Math.max(...pts.map(p=>p.maxW));
-  const best1rm=Math.max(...pts.map(p=>p.orm));
-  const bestVol=Math.max(...pts.map(p=>p.vol));
-
-  c.innerHTML=`
-    <div class="stats-row">
-      <div class="stat"><div class="stat-val">${pr}</div><div class="stat-lbl">PR (kg)</div></div>
-      <div class="stat"><div class="stat-val">${best1rm.toFixed(0)}</div><div class="stat-lbl">1RM est.</div></div>
-      <div class="stat"><div class="stat-val">${pts.length}</div><div class="stat-lbl">Sesiones</div></div>
-    </div>
-    <div class="chart-wrap">
-      <div class="chart-title">Peso máximo</div>
-      <div class="chart-sub">PROGRESO EN KG POR SESIÓN</div>
-      <canvas id="chart-w" height="170"></canvas>
-    </div>
-    <div class="chart-wrap">
-      <div class="chart-title">Volumen total</div>
-      <div class="chart-sub">SERIES × REPS × PESO</div>
-      <canvas id="chart-v" height="170"></canvas>
-    </div>
-    <div class="chart-wrap">
-      <div class="chart-title">1RM Estimado</div>
-      <div class="chart-sub">FÓRMULA DE EPLEY</div>
-      <canvas id="chart-1rm" height="170"></canvas>
-    </div>`;
-
-  setTimeout(()=>{
-    const lbls=pts.map(p=>new Date(p.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'}));
-    drawChart('chart-w',  lbls, pts.map(p=>p.maxW), '#d4ff00');
-    drawChart('chart-v',  lbls, pts.map(p=>p.vol),  '#ff4520');
-    drawChart('chart-1rm',lbls, pts.map(p=>p.orm),  '#00cfff');
-  },60);
-}
-
-function drawChart(cid, labels, data, color) {
-  const canvas=qs(cid); if(!canvas) return;
-  const ctx=canvas.getContext('2d');
-  const W=canvas.offsetWidth, H=parseInt(canvas.getAttribute('height')||170);
-  canvas.width=W; canvas.height=H;
-  const pad={top:14,right:12,bottom:28,left:44};
-  const cW=W-pad.left-pad.right, cH=H-pad.top-pad.bottom;
-  const mn=Math.min(...data)*.92, mx=Math.max(...data)*1.06, rng=mx-mn||1;
-
-  ctx.clearRect(0,0,W,H);
-
-  // Grid
-  for(let i=0;i<=4;i++){
-    const y=pad.top+(cH/4)*i;
-    ctx.strokeStyle='#1c1c1c';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cW,y);ctx.stroke();
-    ctx.fillStyle='#444';ctx.font='8px Roboto Mono';ctx.textAlign='right';
-    ctx.fillText((mx-(rng/4)*i).toFixed(0),pad.left-4,y+3);
-  }
-
-  if(data.length===1){
-    const x=pad.left+cW/2, y=pad.top+cH-((data[0]-mn)/rng)*cH;
-    ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();
+  if(!pts.length) {
+    c.innerHTML='<div class="empty" style="padding:20px 0 32px"><div class="empty-ico">🏋️</div><div class="empty-txt">Sin datos para este ejercicio</div></div>';
     return;
   }
 
-  // Area
-  const grad=ctx.createLinearGradient(0,pad.top,0,pad.top+cH);
-  grad.addColorStop(0,color+'35');grad.addColorStop(1,color+'00');
-  ctx.beginPath();
-  data.forEach((v,i)=>{
-    const x=pad.left+(i/(data.length-1))*cW, y=pad.top+cH-((v-mn)/rng)*cH;
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
-  ctx.lineTo(pad.left+cW,pad.top+cH);ctx.lineTo(pad.left,pad.top+cH);
-  ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+  const pr      = Math.max(...pts.map(p=>p.maxW));
+  const best1rm = Math.max(...pts.map(p=>p.orm));
+  const prReps  = Math.max(...pts.map(p=>p.maxR));
+  const nSess   = pts.length;
+  const lbls    = pts.map(p=>new Date(p.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'}));
 
-  // Line
-  ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2;ctx.lineJoin='round';
-  data.forEach((v,i)=>{
-    const x=pad.left+(i/(data.length-1))*cW, y=pad.top+cH-((v-mn)/rng)*cH;
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
+  // trend vs previous session
+  const trendW = pts.length>=2 ? pts[pts.length-1].maxW - pts[pts.length-2].maxW : 0;
+  const trendTxt = trendW>0 ? `<span style="color:var(--accent)">↑ +${trendW}kg</span>` :
+                   trendW<0 ? `<span style="color:var(--accent2)">↓ ${trendW}kg</span>` : '';
+
+  c.innerHTML = `
+    <div style="padding:0 16px">
+      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">
+        ${ex.name.toUpperCase()} ${trendTxt}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px">
+        <div class="stat" style="padding:10px 6px">
+          <div class="stat-val" style="font-size:20px">${pr||'—'}</div>
+          <div class="stat-lbl" style="font-size:8px">PR kg</div>
+        </div>
+        <div class="stat" style="padding:10px 6px">
+          <div class="stat-val" style="font-size:20px">${best1rm>0?best1rm.toFixed(0):'—'}</div>
+          <div class="stat-lbl" style="font-size:8px">1RM est.</div>
+        </div>
+        <div class="stat" style="padding:10px 6px">
+          <div class="stat-val" style="font-size:20px">${nSess}</div>
+          <div class="stat-lbl" style="font-size:8px">sesiones</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrap" style="margin:0 16px 10px">
+      <div class="chart-title">Peso máximo por sesión</div>
+      <div class="chart-sub">EVOLUCIÓN DEL PESO (KG)</div>
+      <canvas id="cd-w" height="140"></canvas>
+    </div>
+    <div class="chart-wrap" style="margin:0 16px 10px">
+      <div class="chart-title">Volumen por sesión</div>
+      <div class="chart-sub">SERIES × REPS × PESO</div>
+      <canvas id="cd-v" height="140"></canvas>
+    </div>
+    ${best1rm>0?`
+    <div class="chart-wrap" style="margin:0 16px 24px">
+      <div class="chart-title">1RM estimado</div>
+      <div class="chart-sub">FÓRMULA DE EPLEY</div>
+      <canvas id="cd-1rm" height="140"></canvas>
+    </div>`:''}
+  `;
+
+  setTimeout(() => {
+    drawLineChart('cd-w', lbls, pts.map(p=>p.maxW), '#d4ff00');
+    drawLineChart('cd-v', lbls, pts.map(p=>p.vol),  '#ff4520');
+    if(best1rm>0) drawLineChart('cd-1rm', lbls, pts.map(p=>p.orm), '#00cfff');
+  }, 60);
+}
+
+// ── CHART HELPERS ─────────────────────────────────────────────
+
+function drawLineChart(cid, labels, data, color) {
+  const canvas = document.getElementById(cid); if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth, H = +canvas.getAttribute('height')||140;
+  canvas.width=W; canvas.height=H;
+  const p={t:14,r:14,b:26,l:44};
+  const cW=W-p.l-p.r, cH=H-p.t-p.b;
+  const mn=Math.min(...data)*0.93, mx=Math.max(...data)*1.06, rng=mx-mn||1;
+
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<=3;i++){
+    const y=p.t+(cH/3)*i;
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(p.l,y); ctx.lineTo(p.l+cW,y); ctx.stroke();
+    ctx.fillStyle='#555'; ctx.font='9px Roboto Mono'; ctx.textAlign='right';
+    ctx.fillText((mx-(rng/3)*i).toFixed(0), p.l-5, y+3);
+  }
+
+  if(data.length===1){
+    const x=p.l+cW/2, y=p.t+cH-((data[0]-mn)/rng)*cH;
+    ctx.fillStyle=color; ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#555'; ctx.font='8px Roboto Mono'; ctx.textAlign='center';
+    ctx.fillText(labels[0], x, H-5);
+    return;
+  }
+
+  const grad=ctx.createLinearGradient(0,p.t,0,p.t+cH);
+  grad.addColorStop(0,color+'30'); grad.addColorStop(1,color+'00');
+  ctx.beginPath();
+  data.forEach((v,i)=>{const x=p.l+(i/(data.length-1))*cW,y=p.t+cH-((v-mn)/rng)*cH; i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  ctx.lineTo(p.l+cW,p.t+cH); ctx.lineTo(p.l,p.t+cH);
+  ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
+
+  ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineJoin='round';
+  data.forEach((v,i)=>{const x=p.l+(i/(data.length-1))*cW,y=p.t+cH-((v-mn)/rng)*cH; i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
   ctx.stroke();
 
-  // Dots
   data.forEach((v,i)=>{
-    const x=pad.left+(i/(data.length-1))*cW, y=pad.top+cH-((v-mn)/rng)*cH;
-    ctx.fillStyle='#080808';ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+    const x=p.l+(i/(data.length-1))*cW,y=p.t+cH-((v-mn)/rng)*cH;
+    ctx.fillStyle='#080808'; ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=color;     ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();
+    if(i===0||i===data.length-1||i%Math.max(1,Math.floor(data.length/4))===0){
+      ctx.fillStyle='#555'; ctx.font='8px Roboto Mono'; ctx.textAlign='center';
+      ctx.fillText(labels[i], x, H-5);
+    }
   });
+}
 
-  // X labels
-  const show=[0,Math.floor(data.length/2),data.length-1].filter((v,i,a)=>a.indexOf(v)===i);
-  ctx.fillStyle='#444';ctx.font='8px Roboto Mono';ctx.textAlign='center';
-  show.forEach(i=>{
-    const x=pad.left+(i/(data.length-1))*cW;
-    ctx.fillText(labels[i],x,H-5);
+function drawBarChart(cid, labels, data, color, isInt=false) {
+  const canvas = document.getElementById(cid); if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth, H = +canvas.getAttribute('height')||120;
+  canvas.width=W; canvas.height=H;
+  const p={t:14,r:14,b:26,l:44};
+  const cW=W-p.l-p.r, cH=H-p.t-p.b;
+  const mx = Math.max(...data)*1.12||1;
+
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<=3;i++){
+    const y=p.t+(cH/3)*i;
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(p.l,y); ctx.lineTo(p.l+cW,y); ctx.stroke();
+    const val=mx-(mx/3)*i;
+    ctx.fillStyle='#555'; ctx.font='9px Roboto Mono'; ctx.textAlign='right';
+    ctx.fillText(isInt?Math.round(val):val.toFixed(0), p.l-5, y+3);
+  }
+
+  const gap=cW/data.length, barW=gap*0.55;
+  data.forEach((v,i)=>{
+    const x=p.l+i*gap+gap*0.225, bH=Math.max((v/mx)*cH,2), y=p.t+cH-bH;
+    const grad=ctx.createLinearGradient(0,y,0,y+bH);
+    grad.addColorStop(0,color); grad.addColorStop(1,color+'50');
+    ctx.fillStyle=grad;
+    ctx.beginPath();
+    if(ctx.roundRect) ctx.roundRect(x,y,barW,bH,2); else ctx.rect(x,y,barW,bH);
+    ctx.fill();
+    if(i===0||i===data.length-1||i%Math.max(1,Math.floor(data.length/4))===0){
+      ctx.fillStyle='#555'; ctx.font='8px Roboto Mono'; ctx.textAlign='center';
+      ctx.fillText(labels[i], x+barW/2, H-5);
+    }
   });
+}
+
+// ── RESET EXERCISES + ROUTINES ───────────────────────────────
+window.resetExercisesAndRoutines = function() {
+  if(!confirm('Substituir tots els exercicis i rutines pel pla d'Arnau?\n\nEls entrenos registrats NO s'esborraran.')) return;
+  exercises = getDefaultExercises();
+  routines  = getDefaultRoutines(exercises);
+  save();
+  qs('reset-status').style.color = 'var(--accent)';
+  qs('reset-status').textContent = '✓ Fet!';
+  renderRoutines();
+  renderExercises();
 }
 
 // ── BACKUP ────────────────────────────────────────────────────
