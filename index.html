@@ -54,7 +54,7 @@ body::after{
 
 /* ── BOTTOM NAV ── */
 #nav{
-  display:grid;grid-template-columns:repeat(6,1fr);
+  display:grid;grid-template-columns:repeat(5,1fr);
   background:rgba(8,8,8,.97);
   border-top:1px solid var(--border);
   backdrop-filter:blur(20px);
@@ -356,8 +356,31 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 </head>
 <body>
 
+<!-- LOGIN -->
+<div id="login-screen" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px">
+  <div style="font-family:var(--font-display);font-size:48px;font-weight:900;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px">UNGA<em style="color:var(--accent);font-style:normal">BUNGA</em></div>
+  <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:40px">Qui ets?</div>
+
+  <!-- Usuaris coneguts -->
+  <div id="login-users" style="width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;margin-bottom:24px"></div>
+
+  <!-- Separador -->
+  <div style="display:flex;align-items:center;gap:10px;width:100%;max-width:320px;margin-bottom:20px">
+    <div style="flex:1;height:1px;background:var(--border)"></div>
+    <span style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px">O SÓC NOU</span>
+    <div style="flex:1;height:1px;background:var(--border)"></div>
+  </div>
+
+  <!-- Registre nou usuari -->
+  <div style="width:100%;max-width:320px;display:flex;flex-direction:column;gap:8px">
+    <input class="inp" id="login-new-name" placeholder="El teu nom..." style="text-align:center">
+    <button class="btn btn-g btn-w" onclick="loginRegister()">REGISTRAR-ME</button>
+  </div>
+  <div id="login-err" style="font-family:var(--font-mono);font-size:9px;color:var(--accent2);text-align:center;margin-top:10px;min-height:16px"></div>
+</div>
+
 <!-- LOADER -->
-<div id="loader">
+<div id="loader" style="display:none">
   <div class="loader-logo">UNGA<em>BUNGA</em></div>
   <div class="loader-bar"><div class="loader-prog"></div></div>
   <div class="loader-txt" id="loader-txt">Conectando...</div>
@@ -391,17 +414,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       </div>
     </div>
 
-    <!-- ══ EJERCICIOS ══ -->
-    <div class="page" id="page-exercises">
-      <div class="ph">
-        <div class="ph-title">EJERCI<em>CIOS</em></div>
-        <button class="btn btn-y btn-sm" onclick="openEditExercise(null)">+ NUEVO</button>
-      </div>
-      <div class="chips" id="muscle-chips"></div>
-      <div id="ex-list"></div>
-    </div>
-
-    <!-- ══ CALENDARIO ══ -->
+    <!-- ══ CALENDAR ══ -->
     <div class="page on" id="page-cal">
       <div class="ph">
         <div class="ph-title">CALEN<em>DARIO</em></div>
@@ -420,14 +433,39 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <div id="cal-day-detail" class="px16"></div>
     </div>
 
-    <!-- ══ RUTINAS ══ -->
-    <div class="page" id="page-routines">
+    <!-- ══ EXERCICIS + RUTINES ══ -->
+    <div class="page" id="page-exercises">
       <div class="ph">
-        <div class="ph-title">RUTI<em>NAS</em></div>
-        <button class="btn btn-y btn-sm" onclick="openEditRoutine(null)">+ NUEVA</button>
+        <div class="ph-title">ENTRE<em>NO</em></div>
+        <button class="btn btn-y btn-sm" id="exrt-add-btn" onclick="exrtAdd()">+ NOU</button>
       </div>
-      <div id="routines-list"></div>
+
+      <!-- Tab switcher -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;margin:0 16px 14px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden">
+        <button id="tab-btn-ex" onclick="exrtTab('ex')"
+          style="padding:10px;font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:all .15s;background:var(--accent);color:#000;font-weight:700">
+          EXERCICIS
+        </button>
+        <button id="tab-btn-rt" onclick="exrtTab('rt')"
+          style="padding:10px;font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:all .15s;background:var(--s2);color:var(--muted);font-weight:400">
+          RUTINES
+        </button>
+      </div>
+
+      <!-- Exercicis panel -->
+      <div id="exrt-panel-ex">
+        <div class="chips" id="muscle-chips"></div>
+        <div id="ex-list"></div>
+      </div>
+
+      <!-- Rutines panel -->
+      <div id="exrt-panel-rt" style="display:none">
+        <div id="routines-list"></div>
+      </div>
     </div>
+
+    <!-- page-routines kept as alias so existing JS still works -->
+    <div class="page" id="page-routines" style="display:none!important"></div>
 
     <!-- ══ STATS ══ -->
     <div class="page" id="page-stats">
@@ -518,10 +556,6 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       REGISTRO
     </button>
-    <button class="nav-btn" onclick="nav('routines')" id="nb-routines">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-      RUTINAS
-    </button>
     <button class="nav-btn" onclick="nav('hiit')" id="nb-hiit">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
       HIIT
@@ -544,7 +578,14 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 <div class="overlay" id="m-backup">
   <div class="modal">
     <div class="drag-handle"></div>
-    <div class="modal-title">Backup</div>
+    <div class="modal-title">Ajustos</div>
+    <div class="card" style="margin:0 0 10px;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:2px">Sessió activa</div>
+        <div id="backup-username" style="font-family:var(--font-display);font-size:18px;font-weight:800;letter-spacing:1px;text-transform:uppercase"></div>
+      </div>
+      <button class="btn btn-r btn-sm" onclick="logoutUser()">↩ SORTIR</button>
+    </div>
     <div class="card" style="margin:0 0 10px">
       <div class="card-title">Exportar</div>
       <div id="bk-summary" style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.9"></div>
@@ -718,7 +759,116 @@ const firebaseConfig = {
 };
 const fbApp = initializeApp(firebaseConfig);
 const db    = getFirestore(fbApp);
-const DOC   = doc(db, 'ungabunga', 'data');
+
+// ── USER MANAGEMENT ───────────────────────────────────────────
+const USERS_DOC = doc(db, 'ungabunga', 'users');
+let currentUser = null; // { id, name }
+
+function userDoc() {
+  return doc(db, 'ungabunga', 'user_' + currentUser.id);
+}
+
+// Carrega la llista d'usuaris i mostra la pantalla de login
+async function initLogin() {
+  let users = [];
+  try {
+    const snap = await Promise.race([
+      getDoc(USERS_DOC),
+      new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),6000))
+    ]);
+    if(snap.exists()) {
+      users = snap.data().list || [];
+    } else {
+      // Primera vegada: crea l'usuari Sergi per defecte
+      users = [{ id: 'sergi_roures', name: 'Sergi Roures' }];
+      await setDoc(USERS_DOC, { list: users });
+    }
+  } catch(e) {
+    users = JSON.parse(localStorage.getItem('ub_users') || '[]');
+    if(!users.length) users = [{ id: 'sergi_roures', name: 'Sergi Roures' }];
+  }
+
+  // Comprova si hi ha sessió guardada
+  const savedId = localStorage.getItem('ub_current_user');
+  if(savedId) {
+    const found = users.find(u=>u.id===savedId);
+    if(found) { currentUser=found; startApp(users); return; }
+  }
+
+  renderLoginUsers(users);
+}
+
+function renderLoginUsers(users) {
+  const wrap = qs('login-users');
+  if(!users.length) { wrap.innerHTML=''; return; }
+  wrap.innerHTML = users.map(u=>`
+    <button class="btn btn-g btn-w" style="font-size:16px;padding:14px;display:flex;align-items:center;justify-content:space-between"
+      onclick="loginAs('${u.id}')">
+      <span>👤 ${u.name}</span>
+      <span style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px">ENTRAR →</span>
+    </button>
+  `).join('');
+}
+
+window.loginAs = async function(userId) {
+  let users = [];
+  try {
+    const snap = await getDoc(USERS_DOC);
+    if(snap.exists()) users = snap.data().list || [];
+  } catch(e) { users = JSON.parse(localStorage.getItem('ub_users')||'[]'); }
+  const found = users.find(u=>u.id===userId);
+  if(!found) return;
+  currentUser = found;
+  localStorage.setItem('ub_current_user', currentUser.id);
+  startApp(users);
+}
+
+window.loginRegister = async function() {
+  const name = (qs('login-new-name').value||'').trim();
+  if(!name) { qs('login-err').textContent='Escriu el teu nom!'; return; }
+
+  let users = [];
+  try {
+    const snap = await getDoc(USERS_DOC);
+    if(snap.exists()) users = snap.data().list || [];
+  } catch(e) { users = JSON.parse(localStorage.getItem('ub_users')||'[]'); }
+
+  if(users.find(u=>u.name.toLowerCase()===name.toLowerCase())) {
+    qs('login-err').textContent='Aquest nom ja existeix!'; return;
+  }
+
+  const newUser = { id: Date.now().toString(36)+Math.random().toString(36).slice(2,5), name };
+  users.push(newUser);
+  try {
+    await setDoc(USERS_DOC, { list: users });
+  } catch(e) {}
+  localStorage.setItem('ub_users', JSON.stringify(users));
+
+  currentUser = newUser;
+  localStorage.setItem('ub_current_user', currentUser.id);
+  startApp(users);
+}
+
+function startApp(users) {
+  qs('login-screen').style.display = 'none';
+  qs('loader').style.display = 'flex';
+  // Mostra el nom a la capçalera
+  renderUserBadge();
+  loadData();
+}
+
+function renderUserBadge() {
+  // Afegeix badge de usuari al nav si no existeix
+  let badge = qs('user-badge');
+  if(!badge) {
+    badge = document.createElement('div');
+    badge.id = 'user-badge';
+    badge.style.cssText = 'position:fixed;top:10px;right:12px;z-index:200;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;display:flex;align-items:center;gap:6px;cursor:pointer';
+    badge.onclick = () => { if(confirm('Tancar sessió de '+currentUser.name+'?')) { localStorage.removeItem('ub_current_user'); location.reload(); }};
+    document.body.appendChild(badge);
+  }
+  badge.innerHTML = `<span style="color:var(--accent)">●</span> ${currentUser.name}`;
+}
 
 // ── STATE ──────────────────────────────────────────────────────
 let exercises   = [];
@@ -747,61 +897,47 @@ const today = () => new Date().toISOString().split('T')[0];
 
 // ── FIRESTORE SYNC ────────────────────────────────────────────
 async function saveRemote() {
-  setSyncStatus('load');
   try {
-    await setDoc(DOC, { exercises, workouts, routines, updated: Date.now() });
-    setSyncStatus('ok');
-  } catch(e) {
-    setSyncStatus('err');
-    console.error('saveRemote failed:', e);
-  }
+    await setDoc(userDoc(), { exercises, workouts, routines, updated: Date.now() });
+  } catch(e) { console.error('saveRemote failed:', e); }
 }
 
-function setSyncStatus(s) {
-  // No dedicated element in this layout, just log
-  console.log('sync:', s);
-}
+function setSyncStatus(s) { console.log('sync:', s); }
 
-// ── LOAD FROM FIRESTORE — con timeout para no quedarse colgado ─
 async function loadData() {
-  qs('loader-txt').textContent = 'Conectando...';
+  qs('loader-txt').textContent = 'Carregant...';
+  const lsKey = 'ub_data_' + currentUser.id;
   try {
-    // Si Firestore tarda más de 6s, tiramos de localStorage
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('timeout')), 6000)
-    );
-    const snap = await Promise.race([getDoc(DOC), timeoutPromise]);
-
-    if (snap.exists()) {
+    const snap = await Promise.race([
+      getDoc(userDoc()),
+      new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),6000))
+    ]);
+    if(snap.exists()) {
       const d = snap.data();
       exercises = d.exercises || [];
       workouts  = d.workouts  || [];
       routines  = d.routines  || [];
     } else {
-      // Primera vez — datos por defecto
       exercises = getDefaultExercises();
       workouts  = getSeedWorkouts(exercises);
       routines  = getDefaultRoutines(exercises);
       await saveRemote();
     }
-    console.log('✓ Firestore OK');
   } catch(e) {
-    console.warn('Firestore no disponible, usando localStorage:', e.message);
-    qs('loader-txt').textContent = 'Modo offline...';
-    exercises = JSON.parse(localStorage.getItem('il_ex') || 'null') || getDefaultExercises();
-    workouts  = JSON.parse(localStorage.getItem('il_wo') || 'null') || [];
-    routines  = JSON.parse(localStorage.getItem('il_rt') || 'null') || [];
+    qs('loader-txt').textContent = 'Mode offline...';
+    const cached = JSON.parse(localStorage.getItem(lsKey)||'null');
+    exercises = cached?.exercises || getDefaultExercises();
+    workouts  = cached?.workouts  || [];
+    routines  = cached?.routines  || [];
   } finally {
-    // SIEMPRE se ejecuta, pase lo que pase con Firebase
     hideLoader();
     renderCalendar();
   }
 }
 
 function save() {
-  localStorage.setItem('il_ex', JSON.stringify(exercises));
-  localStorage.setItem('il_wo', JSON.stringify(workouts));
-  localStorage.setItem('il_rt', JSON.stringify(routines));
+  const lsKey = 'ub_data_' + currentUser.id;
+  localStorage.setItem(lsKey, JSON.stringify({exercises,workouts,routines}));
   saveRemote();
 }
 
@@ -910,15 +1046,38 @@ function getDefaultRoutines(exs) {
   ];
 }
 
+// ── EXERCICIS + RUTINES TAB ───────────────────────────────────
+let exrtCurTab = 'ex';
+
+window.exrtTab = function(tab) {
+  exrtCurTab = tab;
+  const isEx = tab === 'ex';
+  qs('exrt-panel-ex').style.display = isEx ? 'block' : 'none';
+  qs('exrt-panel-rt').style.display = isEx ? 'none'  : 'block';
+  const btnEx = qs('tab-btn-ex'), btnRt = qs('tab-btn-rt');
+  btnEx.style.background  = isEx ? 'var(--accent)' : 'var(--s2)';
+  btnEx.style.color       = isEx ? '#000' : 'var(--muted)';
+  btnEx.style.fontWeight  = isEx ? '700' : '400';
+  btnRt.style.background  = isEx ? 'var(--s2)' : 'var(--accent)';
+  btnRt.style.color       = isEx ? 'var(--muted)' : '#000';
+  btnRt.style.fontWeight  = isEx ? '400' : '700';
+  if(isEx) renderExercises(); else renderRoutines();
+}
+
+window.exrtAdd = function() {
+  if(exrtCurTab === 'ex') openEditExercise(null);
+  else openEditRoutine(null);
+}
+
 // ── NAVIGATION ────────────────────────────────────────────────
 window.nav = function(page) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('on'));
   qs('page-'+page).classList.add('on');
   qs('nb-'+page).classList.add('on');
-  if(page==='exercises') renderExercises();
+  if(page==='exercises') { exrtTab(exrtCurTab); }
   if(page==='cal')       renderCalendar();
-  if(page==='routines')  renderRoutines();
+  if(page==='routines')  { nav('exercises'); exrtTab('rt'); return; }
   if(page==='stats')     renderStats();
   if(page==='hiit')      initHiitPage();
 }
@@ -1757,11 +1916,18 @@ window.importData = function(ev) {
 window.openModal = function(id) {
   if(id==='m-backup'){
     qs('bk-summary').innerHTML=`💪 ${exercises.length} ejercicios<br>📋 ${routines.length} rutinas<br>📅 ${workouts.length} entrenos`;
+    if(qs('backup-username')) qs('backup-username').textContent = currentUser?.name || '';
   }
   qs(id).classList.add('on');
 }
 window.closeModal = function(id) { qs(id).classList.remove('on'); }
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on');}));
+
+window.logoutUser = function() {
+  if(!confirm('Tancar sessió de '+currentUser.name+'?')) return;
+  localStorage.removeItem('ub_current_user');
+  location.reload();
+}
 
 // ── LOADER ────────────────────────────────────────────────────
 function hideLoader() {
@@ -1913,7 +2079,7 @@ function hiitRender() {
 }
 
 // ── BOOT ──────────────────────────────────────────────────────
-loadData();
+initLogin();
 </script>
 </body>
 </html>
