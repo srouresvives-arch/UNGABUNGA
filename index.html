@@ -54,7 +54,7 @@ body::after{
 
 /* ── BOTTOM NAV ── */
 #nav{
-  display:grid;grid-template-columns:repeat(6,1fr);
+  display:grid;grid-template-columns:repeat(4,1fr);
   background:rgba(8,8,8,.97);
   border-top:1px solid var(--border);
   backdrop-filter:blur(20px);
@@ -342,27 +342,6 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 .empty-ico{font-size:40px;margin-bottom:12px;opacity:.3}
 .empty-txt{font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--muted);line-height:2;text-transform:uppercase}
 
-/* ── MACRO BAR ── */
-.macro-bar-wrap{padding:0 16px;margin-bottom:14px}
-.macro-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.macro-bar-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--muted);width:50px;text-transform:uppercase;flex-shrink:0}
-.macro-bar-track{flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden}
-.macro-bar-fill{height:100%;border-radius:3px;transition:width .3s}
-.macro-bar-val{font-family:var(--font-mono);font-size:9px;color:var(--text);width:60px;text-align:right;flex-shrink:0}
-/* ── MEAL CARD ── */
-.meal-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin:0 16px 10px;overflow:hidden}
-.meal-head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.meal-name{font-family:var(--font-display);font-size:18px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
-.meal-kcal{font-family:var(--font-mono);font-size:11px;color:var(--accent)}
-.meal-item{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.meal-item:last-child{border-bottom:none}
-.meal-item-name{font-size:13px;font-weight:500}
-.meal-item-meta{font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-top:2px}
-/* ── KCAL BALANCE ── */
-.kcal-balance{margin:0 16px 12px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px}
-.kcal-big{font-family:var(--font-display);font-size:42px;font-weight:900;letter-spacing:1px;line-height:1}
-.kcal-sub{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
-
 /* ── CHIP FILTER ── */
 .chips{display:flex;gap:6px;overflow-x:auto;padding:0 16px 12px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
@@ -396,32 +375,8 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
   <!-- Main view -->
   <div id="view">
 
-    <!-- HOME -->
-    <div class="page on" id="page-home">
-      <div class="logobar">
-        <div>
-          <div class="logo">UNGA<em>BUNGA</em></div>
-          <div id="home-date" style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;margin-top:2px;text-transform:uppercase"></div>
-        </div>
-        <div class="row">
-          <div id="sync-status" class="sync load">●&nbsp;sync</div>
-          <button class="btn btn-g btn-sm" onclick="openModal('m-backup')">BACKUP</button>
-        </div>
-      </div>
-      <div id="home-next-widget"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px;margin-bottom:10px">
-        <div class="stat"><div class="stat-val" id="h-kghoy">0</div><div class="stat-lbl">kg HOY</div></div>
-        <div class="stat"><div class="stat-val" id="h-kgtotal">0</div><div class="stat-lbl">kg TOTAL</div></div>
-        <div class="stat"><div class="stat-val" id="h-dias">0</div><div class="stat-lbl">DIAS GYM</div></div>
-        <div class="stat"><div class="stat-val" id="h-kcal">0</div><div class="stat-lbl">kcal HOY</div></div>
-      </div>
-      <div class="px16 mt8">
-        <button class="btn btn-y btn-w" style="font-size:16px;padding:14px" onclick="startWorkout()">+ NUEVO ENTRENO</button>
-      </div>
-    </div>
-
     <!-- ══ WORKOUT (active) ══ -->
-    <div class="page" id="page-workout">
+    <div class="page" id="page-workout" class="page">
       <div class="ph">
         <div>
           <div class="ph-title">ENTRENO<br><em>ACTIVO</em></div>
@@ -447,7 +402,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     </div>
 
     <!-- ══ CALENDARIO ══ -->
-    <div class="page" id="page-cal">
+    <div class="page on" id="page-cal">
       <div class="ph">
         <div class="ph-title">CALEN<em>DARIO</em></div>
       </div>
@@ -455,6 +410,9 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <button class="btn btn-g btn-sm btn-icon" onclick="calMove(-1)">‹</button>
         <div class="cal-month" id="cal-label"></div>
         <button class="btn btn-g btn-sm btn-icon" onclick="calMove(1)">›</button>
+      </div>
+      <div class="px16" style="margin-bottom:12px">
+        <button class="btn btn-y btn-w" style="font-size:15px;padding:12px" onclick="startWorkout()">+ NUEVO ENTRENO</button>
       </div>
       <div class="cal-wrap">
         <div class="cal-grid" id="cal-grid"></div>
@@ -487,35 +445,14 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 
   </div><!-- /view -->
 
-    <!-- ══ NUTRI ══ -->
-    <div class="page" id="page-food">
-      <div class="ph">
-        <div class="ph-title">NUTRI<em>CIÓN</em></div>
-        <button class="btn btn-g btn-sm" onclick="openEditIngredient(null)">+ INGREDIENTE</button>
-      </div>
-      <!-- date nav -->
-      <div class="cal-nav" id="food-date-nav">
-        <button class="btn btn-g btn-sm btn-icon" onclick="foodMoveDay(-1)">‹</button>
-        <div class="cal-month" id="food-date-label"></div>
-        <button class="btn btn-g btn-sm btn-icon" onclick="foodMoveDay(1)">›</button>
-      </div>
-      <!-- daily summary bar -->
-      <div id="food-summary"></div>
-      <!-- meals -->
-      <div id="food-meals"></div>
-    </div>
-
-  <!-- ══ NAV ══ -->
+    <!-- ══ NAV ══ -->
   <nav id="nav">
-    <button class="nav-btn on" onclick="nav('home')" id="nb-home">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      INICIO
-    </button>
+
     <button class="nav-btn" onclick="nav('exercises')" id="nb-exercises">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6.5 6.5h11M6.5 17.5h11M3 12h18"/></svg>
       EJERC.
     </button>
-    <button class="nav-btn" onclick="nav('cal')" id="nb-cal">
+    <button class="nav-btn on" onclick="nav('cal')" id="nb-cal">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       REGISTRO
     </button>
@@ -527,70 +464,12 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       STATS
     </button>
-    <button class="nav-btn" onclick="nav('food')" id="nb-food">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-      NUTRI
-    </button>
+
   </nav>
 
 </div><!-- /app -->
 
 <!-- ══════════════════════════════════════════ MODALS ══════════════════════════════════════════ -->
-
-<!-- INGREDIENT LIBRARY -->
-<div class="overlay" id="m-ingredient">
-  <div class="modal">
-    <div class="drag-handle"></div>
-    <div class="modal-title" id="m-ing-title">Nuevo ingrediente</div>
-    <div class="ig"><label class="lbl">Nombre</label><input class="inp" id="ing-name" placeholder="Pechuga de pollo..."></div>
-    <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin:12px 0 8px">POR 100g</div>
-    <div class="g2">
-      <div class="ig"><label class="lbl">Kcal</label><input type="number" inputmode="decimal" class="inp" id="ing-kcal" placeholder="165"></div>
-      <div class="ig"><label class="lbl">Proteína (g)</label><input type="number" inputmode="decimal" class="inp" id="ing-prot" placeholder="31"></div>
-      <div class="ig"><label class="lbl">Carbohidratos (g)</label><input type="number" inputmode="decimal" class="inp" id="ing-carbs" placeholder="0"></div>
-      <div class="ig"><label class="lbl">Grasas (g)</label><input type="number" inputmode="decimal" class="inp" id="ing-fat" placeholder="3.6"></div>
-    </div>
-    <div class="g2 mt8">
-      <button class="btn btn-r" id="ing-del-btn" onclick="deleteIngredient()" style="display:none">ELIMINAR</button>
-      <button class="btn btn-g" onclick="closeModal('m-ingredient')">CANCELAR</button>
-      <button class="btn btn-y" onclick="saveIngredient()">GUARDAR</button>
-    </div>
-  </div>
-</div>
-
-<!-- ADD FOOD TO MEAL -->
-<div class="overlay" id="m-food-entry">
-  <div class="modal">
-    <div class="drag-handle"></div>
-    <!-- Panel A: pick ingredient -->
-    <div id="fe-panel-pick">
-      <div class="row-between mb12">
-        <div class="modal-title" style="margin:0" id="fe-meal-title">Añadir a Desayuno</div>
-        <button class="btn btn-g btn-sm" onclick="openModal('m-ingredient')">+ NUEVO</button>
-      </div>
-      <input class="inp mb8" id="fe-search" placeholder="Buscar ingrediente..." oninput="renderFePicker()">
-      <div id="fe-picker-list"></div>
-      <button class="btn btn-g btn-w mt8" onclick="closeModal('m-food-entry')">CANCELAR</button>
-    </div>
-    <!-- Panel B: set grams -->
-    <div id="fe-panel-grams" style="display:none">
-      <div class="row-between mb4">
-        <div class="modal-title" style="margin:0" id="fe-ing-name-title"></div>
-        <button class="btn btn-g btn-sm" onclick="feBackToPick()">← VOLVER</button>
-      </div>
-      <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:14px" id="fe-ing-macros-hint"></div>
-      <div class="ig">
-        <label class="lbl">Cantidad (gramos)</label>
-        <input type="number" inputmode="decimal" class="inp" id="fe-grams" placeholder="150" oninput="feUpdatePreview()">
-      </div>
-      <div id="fe-preview" style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-top:8px;font-family:var(--font-mono);font-size:11px;color:var(--muted);line-height:2"></div>
-      <div class="g2 mt12">
-        <button class="btn btn-g" onclick="feBackToPick()">CANCELAR</button>
-        <button class="btn btn-y" onclick="feConfirmAdd()">AÑADIR</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- BACKUP -->
 <div class="overlay" id="m-backup">
@@ -772,8 +651,7 @@ const DOC   = doc(db, 'ungabunga', 'data');
 let exercises   = [];
 let workouts    = [];
 let routines    = [];
-let ingredients = [];   // food library: {id, name, kcal, prot, carbs, fat} per 100g
-let foodLog     = [];   // daily log: {id, date, meal, items:[{ingredientId,name,grams,kcal,prot,carbs,fat}]}
+
 let activeWo  = null;
 let timerIv   = null;
 let editExId  = null;
@@ -800,7 +678,7 @@ let saving = false;
 async function saveRemote() {
   setSyncStatus('load');
   try {
-    await setDoc(DOC, { exercises, workouts, routines, ingredients, foodLog, updated: Date.now() });
+    await setDoc(DOC, { exercises, workouts, routines, updated: Date.now() });
     setSyncStatus('ok');
   } catch(e) {
     setSyncStatus('err');
@@ -820,11 +698,9 @@ async function loadData() {
     const snap = await getDoc(DOC);
     if (snap.exists()) {
       const d = snap.data();
-      exercises   = d.exercises   || [];
-      workouts    = d.workouts    || [];
-      routines    = d.routines    || [];
-      ingredients = d.ingredients || [];
-      foodLog     = d.foodLog     || [];
+      exercises = d.exercises || [];
+      workouts  = d.workouts  || [];
+      routines  = d.routines  || [];
     } else {
       // First time — seed default exercises + sample workouts
       exercises = getDefaultExercises();
@@ -836,14 +712,12 @@ async function loadData() {
   } catch(e) {
     setSyncStatus('err');
     // Fallback to localStorage
-    exercises   = JSON.parse(localStorage.getItem('il_ex')||'null') || getDefaultExercises();
-    workouts    = JSON.parse(localStorage.getItem('il_wo')||'null') || [];
-    routines    = JSON.parse(localStorage.getItem('il_rt')||'null') || [];
-    ingredients = JSON.parse(localStorage.getItem('il_ing')||'null') || [];
-    foodLog     = JSON.parse(localStorage.getItem('il_fl')||'null') || [];
+    exercises = JSON.parse(localStorage.getItem('il_ex')||'null') || getDefaultExercises();
+    workouts  = JSON.parse(localStorage.getItem('il_wo')||'null') || [];
+    routines  = JSON.parse(localStorage.getItem('il_rt')||'null') || [];
   }
   hideLoader();
-  renderHome();
+  renderCalendar();
 }
 
 function save() {
@@ -966,9 +840,7 @@ window.nav = function(page) {
   if(page==='exercises') renderExercises();
   if(page==='cal')       renderCalendar();
   if(page==='routines')  renderRoutines();
-  if(page==='stats')     renderStatsSelect();
-  if(page==='home')      renderHome();
-  if(page==='food')      renderFood();
+  if(page==='stats')     renderStats();
 }
 
 window.showPage = function(page) { nav(page); }
@@ -1004,71 +876,6 @@ function getPRRepsOnly(exId) {
   }));
   return m;
 }
-function calcTotalKg() {
-  let v=0; workouts.forEach(w=>v+=calcVol(w)); return Math.round(v);
-}
-function calcKgToday() {
-  const t=today();
-  let v=0; workouts.filter(w=>w.date.startsWith(t)).forEach(w=>v+=calcVol(w)); return Math.round(v);
-}
-function calcKcalToday() {
-  // rough estimate: 1 kg moved 1 rep ≈ 0.05 kcal (simplified MET approach)
-  const t=today(); let kcal=0;
-  workouts.filter(w=>w.date.startsWith(t)).forEach(w=>{
-    w.exercises.forEach(ae=>ae.sets.forEach(s=>{
-      if(s.weight&&s.reps) kcal+=parseFloat(s.weight||0)*parseFloat(s.reps||0)*0.05;
-    }));
-    // add ~5 kcal/min for duration
-    if(w.duration) kcal+=Math.floor(w.duration/60000)*5;
-  });
-  return Math.round(kcal);
-}
-
-// Next workout widget — cycles routines 1→2→3→4→1...
-function calcNextRoutine() {
-  if(!routines.length) return null;
-  if(!workouts.length) return { routine: routines[0], label:'PRIMER ENTRENO' };
-  // find last workout that was from a routine
-  const sorted=[...workouts].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const lastWithRoutine=sorted.find(w=>w.routineId);
-  if(!lastWithRoutine) return { routine: routines[0], label:'PRÓXIMO' };
-  const idx=routines.findIndex(r=>r.id===lastWithRoutine.routineId);
-  const nextIdx=(idx+1)%routines.length;
-  return { routine: routines[nextIdx], label:'PRÓXIMO' };
-}
-
-function renderHome() {
-  qs('home-date').textContent = new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
-
-  // gorilla stats
-  qs('h-kghoy').textContent  = (calcKgToday()/1000>1 ? (calcKgToday()/1000).toFixed(1)+'t' : calcKgToday()+'kg').replace('kg','');
-  qs('h-kghoy').title = calcKgToday()+'kg';
-  qs('h-kgtotal').textContent = calcTotalKg()>9999 ? (calcTotalKg()/1000).toFixed(0)+'t' : calcTotalKg();
-  qs('h-dias').textContent    = new Set(workouts.map(w=>w.date.split('T')[0])).size;
-  qs('h-kcal').textContent    = calcKcalToday();
-  // fix labels
-  qs('h-kghoy').parentElement.querySelector('.stat-lbl').textContent='kg HOY';
-  qs('h-kgtotal').parentElement.querySelector('.stat-lbl').textContent='kg TOTAL';
-
-  // Next workout widget
-  const nxt=calcNextRoutine();
-  const w=qs('home-next-widget');
-  if(!nxt){
-    w.innerHTML='';return;
-  }
-  const exNames=nxt.routine.exerciseIds.map(id=>exercises.find(e=>e.id===id)?.name).filter(Boolean);
-  w.innerHTML=`
-    <div style="margin:0 16px 12px;background:linear-gradient(135deg,rgba(212,255,0,.08),rgba(212,255,0,.03));border:1px solid rgba(212,255,0,.2);border-radius:var(--r);padding:14px;position:relative;overflow:hidden">
-      <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:6px">${nxt.label}</div>
-      <div style="font-family:var(--font-display);font-size:24px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">${nxt.routine.name}</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">${exNames.slice(0,4).join(' · ')}${exNames.length>4?' +'+( exNames.length-4)+' más':''}</div>
-      <button class="btn btn-y" style="font-size:13px;padding:9px 18px" onclick="startWorkout('${nxt.routine.id}')">▶ EMPEZAR</button>
-      <div style="position:absolute;right:-10px;bottom:-10px;font-size:64px;opacity:.04;line-height:1">🦍</div>
-    </div>`;
-}
-
-// ── WORKOUT ───────────────────────────────────────────────────
-// Get last sets used for an exercise (for pre-fill)
 function getBestSets(exId) {
   // Find the session where the max weight on any single set was highest
   // Returns all sets from that session (preserves full set structure of best day)
@@ -1588,7 +1395,7 @@ window.removeExFromWo = function(wId,aeId) {
 window.deleteWorkout = function(wId) {
   if(!confirm('¿Eliminar este entreno?')) return;
   workouts=workouts.filter(w=>w.id!==wId); save();
-  closeModal('m-wo-detail'); renderCalendar(); renderHome();
+  closeModal('m-wo-detail'); renderCalendar();
 }
 
 // ── WORKOUT DETAIL (read-only, still used from home) ──────────
@@ -1831,245 +1638,9 @@ function drawChart(cid, labels, data, color) {
   });
 }
 
-// ── NUTRITION ─────────────────────────────────────────────────
-let foodDate = new Date().toISOString().split('T')[0];
-let feIngId = null, feMeal = null, editIngId = null;
-const MEALS = ['Desayuno','Comida','Cena','Snack'];
-const MEAL_ICONS = {Desayuno:'☀️', Comida:'🍽️', Cena:'🌙', Snack:'🍎'};
-
-function foodDateLabel(ds) {
-  const t = today();
-  if(ds===t) return 'HOY';
-  const y = new Date(); y.setDate(y.getDate()-1);
-  if(ds===y.toISOString().split('T')[0]) return 'AYER';
-  return new Date(ds+'T12:00:00').toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'}).toUpperCase();
-}
-
-window.foodMoveDay = (d) => {
-  const dt = new Date(foodDate+'T12:00:00');
-  dt.setDate(dt.getDate()+d);
-  foodDate = dt.toISOString().split('T')[0];
-  renderFood();
-}
-
-function getDayLog() {
-  return foodLog.filter(e=>e.date===foodDate);
-}
-
-function getDayTotals(log) {
-  let kcal=0,prot=0,carbs=0,fat=0;
-  log.forEach(e=>e.items.forEach(it=>{kcal+=it.kcal||0;prot+=it.prot||0;carbs+=it.carbs||0;fat+=it.fat||0;}));
-  return {kcal:Math.round(kcal),prot:Math.round(prot),carbs:Math.round(carbs),fat:Math.round(fat)};
-}
-
-function getGymKcalDay(ds) {
-  return Math.round(workouts
-    .filter(w=>w.date.startsWith(ds))
-    .reduce((a,w)=>{
-      let k=0;
-      w.exercises.forEach(ae=>ae.sets.forEach(s=>{if(s.weight&&s.reps)k+=(parseFloat(s.weight)||0)*(parseFloat(s.reps)||0)*0.05;}));
-      if(w.duration) k+=Math.floor(w.duration/60000)*5;
-      return a+k;
-    },0));
-}
-
-function renderFood() {
-  qs('food-date-label').textContent = foodDateLabel(foodDate);
-  const log = getDayLog();
-  const tot = getDayTotals(log);
-  const gymKcal = getGymKcalDay(foodDate);
-  const net = tot.kcal - gymKcal;
-
-  // ── SUMMARY ──
-  const macroMax = {prot:200, carbs:300, fat:100};
-  qs('food-summary').innerHTML=`
-    <div class="kcal-balance">
-      <div class="row-between mb8">
-        <div>
-          <div class="kcal-big" style="color:var(--accent)">${tot.kcal}</div>
-          <div class="kcal-sub">kcal ingeridas</div>
-        </div>
-        ${gymKcal?`<div style="text-align:right">
-          <div class="kcal-big" style="font-size:28px;color:var(--accent2)">−${gymKcal}</div>
-          <div class="kcal-sub">quemadas gym</div>
-        </div>
-        <div style="text-align:right">
-          <div class="kcal-big" style="font-size:28px;color:${net<0?'#00cfff':'var(--text)'}">${net}</div>
-          <div class="kcal-sub">balance neto</div>
-        </div>`:''}
-      </div>
-      <div class="macro-bar-wrap" style="padding:0;margin:0">
-        ${['prot','carbs','fat'].map(m=>{
-          const colors={prot:'#00cfff',carbs:'#d4ff00',fat:'#ff4520'};
-          const labels={prot:'PROT',carbs:'CARBS',fat:'GRASAS'};
-          const val = tot[m];
-          const pct = Math.min(100,(val/(macroMax[m]))*100);
-          return `<div class="macro-bar-row">
-            <div class="macro-bar-lbl">${labels[m]}</div>
-            <div class="macro-bar-track"><div class="macro-bar-fill" style="width:${pct}%;background:${colors[m]}"></div></div>
-            <div class="macro-bar-val">${val}g</div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
-
-  // ── MEALS ──
-  qs('food-meals').innerHTML = MEALS.map(meal=>{
-    const entries = log.filter(e=>e.meal===meal);
-    const mTotal = {kcal:0,prot:0,carbs:0,fat:0};
-    entries.forEach(e=>e.items.forEach(it=>{mTotal.kcal+=it.kcal||0;mTotal.prot+=it.prot||0;mTotal.carbs+=it.carbs||0;mTotal.fat+=it.fat||0;}));
-    const allItems = entries.flatMap(e=>e.items.map(it=>({...it, entryId:e.id})));
-
-    return `<div class="meal-card">
-      <div class="meal-head">
-        <div>
-          <div class="meal-name">${MEAL_ICONS[meal]} ${meal}</div>
-          ${mTotal.kcal?`<div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-top:2px">${Math.round(mTotal.kcal)} kcal · ${Math.round(mTotal.prot)}g P · ${Math.round(mTotal.carbs)}g C · ${Math.round(mTotal.fat)}g G</div>`:''}
-        </div>
-        <button class="btn btn-y btn-sm" onclick="openFoodEntry('${meal}')">+</button>
-      </div>
-      <div>
-        ${allItems.length===0
-          ? '<div class="meal-item"><span style="font-family:var(--font-mono);font-size:9px;color:var(--muted)">Sin alimentos</span></div>'
-          : allItems.map((it,idx)=>`<div class="meal-item">
-              <div style="flex:1;min-width:0">
-                <div class="meal-item-name">${it.name}</div>
-                <div class="meal-item-meta">${it.grams}g · ${Math.round(it.kcal)} kcal · P${Math.round(it.prot)} C${Math.round(it.carbs)} G${Math.round(it.fat)}</div>
-              </div>
-              <button onclick="removeFoodItem('${it.entryId}','${it.name}',${idx})" style="background:none;border:none;color:var(--accent2);font-size:14px;cursor:pointer;padding:4px 6px;flex-shrink:0">✕</button>
-            </div>`).join('')
-        }
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ── OPEN FOOD ENTRY MODAL ──
-window.openFoodEntry = function(meal) {
-  feMeal = meal;
-  qs('fe-meal-title').textContent = `Añadir a ${meal}`;
-  qs('fe-panel-pick').style.display = 'block';
-  qs('fe-panel-grams').style.display = 'none';
-  qs('fe-search').value = '';
-  renderFePicker();
-  openModal('m-food-entry');
-}
-
-function renderFePicker() {
-  const q = qs('fe-search').value.toLowerCase();
-  const filtered = ingredients.filter(i=>!q||i.name.toLowerCase().includes(q));
-  qs('fe-picker-list').innerHTML = filtered.length===0
-    ? `<div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);text-align:center;padding:24px">${ingredients.length===0?'Sin ingredientes — crea uno primero':'Sin resultados'}</div>`
-    : filtered.map(ing=>`<div class="ex-item" onclick="fePickIngredient('${ing.id}')">
-        <div>
-          <div class="ex-name">${ing.name}</div>
-          <div class="ex-meta" style="font-family:var(--font-mono);font-size:9px">${ing.kcal} kcal · P${ing.prot} C${ing.carbs} G${ing.fat} <span style="color:var(--muted)">(por 100g)</span></div>
-        </div>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </div>`).join('');
-}
-
-window.fePickIngredient = function(ingId) {
-  feIngId = ingId;
-  const ing = ingredients.find(i=>i.id===ingId);
-  qs('fe-ing-name-title').textContent = ing.name;
-  qs('fe-ing-macros-hint').textContent = `Por 100g: ${ing.kcal} kcal · P${ing.prot}g · C${ing.carbs}g · G${ing.fat}g`;
-  qs('fe-grams').value = '';
-  qs('fe-preview').innerHTML = '—';
-  qs('fe-panel-pick').style.display = 'none';
-  qs('fe-panel-grams').style.display = 'block';
-  setTimeout(()=>qs('fe-grams').focus(), 100);
-}
-
-window.feBackToPick = function() {
-  qs('fe-panel-grams').style.display = 'none';
-  qs('fe-panel-pick').style.display = 'block';
-}
-
-window.feUpdatePreview = function() {
-  const ing = ingredients.find(i=>i.id===feIngId); if(!ing) return;
-  const g = parseFloat(qs('fe-grams').value)||0;
-  if(!g){qs('fe-preview').innerHTML='—';return;}
-  const f = g/100;
-  qs('fe-preview').innerHTML=`
-    <span style="color:var(--accent);font-size:14px;font-weight:600">${Math.round(ing.kcal*f)} kcal</span><br>
-    Proteína: ${(ing.prot*f).toFixed(1)}g &nbsp;·&nbsp; Carbs: ${(ing.carbs*f).toFixed(1)}g &nbsp;·&nbsp; Grasas: ${(ing.fat*f).toFixed(1)}g`;
-}
-
-window.feConfirmAdd = function() {
-  const ing = ingredients.find(i=>i.id===feIngId); if(!ing) return;
-  const g = parseFloat(qs('fe-grams').value)||0;
-  if(!g){alert('Pon los gramos');return;}
-  const f = g/100;
-  const item = {
-    ingredientId: ing.id,
-    name: ing.name,
-    grams: g,
-    kcal:  Math.round(ing.kcal*f*10)/10,
-    prot:  Math.round(ing.prot*f*10)/10,
-    carbs: Math.round(ing.carbs*f*10)/10,
-    fat:   Math.round(ing.fat*f*10)/10,
-  };
-  // find or create entry for this meal+date
-  let entry = foodLog.find(e=>e.date===foodDate&&e.meal===feMeal);
-  if(!entry){
-    entry = {id:uid(), date:foodDate, meal:feMeal, items:[]};
-    foodLog.push(entry);
-  }
-  entry.items.push(item);
-  save();
-  closeModal('m-food-entry');
-  renderFood();
-}
-
-window.removeFoodItem = function(entryId, itemName, idx) {
-  const entry = foodLog.find(e=>e.id===entryId); if(!entry) return;
-  entry.items.splice(idx,1);
-  if(entry.items.length===0) foodLog = foodLog.filter(e=>e.id!==entryId);
-  save(); renderFood();
-}
-
-// ── INGREDIENT CRUD ──
-window.openEditIngredient = function(id) {
-  editIngId = id;
-  const ing = id ? ingredients.find(i=>i.id===id) : null;
-  qs('m-ing-title').textContent = id ? 'Editar ingrediente' : 'Nuevo ingrediente';
-  qs('ing-name').value  = ing?.name  || '';
-  qs('ing-kcal').value  = ing?.kcal  || '';
-  qs('ing-prot').value  = ing?.prot  || '';
-  qs('ing-carbs').value = ing?.carbs || '';
-  qs('ing-fat').value   = ing?.fat   || '';
-  qs('ing-del-btn').style.display = id ? 'inline-flex' : 'none';
-  openModal('m-ingredient');
-}
-
-window.saveIngredient = function() {
-  const name = qs('ing-name').value.trim();
-  if(!name){alert('Pon un nombre');return;}
-  const kcal=parseFloat(qs('ing-kcal').value)||0;
-  const prot=parseFloat(qs('ing-prot').value)||0;
-  const carbs=parseFloat(qs('ing-carbs').value)||0;
-  const fat=parseFloat(qs('ing-fat').value)||0;
-  if(editIngId){
-    const ing=ingredients.find(i=>i.id===editIngId);
-    if(ing){Object.assign(ing,{name,kcal,prot,carbs,fat});}
-  } else {
-    ingredients.push({id:uid(),name,kcal,prot,carbs,fat});
-  }
-  save(); closeModal('m-ingredient');
-  // if food entry modal is open, refresh picker
-  if(document.getElementById('m-food-entry').classList.contains('on')) renderFePicker();
-}
-
-window.deleteIngredient = function() {
-  if(!confirm('¿Eliminar ingrediente?')) return;
-  ingredients = ingredients.filter(i=>i.id!==editIngId);
-  save(); closeModal('m-ingredient');
-}
-
 // ── BACKUP ────────────────────────────────────────────────────
 window.exportData = function() {
-  const blob=new Blob([JSON.stringify({version:2,date:new Date().toISOString(),exercises,workouts,routines,ingredients,foodLog},null,2)],{type:'application/json'});
+  const blob=new Blob([JSON.stringify({version:2,date:new Date().toISOString(),exercises,workouts,routines},null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
   a.download=`ungabunga-${today()}.json`;
@@ -2087,10 +1658,10 @@ window.importData = function(ev) {
       exercises=d.exercises; workouts=d.workouts; routines=d.routines||[];
       save();
       st.innerHTML='<span style="color:var(--accent)">✓ Restaurado</span>';
-      renderHome();
+      renderCalendar();
     }catch{st.innerHTML='<span style="color:var(--accent2)">✕ Fichero inválido</span>';}
   };
-  const fr=new FileReader();fr.onload=e=>{try{const d=JSON.parse(e.target.result);if(!d.exercises||!d.workouts)throw new Error();if(!confirm(`¿Restaurar backup?\n${d.exercises.length} ejercicios · ${d.routines?.length||0} rutinas · ${d.workouts.length} entrenos\n\n⚠ Se reemplazarán los datos actuales.`))return;exercises=d.exercises;workouts=d.workouts;routines=d.routines||[];ingredients=d.ingredients||[];foodLog=d.foodLog||[];save();st.innerHTML='<span style="color:var(--accent)">✓ Restaurado</span>';renderHome();}catch{st.innerHTML='<span style="color:var(--accent2)">✕ Fichero inválido</span>';}};
+  const fr=new FileReader();fr.onload=e=>{try{const d=JSON.parse(e.target.result);if(!d.exercises||!d.workouts)throw new Error();if(!confirm(`¿Restaurar backup?\n${d.exercises.length} ejercicios · ${d.routines?.length||0} rutinas · ${d.workouts.length} entrenos\n\n⚠ Se reemplazarán los datos actuales.`))return;exercises=d.exercises;workouts=d.workouts;routines=d.routines||[];save();st.innerHTML='<span style="color:var(--accent)">✓ Restaurado</span>';renderCalendar();}catch{st.innerHTML='<span style="color:var(--accent2)">✕ Fichero inválido</span>';}};
   fr.readAsText(f);ev.target.value='';
 }
 
