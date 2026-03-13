@@ -54,7 +54,7 @@ body::after{
 
 /* ── BOTTOM NAV ── */
 #nav{
-  display:grid;grid-template-columns:repeat(4,1fr);
+  display:grid;grid-template-columns:repeat(6,1fr);
   background:rgba(8,8,8,.97);
   border-top:1px solid var(--border);
   backdrop-filter:blur(20px);
@@ -446,6 +446,66 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <div id="stats-detail"></div>
     </div>
 
+    <!-- ══ HIIT TIMER ══ -->
+    <div class="page" id="page-hiit">
+      <div class="ph">
+        <div class="ph-title">HIIT<em>TIMER</em></div>
+      </div>
+
+      <!-- Config -->
+      <div id="hiit-config" style="padding:0 16px 16px">
+        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-align:center;margin-bottom:20px;line-height:2;text-transform:uppercase">
+          4 exercicis · 30s treball / 15s descans<br>90s descans de ronda · 4 rondes
+        </div>
+        <button class="btn btn-y btn-w" style="font-size:18px;padding:16px" onclick="hiitStart()">▶ INICIAR</button>
+      </div>
+
+      <!-- Timer running -->
+      <div id="hiit-running" style="display:none;padding:0 16px">
+
+        <!-- Phase label -->
+        <div id="hiit-phase" style="font-family:var(--font-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:6px">–</div>
+
+        <!-- Exercise name -->
+        <div id="hiit-exname" style="font-family:var(--font-display);font-size:26px;font-weight:800;letter-spacing:1px;text-transform:uppercase;text-align:center;min-height:36px;margin-bottom:14px">–</div>
+
+        <!-- Big timer -->
+        <div id="hiit-big" style="font-family:var(--font-display);font-size:100px;font-weight:900;text-align:center;line-height:1;margin-bottom:10px;transition:color .2s">–</div>
+
+        <!-- Progress bar -->
+        <div style="height:6px;background:var(--s3);border-radius:3px;margin:0 0 16px;overflow:hidden">
+          <div id="hiit-bar" style="height:100%;border-radius:3px;width:0%;transition:width .25s linear,background .2s"></div>
+        </div>
+
+        <!-- Round label -->
+        <div id="hiit-round-lbl" style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--muted);text-align:center;margin-bottom:14px">Ronda – / –</div>
+
+        <!-- Round dots -->
+        <div id="hiit-rdots" style="display:flex;justify-content:center;gap:10px;margin-bottom:10px"></div>
+
+        <!-- Exercise dots -->
+        <div id="hiit-edots" style="display:flex;justify-content:center;gap:8px;margin-bottom:24px"></div>
+
+        <!-- Next up -->
+        <div id="hiit-next" style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--muted);text-align:center;min-height:16px;margin-bottom:20px"></div>
+
+        <!-- Controls -->
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-g" style="flex:1" id="hiit-btn-pause" onclick="hiitPause()">⏸ PAUSA</button>
+          <button class="btn btn-r" style="flex:1" onclick="hiitReset()">↺ RESET</button>
+        </div>
+      </div>
+
+      <!-- Finished -->
+      <div id="hiit-done" style="display:none;padding:40px 16px;text-align:center">
+        <div style="font-size:48px;margin-bottom:12px">🏆</div>
+        <div style="font-family:var(--font-display);font-size:40px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--accent)">COMPLETAT!</div>
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;color:var(--muted);margin-top:8px;margin-bottom:28px" id="hiit-done-sub"></div>
+        <button class="btn btn-y btn-w" onclick="hiitReset()">↺ TORNAR A FER</button>
+      </div>
+
+    </div>
+
   </div><!-- /view -->
 
   <!-- ══ NAV ══ -->
@@ -462,9 +522,17 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
       RUTINAS
     </button>
+    <button class="nav-btn" onclick="nav('hiit')" id="nb-hiit">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+      HIIT
+    </button>
     <button class="nav-btn" onclick="nav('stats')" id="nb-stats">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       STATS
+    </button>
+    <button class="nav-btn" onclick="openModal('m-backup')" id="nb-backup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      ⚙
     </button>
   </nav>
 
@@ -852,6 +920,7 @@ window.nav = function(page) {
   if(page==='cal')       renderCalendar();
   if(page==='routines')  renderRoutines();
   if(page==='stats')     renderStats();
+  if(page==='hiit')      initHiitPage();
 }
 window.showPage = function(page) { nav(page); }
 
@@ -1440,9 +1509,13 @@ function renderStats() {
   const sel=qs('stats-sel');
   const prev=sel.value;
   sel.innerHTML='<option value="">— Selecciona ejercicio —</option>'+
-    exercises.filter(e=>workouts.some(w=>w.exercises.some(ae=>ae.exerciseId===e.id)))
+    exercises
+      .slice()
       .sort((a,b)=>a.name.localeCompare(b.name))
-      .map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+      .map(e=>{
+        const hasData = workouts.some(w=>w.exercises.some(ae=>ae.exerciseId===e.id));
+        return `<option value="${e.id}">${e.name}${hasData?'':' —'}</option>`;
+      }).join('');
   if(prev) sel.value=prev;
   if(sel.value) renderStatsDetail(); else qs('stats-detail').innerHTML='';
 }
@@ -1697,6 +1770,146 @@ function hideLoader() {
     qs('loader').style.transition='opacity .4s';
     setTimeout(()=>{qs('loader').style.display='none'; qs('app').style.display='flex';},400);
   },400);
+}
+
+// ── HIIT TIMER ────────────────────────────────────────────────
+let hiitState = null;
+let hiitIv    = null;
+
+function initHiitPage() {} // res a inicialitzar
+
+function hiitBeep(type) {
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    if(type==='work')  { o.frequency.value=880; g.gain.setValueAtTime(.3,ctx.currentTime); g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.15); }
+    if(type==='rest')  { o.frequency.value=440; g.gain.setValueAtTime(.2,ctx.currentTime); g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.25); }
+    if(type==='done')  { o.frequency.value=660; g.gain.setValueAtTime(.35,ctx.currentTime); g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.6); }
+    o.start(); o.stop(ctx.currentTime+.7);
+  } catch(e){}
+}
+
+window.hiitStart = function() {
+  const work=30, rest=15, rround=90, rounds=4;
+  const exs = ['Exercici 1','Exercici 2','Exercici 3','Exercici 4'];
+
+  hiitState = { round:0, ex:0, phase:'work', remaining:work, total:work,
+                work, rest, rround, rounds, exs, paused:false };
+
+  qs('hiit-config').style.display  = 'none';
+  qs('hiit-running').style.display = 'block';
+  qs('hiit-done').style.display    = 'none';
+
+  // Construir dots
+  let rdots='', edots='';
+  for(let i=0;i<rounds;i++) rdots+=`<div class="hiit-rd" id="hiit-rd${i}" style="width:10px;height:10px;border-radius:50%;background:var(--s3);border:1.5px solid var(--border2);transition:background .2s"></div>`;
+  for(let i=0;i<exs.length;i++) edots+=`<div class="hiit-ed" id="hiit-ed${i}" style="width:8px;height:8px;border-radius:50%;background:var(--s3);border:1.5px solid var(--border2);transition:background .2s"></div>`;
+  qs('hiit-rdots').innerHTML = rdots;
+  qs('hiit-edots').innerHTML = edots;
+
+  hiitBeep('work');
+  hiitRender();
+  hiitIv = setInterval(hiitTick, 1000);
+}
+
+window.hiitPause = function() {
+  if(!hiitState) return;
+  hiitState.paused = !hiitState.paused;
+  qs('hiit-btn-pause').textContent = hiitState.paused ? '▶ REPRENDRE' : '⏸ PAUSA';
+}
+
+window.hiitReset = function() {
+  clearInterval(hiitIv); hiitIv = null; hiitState = null;
+  qs('hiit-config').style.display  = 'block';
+  qs('hiit-running').style.display = 'none';
+  qs('hiit-done').style.display    = 'none';
+  qs('hiit-btn-pause').textContent = '⏸ PAUSA';
+}
+
+function hiitTick() {
+  if(!hiitState||hiitState.paused) return;
+  hiitState.remaining--;
+  if(hiitState.remaining<=0) hiitAdvance();
+  else hiitRender();
+}
+
+function hiitAdvance() {
+  const s = hiitState;
+  const nexPhase = () => {
+    if(s.phase==='work') {
+      if(s.ex < s.exs.length-1) { s.phase='rest'; s.remaining=s.rest; s.total=s.rest; hiitBeep('rest'); }
+      else if(s.round < s.rounds-1) { s.phase='round_rest'; s.remaining=s.rround; s.total=s.rround; hiitBeep('rest'); }
+      else { hiitFinish(); return; }
+    } else if(s.phase==='rest') {
+      s.ex++; s.phase='work'; s.remaining=s.work; s.total=s.work; hiitBeep('work');
+    } else if(s.phase==='round_rest') {
+      s.round++; s.ex=0; s.phase='work'; s.remaining=s.work; s.total=s.work; hiitBeep('work');
+    }
+    hiitRender();
+  };
+  nexPhase();
+}
+
+function hiitFinish() {
+  clearInterval(hiitIv); hiitIv=null;
+  hiitBeep('done');
+  qs('hiit-running').style.display='none';
+  qs('hiit-done').style.display='block';
+  qs('hiit-done-sub').textContent = hiitState.rounds+' rondes · '+hiitState.exs.length+' exercicis · '+Math.round((hiitState.rounds*(hiitState.exs.length*hiitState.work+(hiitState.exs.length-1)*hiitState.rest)+( hiitState.rounds-1)*hiitState.rround)/60)+' min aprox.';
+}
+
+function hiitRender() {
+  const s = hiitState; if(!s) return;
+  const t   = s.remaining;
+  const pct = Math.round(((s.total-t)/s.total)*100);
+
+  qs('hiit-big').textContent = t;
+  qs('hiit-bar').style.width = pct+'%';
+
+  const ACCENT  = '#d4ff00';
+  const GREEN   = '#1D9E75';
+  const BLUE    = '#00cfff';
+
+  if(s.phase==='work') {
+    qs('hiit-phase').textContent   = 'TREBALL';
+    qs('hiit-exname').textContent  = s.exs[s.ex];
+    qs('hiit-big').style.color     = ACCENT;
+    qs('hiit-bar').style.background= ACCENT;
+    qs('hiit-round-lbl').textContent = 'Ronda '+(s.round+1)+' / '+s.rounds;
+    const nx = s.ex<s.exs.length-1 ? s.exs[s.ex+1] : (s.round<s.rounds-1?'Descans de ronda':'Última sèrie!');
+    qs('hiit-next').textContent = t<=5 ? '→ '+nx : '';
+  } else if(s.phase==='rest') {
+    qs('hiit-phase').textContent   = 'DESCANS';
+    qs('hiit-exname').textContent  = s.exs[s.ex+1]||'';
+    qs('hiit-big').style.color     = GREEN;
+    qs('hiit-bar').style.background= GREEN;
+    qs('hiit-round-lbl').textContent = 'Ronda '+(s.round+1)+' / '+s.rounds;
+    qs('hiit-next').textContent    = '';
+  } else if(s.phase==='round_rest') {
+    qs('hiit-phase').textContent   = 'DESCANS DE RONDA';
+    qs('hiit-exname').textContent  = 'Ronda '+(s.round+2)+' comença aviat';
+    qs('hiit-big').style.color     = BLUE;
+    qs('hiit-bar').style.background= BLUE;
+    qs('hiit-round-lbl').textContent = 'Ronda '+(s.round+1)+' completada';
+    qs('hiit-next').textContent    = t<=5 ? '→ '+s.exs[0] : '';
+  }
+
+  // Round dots
+  for(let i=0;i<s.rounds;i++) {
+    const d=qs('hiit-rd'+i); if(!d) continue;
+    if(i<s.round)       { d.style.background='#1D9E75';d.style.borderColor='#1D9E75'; }
+    else if(i===s.round){ d.style.background=ACCENT;   d.style.borderColor=ACCENT; }
+    else                { d.style.background='var(--s3)';d.style.borderColor='var(--border2)'; }
+  }
+  // Exercise dots
+  for(let i=0;i<s.exs.length;i++) {
+    const d=qs('hiit-ed'+i); if(!d) continue;
+    if(s.phase==='round_rest') { d.style.background='#1D9E75';d.style.borderColor='#1D9E75'; }
+    else if(i<s.ex)            { d.style.background='#1D9E75';d.style.borderColor='#1D9E75'; }
+    else if(i===s.ex)          { d.style.background=ACCENT;   d.style.borderColor=ACCENT; }
+    else                       { d.style.background='var(--s3)';d.style.borderColor='var(--border2)'; }
+  }
 }
 
 // ── BOOT ──────────────────────────────────────────────────────
