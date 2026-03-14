@@ -579,6 +579,8 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
   <div class="modal">
     <div class="drag-handle"></div>
     <div class="modal-title">Ajustos</div>
+
+    <!-- Usuari -->
     <div class="card" style="margin:0 0 10px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <div>
@@ -593,6 +595,39 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       </div>
       <div id="edit-username-status" style="font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-top:6px;min-height:14px"></div>
     </div>
+
+    <!-- Dades físiques -->
+    <div class="card" style="margin:0 0 10px">
+      <div class="card-title">Dades físiques</div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:10px;line-height:1.8">Necessàries per calcular kcal cremades</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <label class="lbl">Pes (kg)</label>
+          <input class="inp" id="phys-weight" type="number" placeholder="75" min="30" max="250" step="0.5">
+        </div>
+        <div>
+          <label class="lbl">Altura (cm)</label>
+          <input class="inp" id="phys-height" type="number" placeholder="175" min="100" max="250">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div>
+          <label class="lbl">Edat</label>
+          <input class="inp" id="phys-age" type="number" placeholder="25" min="10" max="100">
+        </div>
+        <div>
+          <label class="lbl">Sexe</label>
+          <select class="inp" id="phys-sex">
+            <option value="m">Home</option>
+            <option value="f">Dona</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-y btn-w" onclick="savePhysData()">GUARDAR DADES</button>
+      <div id="phys-status" style="font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-top:6px;min-height:14px"></div>
+    </div>
+
+    <!-- Backup -->
     <div class="card" style="margin:0 0 10px">
       <div class="card-title">Exportar</div>
       <div id="bk-summary" style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.9"></div>
@@ -606,12 +641,6 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <input type="file" accept=".json" onchange="importData(event)" style="display:none">
       </label>
       <div id="bk-status" style="font-family:var(--font-mono);font-size:9px;text-align:center;margin-top:8px"></div>
-    </div>
-    <div class="card" style="margin:0 0 16px">
-      <div class="card-title">Reset biblioteca + rutines</div>
-      <p style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:10px;line-height:1.8">Substitueix exercicis i rutines pels del pla d'Arnau.<br>Els entrenos registrats NO s'esborren.</p>
-      <button class="btn btn-w" style="background:var(--accent2);color:#fff;border:none" onclick="resetExercisesAndRoutines()">↺ RESET EXERCICIS + RUTINES</button>
-      <div id="reset-status" style="font-family:var(--font-mono);font-size:9px;text-align:center;margin-top:8px"></div>
     </div>
     <button class="btn btn-g btn-w" onclick="closeModal('m-backup')">CERRAR</button>
   </div>
@@ -657,7 +686,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     <div class="drag-handle"></div>
     <div class="row-between mb4">
       <div style="font-family:var(--font-display);font-size:24px;font-weight:900;letter-spacing:1px;text-transform:uppercase" id="exd-name"></div>
-      <button class="btn btn-g btn-sm" onclick="openEditExercise(exDetailId)">EDITAR</button>
+      <button class="btn btn-g btn-sm" onclick="closeModal('m-ex-detail');openEditExercise(exDetailId)">EDITAR</button>
     </div>
     <div class="tags mb12" id="exd-tags"></div>
     <div id="exd-body"></div>
@@ -770,9 +799,13 @@ const db    = getFirestore(fbApp);
 // ── USER MANAGEMENT ───────────────────────────────────────────
 const USERS_DOC = doc(db, 'ungabunga', 'users');
 let currentUser = null; // { id, name }
+let physData    = null; // { weight, height, age, sex }
 
 function userDoc() {
   return doc(db, 'ungabunga', 'user_' + currentUser.id);
+}
+function physDoc() {
+  return doc(db, 'ungabunga', 'phys_' + currentUser.id);
 }
 
 // Carrega la llista d'usuaris i mostra la pantalla de login
@@ -786,20 +819,25 @@ async function initLogin() {
     if(snap.exists()) {
       users = snap.data().list || [];
     } else {
-      // Primera vegada: crea l'usuari Sergi per defecte
       users = [{ id: 'sergi_roures', name: 'Sergi Roures' }];
-      await setDoc(USERS_DOC, { list: users });
+      try { await setDoc(USERS_DOC, { list: users }); } catch(e){}
     }
   } catch(e) {
+    console.warn('initLogin Firebase error:', e.message);
     users = JSON.parse(localStorage.getItem('ub_users') || '[]');
     if(!users.length) users = [{ id: 'sergi_roures', name: 'Sergi Roures' }];
   }
+
+  // Sempre guarda la llista al localStorage com a cache
+  localStorage.setItem('ub_users', JSON.stringify(users));
 
   // Comprova si hi ha sessió guardada
   const savedId = localStorage.getItem('ub_current_user');
   if(savedId) {
     const found = users.find(u=>u.id===savedId);
     if(found) { currentUser=found; startApp(users); return; }
+    // Si no troba l'ID guardat, esborra'l i mostra el login
+    localStorage.removeItem('ub_current_user');
   }
 
   renderLoginUsers(users);
@@ -818,11 +856,11 @@ function renderLoginUsers(users) {
 }
 
 window.loginAs = async function(userId) {
-  let users = [];
+  let users = JSON.parse(localStorage.getItem('ub_users')||'[]');
   try {
     const snap = await getDoc(USERS_DOC);
-    if(snap.exists()) users = snap.data().list || [];
-  } catch(e) { users = JSON.parse(localStorage.getItem('ub_users')||'[]'); }
+    if(snap.exists()) { users = snap.data().list || []; localStorage.setItem('ub_users', JSON.stringify(users)); }
+  } catch(e) {}
   const found = users.find(u=>u.id===userId);
   if(!found) return;
   currentUser = found;
@@ -834,11 +872,11 @@ window.loginRegister = async function() {
   const name = (qs('login-new-name').value||'').trim();
   if(!name) { qs('login-err').textContent='Escriu el teu nom!'; return; }
 
-  let users = [];
+  let users = JSON.parse(localStorage.getItem('ub_users')||'[]');
   try {
     const snap = await getDoc(USERS_DOC);
     if(snap.exists()) users = snap.data().list || [];
-  } catch(e) { users = JSON.parse(localStorage.getItem('ub_users')||'[]'); }
+  } catch(e) {}
 
   if(users.find(u=>u.name.toLowerCase()===name.toLowerCase())) {
     qs('login-err').textContent='Aquest nom ja existeix!'; return;
@@ -846,9 +884,7 @@ window.loginRegister = async function() {
 
   const newUser = { id: Date.now().toString(36)+Math.random().toString(36).slice(2,5), name };
   users.push(newUser);
-  try {
-    await setDoc(USERS_DOC, { list: users });
-  } catch(e) {}
+  try { await setDoc(USERS_DOC, { list: users }); } catch(e){}
   localStorage.setItem('ub_users', JSON.stringify(users));
 
   currentUser = newUser;
@@ -859,9 +895,8 @@ window.loginRegister = async function() {
 function startApp(users) {
   qs('login-screen').style.display = 'none';
   qs('loader').style.display = 'flex';
-  // Mostra el nom a la capçalera
   renderUserBadge();
-  loadData();
+  loadPhysData().catch(()=>{}).then(() => loadData());
 }
 
 function renderUserBadge() {
@@ -937,6 +972,17 @@ async function loadData() {
     workouts  = cached?.workouts  || [];
     routines  = cached?.routines  || [];
   } finally {
+    // Migració silenciosa: corregeix tipus d'exercicis mal etiquetats
+    let migrated = false;
+    exercises.forEach(ex => {
+      if(ex.name.toLowerCase().includes('hangtime') && ex.type !== 'tiempo') {
+        ex.type = 'tiempo'; migrated = true;
+      }
+      if(ex.name.toLowerCase() === 'plancha' && ex.type !== 'tiempo') {
+        ex.type = 'tiempo'; migrated = true;
+      }
+    });
+    if(migrated) saveRemote();
     hideLoader();
     renderCalendar();
   }
@@ -946,6 +992,71 @@ function save() {
   const lsKey = 'ub_data_' + currentUser.id;
   localStorage.setItem(lsKey, JSON.stringify({exercises,workouts,routines}));
   saveRemote();
+}
+
+// ── DADES FÍSIQUES ────────────────────────────────────────────
+async function loadPhysData() {
+  try {
+    const snap = await getDoc(physDoc());
+    if(snap.exists()) physData = snap.data();
+    else physData = null;
+  } catch(e) {
+    physData = JSON.parse(localStorage.getItem('ub_phys_'+currentUser.id)||'null');
+  }
+}
+
+window.savePhysData = async function() {
+  const w=parseFloat(qs('phys-weight').value)||0;
+  const h=parseFloat(qs('phys-height').value)||0;
+  const a=parseInt(qs('phys-age').value)||0;
+  const s=qs('phys-sex').value;
+  const st=qs('phys-status');
+  if(!w||!h||!a){ st.style.color='var(--accent2)'; st.textContent='Omple tots els camps!'; return; }
+  physData={weight:w,height:h,age:a,sex:s};
+  try { await setDoc(physDoc(), physData); } catch(e){}
+  localStorage.setItem('ub_phys_'+currentUser.id, JSON.stringify(physData));
+  st.style.color='var(--accent)'; st.textContent='✓ Guardat!';
+  setTimeout(()=>{ st.textContent=''; },2000);
+}
+
+// ── KCAL ENGINE (MET-based) ───────────────────────────────────
+// MET per tipus d'exercici (Compendium of Physical Activities)
+function getMET(exType, muscle) {
+  if(exType==='cardio')     return 8.0;   // running/bike moderat
+  if(exType==='tiempo')     return 4.0;   // isomètric/plancha
+  if(exType==='bodyweight') return 5.0;   // exercicis pes corporal
+  // fuerza: MET varia per grup muscular (grans muscles = més MET)
+  const bigMuscles = ['pierna','gluteo','esquena','espalda'];
+  return bigMuscles.includes(muscle) ? 6.0 : 4.5;
+}
+
+function calcKcal(workout) {
+  if(!physData?.weight) return 0;
+  const bodyKg = physData.weight;
+  let kcal = 0;
+  workout.exercises.forEach(ae => {
+    const ex = exercises.find(e=>e.id===ae.exerciseId);
+    if(!ex) return;
+    const met = getMET(ex.type, ex.muscle);
+    // Estima temps actiu per sèrie: fuerza ~45s, bodyweight ~40s, tiempo = el temps real
+    const secs = ae.sets.reduce((a,s) => {
+      if(ex.type==='tiempo') return a + (parseFloat(s.weight)||0);
+      return a + 45;
+    }, 0);
+    const hours = secs / 3600;
+    kcal += met * bodyKg * hours;
+  });
+  // Afegeix descans passiu: ~15% extra per EPOC i temps de descans
+  return Math.round(kcal * 1.15);
+}
+
+// Ratio kg aixecats per minut (productivitat)
+function calcKgPerMin(workout) {
+  const vol = calcVol(workout);
+  if(!vol || !workout.duration) return 0;
+  const mins = workout.duration / 60000;
+  if(mins < 1) return 0;
+  return Math.round(vol / mins);
 }
 
 // ── DEFAULT DATA ───────────────────────────────────────────────
@@ -1098,19 +1209,33 @@ function calcVol(w) {
   }));
   return Math.round(v);
 }
+// Retorna el valor "principal" de PR segons el tipus:
+// fuerza → pes màxim (kg); bodyweight → reps màximes; tiempo → temps màxim (s); cardio → temps màxim
 function getPR(exId) {
+  const ex = exercises.find(e=>e.id===exId);
+  if(!ex) return 0;
   let m=0;
   workouts.forEach(w=>w.exercises.forEach(ae=>{
-    if(ae.exerciseId===exId) ae.sets.forEach(s=>{if(s.weight) m=Math.max(m,parseFloat(s.weight)||0);});
+    if(ae.exerciseId!==exId) return;
+    ae.sets.forEach(s=>{
+      if(ex.type==='bodyweight') {
+        m = Math.max(m, parseFloat(s.reps)||0);
+      } else {
+        // fuerza, tiempo, cardio: el valor principal és weight
+        m = Math.max(m, parseFloat(s.weight)||0);
+      }
+    });
   }));
   return m;
 }
 function getPRReps(exId) {
+  // Reps de la sèrie amb més pes (fuerza)
   let maxW=0, reps=0;
   workouts.forEach(w=>w.exercises.forEach(ae=>{
-    if(ae.exerciseId===exId) ae.sets.forEach(s=>{
+    if(ae.exerciseId!==exId) return;
+    ae.sets.forEach(s=>{
       const w2=parseFloat(s.weight)||0;
-      if(w2>maxW){maxW=w2;reps=parseFloat(s.reps)||0;}
+      if(w2>maxW){maxW=w2; reps=parseFloat(s.reps)||0;}
     });
   }));
   return reps;
@@ -1118,9 +1243,37 @@ function getPRReps(exId) {
 function getPRRepsOnly(exId) {
   let m=0;
   workouts.forEach(w=>w.exercises.forEach(ae=>{
-    if(ae.exerciseId===exId) ae.sets.forEach(s=>{m=Math.max(m,parseFloat(s.reps)||0);});
+    if(ae.exerciseId!==exId) return;
+    ae.sets.forEach(s=>{ m=Math.max(m,parseFloat(s.reps)||0); });
   }));
   return m;
+}
+
+// Etiqueta llegible del PR per mostrar a la UI
+function getPRLabel(ex) {
+  if(!ex) return '';
+  const pr=getPR(ex.id);
+  if(!pr) return '';
+  if(ex.type==='fuerza') {
+    const r=getPRReps(ex.id);
+    return `PR: ${pr}kg${r?' × '+r+'r':''}`;
+  }
+  if(ex.type==='bodyweight') return `PR: ${pr} reps`;
+  if(ex.type==='tiempo')     return `PR: ${pr}s`;
+  if(ex.type==='cardio')     return `PR: ${pr}min`;
+  return `PR: ${pr}`;
+}
+
+// Valor numèric normalitzat per ordenar Mis Récords (tot a una escala comparable)
+function getPRSortValue(ex) {
+  const pr=getPR(ex.id);
+  if(!pr) return 0;
+  // Normalitzem per tenir un ranking amb sentit entre tipus
+  if(ex.type==='fuerza')     return pr * 10;    // pes en kg, ×10
+  if(ex.type==='bodyweight') return pr * 5;     // reps, ×5
+  if(ex.type==='tiempo')     return pr;         // segons
+  if(ex.type==='cardio')     return pr * 2;     // minuts
+  return pr;
 }
 function getBestSets(exId) {
   let bestSets=null, bestMaxW=-1;
@@ -1281,12 +1434,8 @@ window.openLogSets = function(exId, aeId) {
   logExId=exId; logAeId=aeId;
   const ex=exercises.find(e=>e.id===exId);
   qs('sets-ex-name').textContent=ex.name;
-  const pr=getPR(exId), prR=getPRReps(exId), prRO=getPRRepsOnly(exId);
-  let prHtml='';
-  if(ex.type==='fuerza'&&pr) prHtml=`<span class="tag tag-y">PR PESO: ${pr}kg × ${prR}r</span>`;
-  else if(ex.type==='bodyweight'&&prRO) prHtml=`<span class="tag tag-y">PR REPS: ${prRO}</span>`;
-  else if(ex.type==='tiempo'&&pr) prHtml=`<span class="tag tag-y">PR TIEMPO: ${pr}s</span>`;
-  qs('sets-ex-tags').innerHTML=`<span class="tag tag-g">${ex.muscle}</span><span class="tag tag-g">${ex.type}</span>${prHtml}`;
+  const prLbl=getPRLabel(ex);
+  qs('sets-ex-tags').innerHTML=`<span class="tag tag-g">${ex.muscle}</span><span class="tag tag-g">${ex.type}</span>${prLbl?`<span class="tag tag-y">${prLbl}</span>`:''}`;
   if(ex.type==='tiempo'){
     qs('sets-col-w').textContent='TIEMPO (s)'; qs('sets-col-r').textContent='PESO (kg)';
   } else if(ex.type==='bodyweight'){
@@ -1326,7 +1475,16 @@ function updateORM() {
   if(!ex||ex.type!=='fuerza'){
     if(ex&&ex.type==='tiempo'){
       const total=curSets.reduce((a,s)=>a+(parseFloat(s.weight)||0),0);
-      qs('orm-live').innerHTML=total?`TIEMPO TOTAL: <span style="color:var(--accent)">${total}s</span> <span style="color:var(--muted)">(${(total/60).toFixed(1)} min)</span>`:'';
+      const prSecs=getPR(logExId);
+      const bestSet=Math.max(...curSets.map(s=>parseFloat(s.weight)||0));
+      const isPR=bestSet>0&&bestSet>prSecs;
+      qs('orm-live').innerHTML=total?`TEMPS TOTAL: <span style="color:var(--accent)">${total}s</span> <span style="color:var(--muted)">(${(total/60).toFixed(1)} min)</span>${isPR?' <span class="tag tag-y" style="font-size:7px">🏆 NOU PR!</span>':''}`:'';
+    } else if(ex&&ex.type==='bodyweight'){
+      const totalReps=curSets.reduce((a,s)=>a+(parseFloat(s.reps)||0),0);
+      const bestSet=Math.max(...curSets.map(s=>parseFloat(s.reps)||0));
+      const prReps=getPR(logExId);
+      const isPR=bestSet>0&&bestSet>prReps;
+      qs('orm-live').innerHTML=totalReps?`REPS TOTALS: <span style="color:var(--accent)">${totalReps}</span>${isPR?' <span class="tag tag-y" style="font-size:7px">🏆 NOU PR!</span>':''}`:'';
     } else { qs('orm-live').textContent=''; }
     return;
   }
@@ -1334,7 +1492,7 @@ function updateORM() {
   curSets.forEach(s=>{const w=parseFloat(s.weight)||0,r=parseFloat(s.reps)||0;if(w&&r)best=Math.max(best,epley(w,r));});
   if(!best){qs('orm-live').textContent='';return;}
   const pr=getPR(logExId);
-  qs('orm-live').innerHTML=`1RM EST: <span style="color:var(--accent);font-weight:500">${best.toFixed(1)} kg</span>${best>pr?' <span class="tag tag-y" style="font-size:7px">¡NUEVO PR!</span>':''}`;
+  qs('orm-live').innerHTML=`1RM EST: <span style="color:var(--accent);font-weight:500">${best.toFixed(1)} kg</span>${best>pr?' <span class="tag tag-y" style="font-size:7px">🏆 NOU PR!</span>':''}`;
 }
 window.updateORM=updateORM;
 
@@ -1363,11 +1521,8 @@ function renderExercises() {
     return;
   }
   qs('ex-list').innerHTML=filtered.map(ex=>{
-    const pr=getPR(ex.id), prR=getPRReps(ex.id), prRO=getPRRepsOnly(ex.id);
-    let prBadge='';
-    if(ex.type==='fuerza'&&pr) prBadge=`<span class="ex-pr">🏆 ${pr}kg × ${prR}r</span>`;
-    else if(ex.type==='bodyweight'&&prRO) prBadge=`<span class="ex-pr">🏆 ${prRO} reps</span>`;
-    else if(ex.type==='tiempo'&&pr) prBadge=`<span class="ex-pr">🏆 ${pr}s</span>`;
+    const prLbl=getPRLabel(ex);
+    const prBadge=prLbl?`<span class="ex-pr">${prLbl}</span>`:'';
     return `<div class="ex-item" onclick="openExDetail('${ex.id}')">
       <div>
         <div class="ex-name">${ex.name}</div>
@@ -1388,12 +1543,8 @@ window.openExDetail = function(id) {
   exDetailId=id;
   const ex=exercises.find(e=>e.id===id); if(!ex) return;
   qs('exd-name').textContent=ex.name;
-  const pr=getPR(id), prR=getPRReps(id), prRO=getPRRepsOnly(id);
-  let prBadge='';
-  if(ex.type==='fuerza'&&pr) prBadge=`<span class="tag tag-y">🏆 ${pr}kg × ${prR}r</span>`;
-  else if(ex.type==='bodyweight'&&prRO) prBadge=`<span class="tag tag-y">🏆 ${prRO} reps</span>`;
-  else if(ex.type==='tiempo'&&pr) prBadge=`<span class="tag tag-y">🏆 ${pr}s</span>`;
-  qs('exd-tags').innerHTML=`<span class="tag tag-g">${ex.muscle}</span><span class="tag tag-g">${ex.type}</span>${prBadge}`;
+  const prLbl=getPRLabel(ex);
+  qs('exd-tags').innerHTML=`<span class="tag tag-g">${ex.muscle}</span><span class="tag tag-g">${ex.type}</span>${prLbl?`<span class="tag tag-y">${prLbl}</span>`:''}`;
   const bestSets=getBestSets(id);
   const totalWos=workouts.filter(w=>w.exercises.some(ae=>ae.exerciseId===id)).length;
   let body='';
@@ -1483,13 +1634,19 @@ window.calSelectDay = function(ds, el) {
   if(!dayWos.length){
     html+=`<div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-bottom:12px">Sin entrenos</div>`;
   } else {
-    html+=dayWos.map(w=>`<div class="wo-item" onclick="showWoEdit('${w.id}')">
-      <div class="wo-exs">${w.exercises.map(e=>e.name).join(' · ')}</div>
-      <div class="tags mt8">
-        <span class="tag tag-y">${calcVol(w)} kg vol.</span>
-        <span class="tag tag-b">✏ EDITAR</span>
-      </div>
-    </div>`).join('');
+    html+=dayWos.map(w=>{
+      const kcal=calcKcal(w);
+      const kgMin=calcKgPerMin(w);
+      return `<div class="wo-item" onclick="showWoEdit('${w.id}')">
+        <div class="wo-exs">${w.exercises.map(e=>e.name).join(' · ')}</div>
+        <div class="tags mt8">
+          <span class="tag tag-y">${calcVol(w)} kg vol.</span>
+          ${kcal?`<span class="tag tag-g">🔥 ${kcal} kcal</span>`:''}
+          ${kgMin?`<span class="tag" style="background:rgba(0,207,255,.12);color:#00cfff;border-color:rgba(0,207,255,.3)">${kgMin} kg/min</span>`:''}
+          <span class="tag tag-b">✏ EDITAR</span>
+        </div>
+      </div>`;
+    }).join('');
   }
   html+=`<button class="btn btn-g btn-w mt8" style="font-size:12px" onclick="startWorkoutOnDate('${ds}')">+ AÑADIR ENTRENO ESTE DÍA</button>`;
   det.innerHTML=html;
@@ -1692,39 +1849,75 @@ function renderStatsGlobal() {
     c.innerHTML='<div class="empty"><div class="empty-ico">📊</div><div class="empty-txt">Sin entrenos aún</div></div>';
     return;
   }
-  const totalDays=new Set(workouts.map(w=>w.date.slice(0,10))).size;
-  const totalKg=Math.round(workouts.reduce((a,w)=>a+calcVol(w),0));
-  const totalSets=workouts.reduce((a,w)=>a+w.exercises.reduce((b,ae)=>b+ae.sets.length,0),0);
-  const wosWithDur=workouts.filter(w=>w.duration>0);
-  const avgMin=wosWithDur.length?Math.round(wosWithDur.reduce((a,w)=>a+w.duration,0)/wosWithDur.length/60000):0;
-  const weekVol={}, weekCount={};
-  workouts.forEach(w=>{const k=weekKey(w.date);weekVol[k]=(weekVol[k]||0)+calcVol(w);weekCount[k]=(weekCount[k]||0)+1;});
-  const allWeeks=Object.keys(weekVol).sort().slice(-10);
-  const volData=allWeeks.map(k=>Math.round(weekVol[k]));
-  const freqData=allWeeks.map(k=>weekCount[k]);
-  const weekLbls=allWeeks.map(k=>{const d=new Date(k+'T12:00:00');return d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});});
-  const prs=exercises.map(e=>({e,pr:getPR(e.id),reps:getPRReps(e.id)})).filter(x=>x.pr>0).sort((a,b)=>b.pr-a.pr).slice(0,8);
+
+  // Dies únics (no comptar 3 entrenos com 3 dies)
+  const totalDays = new Set(workouts.map(w=>w.date.slice(0,10))).size;
+  const totalKg   = Math.round(workouts.reduce((a,w)=>a+calcVol(w),0));
+  const totalSets = workouts.reduce((a,w)=>a+w.exercises.reduce((b,ae)=>b+ae.sets.length,0),0);
+
+  // Kcal total
+  const totalKcal = workouts.reduce((a,w)=>a+calcKcal(w),0);
+
+  // Ratio kg/min: per dia únic (suma tots els entrenos del dia)
+  const dayMap = {};
+  workouts.forEach(w=>{
+    const ds=w.date.slice(0,10);
+    if(!dayMap[ds]) dayMap[ds]={vol:0,dur:0,kcal:0};
+    dayMap[ds].vol  += calcVol(w);
+    dayMap[ds].dur  += (w.duration||0);
+    dayMap[ds].kcal += calcKcal(w);
+  });
+  const daysWithDur = Object.values(dayMap).filter(d=>d.dur>0);
+  const avgKgMin = daysWithDur.length
+    ? Math.round(daysWithDur.reduce((a,d)=>a+(d.vol/(d.dur/60000)),0)/daysWithDur.length)
+    : 0;
+
+  // Gràfics setmanals per dies únics
+  const weekVol={}, weekKcal={};
+  Object.entries(dayMap).forEach(([ds,d])=>{
+    const k=weekKey(ds);
+    weekVol[k]  = (weekVol[k]||0)  + d.vol;
+    weekKcal[k] = (weekKcal[k]||0) + d.kcal;
+  });
+  const allWeeks = Object.keys(weekVol).sort().slice(-10);
+  const volData  = allWeeks.map(k=>Math.round(weekVol[k]));
+  const kcalData = allWeeks.map(k=>Math.round(weekKcal[k]));
+  const weekLbls = allWeeks.map(k=>{const d=new Date(k+'T12:00:00');return d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});});
+
+  const prs = exercises
+    .map(e=>({e, lbl:getPRLabel(e), sort:getPRSortValue(e)}))
+    .filter(x=>x.lbl)
+    .sort((a,b)=>b.sort-a.sort)
+    .slice(0,10);
+
+  const noPhys = !physData?.weight;
 
   c.innerHTML=`
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 16px 14px">
-      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalDays}</div><div class="stat-lbl" style="font-size:8px">días gym</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalDays}</div><div class="stat-lbl" style="font-size:8px">dies gym</div></div>
       <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalKg>9999?(totalKg/1000).toFixed(1)+'t':totalKg+'k'}</div><div class="stat-lbl" style="font-size:8px">kg total</div></div>
-      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalSets}</div><div class="stat-lbl" style="font-size:8px">series</div></div>
-      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${avgMin||'—'}</div><div class="stat-lbl" style="font-size:8px">min/día</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalSets}</div><div class="stat-lbl" style="font-size:8px">sèries</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${avgKgMin||'—'}</div><div class="stat-lbl" style="font-size:8px">kg/min</div></div>
     </div>
+    ${noPhys?`<div style="margin:0 16px 14px;padding:10px 12px;background:rgba(212,255,0,.07);border:1px solid rgba(212,255,0,.2);border-radius:var(--r);font-family:var(--font-mono);font-size:9px;color:var(--accent);letter-spacing:1px;line-height:1.8">
+      ⚠ Afegeix el teu pes i altura a Ajustos per veure les kcal cremades
+    </div>`:`<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:0 16px 14px">
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px;color:#ff4520">${totalKcal>9999?(totalKcal/1000).toFixed(1)+'k':totalKcal}</div><div class="stat-lbl" style="font-size:8px">kcal totals 🔥</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px;color:#ff4520">${daysWithDur.length?Math.round(totalKcal/daysWithDur.length):'—'}</div><div class="stat-lbl" style="font-size:8px">kcal/dia 🔥</div></div>
+    </div>`}
     <div class="chart-wrap">
-      <div class="chart-title">Volumen semanal <span style="color:var(--accent);font-size:10px">(kg)</span></div>
-      <div class="chart-sub">CARGA TOTAL LEVANTADA POR SEMANA</div>
+      <div class="chart-title">Volum setmanal <span style="color:var(--accent);font-size:10px">(kg)</span></div>
+      <div class="chart-sub">CÀRREGA TOTAL AIXECADA PER SETMANA</div>
       <canvas id="cg-vol" height="130"></canvas>
     </div>
-    <div class="chart-wrap">
-      <div class="chart-title">Frecuencia semanal <span style="color:var(--accent3);font-size:10px">(sesiones)</span></div>
-      <div class="chart-sub">ENTRENOS POR SEMANA</div>
-      <canvas id="cg-freq" height="110"></canvas>
-    </div>
+    ${!noPhys&&kcalData.some(v=>v>0)?`<div class="chart-wrap">
+      <div class="chart-title">Kcal cremades <span style="color:#ff4520;font-size:10px">(setmanal)</span></div>
+      <div class="chart-sub">ESTIMACIÓ PER MET × PES CORPORAL</div>
+      <canvas id="cg-kcal" height="130"></canvas>
+    </div>`:''}
     ${prs.length?`
     <div style="padding:0 16px 4px">
-      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">🏆 MIS RÉCORDS</div>
+      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">🏆 ELS MEUS RÈCORDS</div>
       ${prs.map((x,i)=>`
         <div onclick="qs('stats-sel').value='${x.e.id}';renderStatsDetail();qs('stats-detail').scrollIntoView({behavior:'smooth'})"
           style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin-bottom:4px;cursor:pointer">
@@ -1732,14 +1925,14 @@ function renderStatsGlobal() {
             <div style="font-family:var(--font-mono);font-size:9px;color:${i===0?'var(--accent)':i===1?'#aaa':i===2?'#cd7f32':'var(--muted)'};width:14px;text-align:center">${i<3?'●':'·'}</div>
             <div style="font-size:13px;font-weight:500">${x.e.name}</div>
           </div>
-          <div style="font-family:var(--font-mono);font-size:12px;color:var(--accent);font-weight:600">${x.pr}kg${x.reps?' ×'+x.reps:''}</div>
+          <div style="font-family:var(--font-mono);font-size:12px;color:var(--accent);font-weight:600">${x.lbl.replace('🏆 ','')}</div>
         </div>`).join('')}
     </div><div style="height:8px"></div>`:''}
     <div style="margin:0 16px 14px;border-top:1px solid var(--border)"></div>`;
 
   setTimeout(()=>{
     if(volData.length)  drawBarChart('cg-vol',  weekLbls, volData,  '#d4ff00');
-    if(freqData.length) drawBarChart('cg-freq', weekLbls, freqData, '#00cfff', true);
+    if(!noPhys&&kcalData.some(v=>v>0)) drawBarChart('cg-kcal', weekLbls, kcalData, '#ff4520');
   },60);
 }
 
@@ -1748,17 +1941,32 @@ window.renderStatsDetail = function() {
   const c=qs('stats-detail');
   if(!exId){c.innerHTML='';return;}
   const ex=exercises.find(e=>e.id===exId);
+  if(!ex) return;
+  const isTiempo = ex.type==='tiempo';
+  const isBW     = ex.type==='bodyweight';
+
   const pts=[];
   workouts.forEach(w=>{
     w.exercises.forEach(ae=>{
       if(ae.exerciseId!==exId) return;
       const valid=ae.sets.filter(s=>parseFloat(s.weight||0)>0||parseFloat(s.reps||0)>0);
       if(!valid.length) return;
-      const maxW=Math.max(...valid.map(s=>parseFloat(s.weight)||0));
-      const vol=valid.reduce((a,s)=>a+(parseFloat(s.weight)||0)*(parseFloat(s.reps)||0),0);
-      const orm=Math.max(...valid.map(s=>{const w=parseFloat(s.weight)||0,r=parseFloat(s.reps)||0;return w&&r?epley(w,r):0;}));
-      const maxR=Math.max(...valid.map(s=>parseFloat(s.reps)||0));
-      pts.push({date:w.date,maxW,vol,orm,maxR,sets:valid.length});
+      if(isTiempo) {
+        // weight = temps en segons per sèrie
+        const totalSecs = valid.reduce((a,s)=>a+(parseFloat(s.weight)||0),0);
+        const maxSecs   = Math.max(...valid.map(s=>parseFloat(s.weight)||0));
+        pts.push({date:w.date, maxW:maxSecs, vol:totalSecs, orm:0, maxR:0, sets:valid.length});
+      } else if(isBW) {
+        const maxR = Math.max(...valid.map(s=>parseFloat(s.reps)||0));
+        const vol  = valid.reduce((a,s)=>a+(parseFloat(s.reps)||0),0);
+        pts.push({date:w.date, maxW:0, vol, orm:0, maxR, sets:valid.length});
+      } else {
+        const maxW = Math.max(...valid.map(s=>parseFloat(s.weight)||0));
+        const vol  = valid.reduce((a,s)=>a+(parseFloat(s.weight)||0)*(parseFloat(s.reps)||0),0);
+        const orm  = Math.max(...valid.map(s=>{const w=parseFloat(s.weight)||0,r=parseFloat(s.reps)||0;return w&&r?epley(w,r):0;}));
+        const maxR = Math.max(...valid.map(s=>parseFloat(s.reps)||0));
+        pts.push({date:w.date, maxW, vol, orm, maxR, sets:valid.length});
+      }
     });
   });
   pts.sort((a,b)=>new Date(a.date)-new Date(b.date));
@@ -1766,42 +1974,97 @@ window.renderStatsDetail = function() {
     c.innerHTML='<div class="empty" style="padding:20px 0 32px"><div class="empty-ico">🏋️</div><div class="empty-txt">Sin datos para este ejercicio</div></div>';
     return;
   }
-  const pr=Math.max(...pts.map(p=>p.maxW));
-  const best1rm=Math.max(...pts.map(p=>p.orm));
-  const nSess=pts.length;
-  const lbls=pts.map(p=>new Date(p.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'}));
-  const trendW=pts.length>=2?pts[pts.length-1].maxW-pts[pts.length-2].maxW:0;
-  const trendTxt=trendW>0?`<span style="color:var(--accent)">↑ +${trendW}kg</span>`:trendW<0?`<span style="color:var(--accent2)">↓ ${trendW}kg</span>`:'';
+
+  const lbls    = pts.map(p=>new Date(p.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'}));
+  const nSess   = pts.length;
+
+  // Capçalera i gràfics adaptats per tipus
+  let statCards='', charts='', trendTxt='';
+
+  if(isTiempo) {
+    const prSecs = Math.max(...pts.map(p=>p.maxW));
+    const trend  = pts.length>=2 ? pts[pts.length-1].maxW - pts[pts.length-2].maxW : 0;
+    trendTxt = trend>0?`<span style="color:var(--accent)">↑ +${trend}s</span>`:trend<0?`<span style="color:var(--accent2)">↓ ${trend}s</span>`:'';
+    statCards=`
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${prSecs||'—'}</div><div class="stat-lbl" style="font-size:8px">PR (s)</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${prSecs?Math.round(prSecs/60*10)/10:'—'}</div><div class="stat-lbl" style="font-size:8px">PR (min)</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${nSess}</div><div class="stat-lbl" style="font-size:8px">sessions</div></div>`;
+    charts=`
+      <div class="chart-wrap">
+        <div class="chart-title">Millor sèrie per sessió</div>
+        <div class="chart-sub">TEMPS MÀXIM (S)</div>
+        <canvas id="cd-w" height="140"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Temps total per sessió</div>
+        <div class="chart-sub">SUMA DE TOTES LES SÈRIES (S)</div>
+        <canvas id="cd-v" height="140"></canvas>
+      </div>`;
+  } else if(isBW) {
+    const prReps = Math.max(...pts.map(p=>p.maxR));
+    const trend  = pts.length>=2 ? pts[pts.length-1].maxR - pts[pts.length-2].maxR : 0;
+    trendTxt = trend>0?`<span style="color:var(--accent)">↑ +${trend}r</span>`:trend<0?`<span style="color:var(--accent2)">↓ ${trend}r</span>`:'';
+    statCards=`
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${prReps||'—'}</div><div class="stat-lbl" style="font-size:8px">PR reps</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${Math.max(...pts.map(p=>p.vol))||'—'}</div><div class="stat-lbl" style="font-size:8px">Màx reps/ses</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${nSess}</div><div class="stat-lbl" style="font-size:8px">sessions</div></div>`;
+    charts=`
+      <div class="chart-wrap">
+        <div class="chart-title">Reps màximes per sessió</div>
+        <div class="chart-sub">MILLOR SÈRIE</div>
+        <canvas id="cd-w" height="140"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Reps totals per sessió</div>
+        <div class="chart-sub">SUMA DE TOTES LES SÈRIES</div>
+        <canvas id="cd-v" height="140"></canvas>
+      </div>`;
+  } else {
+    const pr     = Math.max(...pts.map(p=>p.maxW));
+    const best1rm= Math.max(...pts.map(p=>p.orm));
+    const trend  = pts.length>=2 ? pts[pts.length-1].maxW - pts[pts.length-2].maxW : 0;
+    trendTxt = trend>0?`<span style="color:var(--accent)">↑ +${trend}kg</span>`:trend<0?`<span style="color:var(--accent2)">↓ ${trend}kg</span>`:'';
+    statCards=`
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${pr||'—'}</div><div class="stat-lbl" style="font-size:8px">PR kg</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${best1rm>0?best1rm.toFixed(0):'—'}</div><div class="stat-lbl" style="font-size:8px">1RM est.</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${nSess}</div><div class="stat-lbl" style="font-size:8px">sessions</div></div>`;
+    charts=`
+      <div class="chart-wrap">
+        <div class="chart-title">Peso màxim per sessió</div>
+        <div class="chart-sub">EVOLUCIÓ DEL PES (KG)</div>
+        <canvas id="cd-w" height="140"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Volum per sessió</div>
+        <div class="chart-sub">SÈRIES × REPS × PES</div>
+        <canvas id="cd-v" height="140"></canvas>
+      </div>
+      ${best1rm>0?`<div class="chart-wrap">
+        <div class="chart-title">1RM estimat</div>
+        <div class="chart-sub">FÓRMULA D'EPLEY</div>
+        <canvas id="cd-1rm" height="140"></canvas>
+      </div>`:''}`;
+  }
 
   c.innerHTML=`
     <div style="padding:0 16px">
       <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">${ex.name.toUpperCase()} ${trendTxt}</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px">
-        <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${pr||'—'}</div><div class="stat-lbl" style="font-size:8px">PR kg</div></div>
-        <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${best1rm>0?best1rm.toFixed(0):'—'}</div><div class="stat-lbl" style="font-size:8px">1RM est.</div></div>
-        <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${nSess}</div><div class="stat-lbl" style="font-size:8px">sesiones</div></div>
-      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px">${statCards}</div>
     </div>
-    <div class="chart-wrap">
-      <div class="chart-title">Peso máximo por sesión</div>
-      <div class="chart-sub">EVOLUCIÓN DEL PESO (KG)</div>
-      <canvas id="cd-w" height="140"></canvas>
-    </div>
-    <div class="chart-wrap">
-      <div class="chart-title">Volumen por sesión</div>
-      <div class="chart-sub">SERIES × REPS × PESO</div>
-      <canvas id="cd-v" height="140"></canvas>
-    </div>
-    ${best1rm>0?`<div class="chart-wrap">
-      <div class="chart-title">1RM estimado</div>
-      <div class="chart-sub">FÓRMULA DE EPLEY</div>
-      <canvas id="cd-1rm" height="140"></canvas>
-    </div>`:''}`;
+    ${charts}`;
 
   setTimeout(()=>{
-    drawLineChart('cd-w',  lbls, pts.map(p=>p.maxW), '#d4ff00');
-    drawLineChart('cd-v',  lbls, pts.map(p=>p.vol),  '#ff4520');
-    if(best1rm>0) drawLineChart('cd-1rm', lbls, pts.map(p=>p.orm), '#00cfff');
+    if(isTiempo||ex.type==='fuerza') {
+      drawLineChart('cd-w', lbls, pts.map(p=>p.maxW), '#d4ff00');
+      drawLineChart('cd-v', lbls, pts.map(p=>p.vol),  '#ff4520');
+      if(ex.type==='fuerza') {
+        const best1rm=Math.max(...pts.map(p=>p.orm));
+        if(best1rm>0) drawLineChart('cd-1rm', lbls, pts.map(p=>p.orm), '#00cfff');
+      }
+    } else if(isBW) {
+      drawLineChart('cd-w', lbls, pts.map(p=>p.maxR), '#d4ff00');
+      drawLineChart('cd-v', lbls, pts.map(p=>p.vol),  '#ff4520');
+    }
   },60);
 }
 
@@ -1924,6 +2187,13 @@ window.openModal = function(id) {
   if(id==='m-backup'){
     qs('bk-summary').innerHTML=`💪 ${exercises.length} ejercicios<br>📋 ${routines.length} rutinas<br>📅 ${workouts.length} entrenos`;
     if(qs('backup-username')) qs('backup-username').textContent = currentUser?.name || '';
+    // Pobla dades físiques
+    if(physData) {
+      qs('phys-weight').value = physData.weight||'';
+      qs('phys-height').value = physData.height||'';
+      qs('phys-age').value    = physData.age||'';
+      qs('phys-sex').value    = physData.sex||'m';
+    }
   }
   qs(id).classList.add('on');
 }
