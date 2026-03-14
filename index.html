@@ -492,8 +492,27 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 
       <!-- Config -->
       <div id="hiit-config" style="padding:0 16px 16px">
-        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-align:center;margin-bottom:20px;line-height:2;text-transform:uppercase">
-          4 exercicis · 30s treball / 15s descans<br>90s descans de ronda · 4 rondes
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div>
+            <label class="lbl">Treball (s)</label>
+            <input class="inp" id="hiit-work" type="number" value="30" min="5" max="120">
+          </div>
+          <div>
+            <label class="lbl">Descans (s)</label>
+            <input class="inp" id="hiit-rest" type="number" value="15" min="5" max="60">
+          </div>
+          <div>
+            <label class="lbl">Desc. ronda (s)</label>
+            <input class="inp" id="hiit-rround" type="number" value="90" min="10" max="300">
+          </div>
+          <div>
+            <label class="lbl">Rondes</label>
+            <input class="inp" id="hiit-rounds" type="number" value="4" min="1" max="10">
+          </div>
+          <div>
+            <label class="lbl">Exercicis / ronda</label>
+            <input class="inp" id="hiit-nexs" type="number" value="4" min="1" max="10">
+          </div>
         </div>
         <button class="btn btn-y btn-w" style="font-size:18px;padding:16px" onclick="hiitStart()">▶ INICIAR</button>
       </div>
@@ -540,6 +559,32 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <div style="font-family:var(--font-display);font-size:40px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--accent)">COMPLETAT!</div>
         <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;color:var(--muted);margin-top:8px;margin-bottom:28px" id="hiit-done-sub"></div>
         <button class="btn btn-y btn-w" onclick="hiitReset()">↺ TORNAR A FER</button>
+      </div>
+
+      <!-- ── TEMPORITZADOR DE DESCANS ── -->
+      <div style="margin:24px 0 0;border-top:1px solid var(--border);padding-top:20px">
+        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:14px;padding:0 16px">⏱ TEMPORITZADOR DE DESCANS</div>
+        <div style="padding:0 16px">
+          <!-- Presets -->
+          <div style="display:flex;gap:6px;margin-bottom:12px">
+            <button class="btn btn-g btn-sm" style="flex:1" onclick="restSetTime(30)">30s</button>
+            <button class="btn btn-g btn-sm" style="flex:1" onclick="restSetTime(60)">1min</button>
+            <button class="btn btn-g btn-sm" style="flex:1" onclick="restSetTime(90)">1:30</button>
+            <button class="btn btn-g btn-sm" style="flex:1" onclick="restSetTime(120)">2min</button>
+            <button class="btn btn-g btn-sm" style="flex:1" onclick="restSetTime(180)">3min</button>
+          </div>
+          <!-- Display -->
+          <div id="rest-display" style="font-family:var(--font-display);font-size:80px;font-weight:900;text-align:center;line-height:1;margin-bottom:8px;color:var(--accent);transition:color .3s">1:00</div>
+          <!-- Progress bar -->
+          <div style="height:4px;background:var(--s3);border-radius:2px;margin-bottom:18px;overflow:hidden">
+            <div id="rest-bar" style="height:100%;border-radius:2px;background:var(--accent);width:100%;transition:width .25s linear,background .3s"></div>
+          </div>
+          <!-- Controls -->
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-y" style="flex:2;font-size:16px;padding:14px" id="rest-btn-start" onclick="restToggle()">▶ INICIAR</button>
+            <button class="btn btn-g" style="flex:1" onclick="restReset()">↺</button>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -2251,6 +2296,18 @@ let hiitIv    = null;
 
 function initHiitPage() {} // res a inicialitzar
 
+function countdownBeep() {
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = 660;
+    g.gain.setValueAtTime(.25, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime+.08);
+    o.start(); o.stop(ctx.currentTime+.1);
+  } catch(e){}
+}
+
 function hiitBeep(type) {
   try {
     const ctx = new (window.AudioContext||window.webkitAudioContext)();
@@ -2264,8 +2321,12 @@ function hiitBeep(type) {
 }
 
 window.hiitStart = function() {
-  const work=30, rest=15, rround=90, rounds=4;
-  const exs = ['Exercici 1','Exercici 2','Exercici 3','Exercici 4'];
+  const work   = Math.max(5,  parseInt(qs('hiit-work').value)  || 30);
+  const rest   = Math.max(5,  parseInt(qs('hiit-rest').value)  || 15);
+  const rround = Math.max(10, parseInt(qs('hiit-rround').value)|| 90);
+  const rounds = Math.max(1,  parseInt(qs('hiit-rounds').value)|| 4);
+  const nexs   = Math.max(1,  parseInt(qs('hiit-nexs').value)  || 4);
+  const exs    = Array.from({length:nexs},(_,i)=>`Exercici ${i+1}`);
 
   hiitState = { round:0, ex:0, phase:'work', remaining:work, total:work,
                 work, rest, rround, rounds, exs, paused:false };
@@ -2303,6 +2364,7 @@ window.hiitReset = function() {
 function hiitTick() {
   if(!hiitState||hiitState.paused) return;
   hiitState.remaining--;
+  if(hiitState.remaining>0 && hiitState.remaining<=3) countdownBeep();
   if(hiitState.remaining<=0) hiitAdvance();
   else hiitRender();
 }
@@ -2329,7 +2391,7 @@ function hiitFinish() {
   hiitBeep('done');
   qs('hiit-running').style.display='none';
   qs('hiit-done').style.display='block';
-  qs('hiit-done-sub').textContent = hiitState.rounds+' rondes · '+hiitState.exs.length+' exercicis · '+Math.round((hiitState.rounds*(hiitState.exs.length*hiitState.work+(hiitState.exs.length-1)*hiitState.rest)+( hiitState.rounds-1)*hiitState.rround)/60)+' min aprox.';
+  qs('hiit-done-sub').textContent = `${hiitState.rounds} rondes · ${hiitState.exs.length} exercicis/ronda · ${hiitState.work}s treball / ${hiitState.rest}s descans`;
 }
 
 function hiitRender() {
@@ -2383,6 +2445,80 @@ function hiitRender() {
     else if(i===s.ex)          { d.style.background=ACCENT;   d.style.borderColor=ACCENT; }
     else                       { d.style.background='var(--s3)';d.style.borderColor='var(--border2)'; }
   }
+}
+
+// ── TEMPORITZADOR DE DESCANS ──────────────────────────────────
+let restTotal   = 60;   // segons configurats
+let restLeft    = 60;   // segons restants
+let restIv      = null;
+let restRunning = false;
+
+function restFmt(s) {
+  const m = Math.floor(s/60), sec = s%60;
+  return m>0 ? `${m}:${String(sec).padStart(2,'0')}` : `${s}`;
+}
+
+function restUpdateUI() {
+  const pct = restTotal>0 ? (restLeft/restTotal)*100 : 0;
+  qs('rest-display').textContent = restFmt(restLeft);
+  qs('rest-bar').style.width = pct+'%';
+  // Color: verd→taronja→vermell a mesura que s'acaba
+  const color = pct>50 ? 'var(--accent)' : pct>20 ? '#ffaa00' : 'var(--accent2)';
+  qs('rest-display').style.color = color;
+  qs('rest-bar').style.background = color;
+}
+
+window.restSetTime = function(secs) {
+  restStop();
+  restTotal = secs; restLeft = secs;
+  restUpdateUI();
+  qs('rest-btn-start').textContent = '▶ INICIAR';
+}
+
+window.restToggle = function() {
+  if(restRunning) { restStop(); }
+  else {
+    if(restLeft<=0) { restLeft=restTotal; }
+    restRunning=true;
+    qs('rest-btn-start').textContent = '⏸ PAUSA';
+    restIv = setInterval(()=>{
+      restLeft--;
+      if(restLeft>0 && restLeft<=3) countdownBeep();
+      restUpdateUI();
+      if(restLeft<=0) {
+        restStop();
+        restBeep();
+        qs('rest-display').textContent = '✓';
+        qs('rest-display').style.color = 'var(--accent)';
+        qs('rest-bar').style.width = '0%';
+        qs('rest-btn-start').textContent = '▶ INICIAR';
+      }
+    },1000);
+  }
+}
+
+function restStop() {
+  clearInterval(restIv); restIv=null; restRunning=false;
+  qs('rest-btn-start').textContent = restLeft>0&&restLeft<restTotal ? '▶ REPRENDRE' : '▶ INICIAR';
+}
+
+window.restReset = function() {
+  restStop(); restLeft=restTotal; restUpdateUI();
+  qs('rest-btn-start').textContent = '▶ INICIAR';
+}
+
+function restBeep() {
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    [0, 0.15, 0.3].forEach(t => {
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value=880;
+      g.gain.setValueAtTime(.3, ctx.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime+t+.12);
+      o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+.15);
+    });
+  } catch(e){}
 }
 
 // ── BOOT ──────────────────────────────────────────────────────
