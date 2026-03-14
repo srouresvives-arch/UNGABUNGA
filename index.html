@@ -484,10 +484,17 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <div id="stats-detail"></div>
     </div>
 
-    <!-- ══ HIIT TIMER ══ -->
+    <!-- ══ CRONOS ══ -->
     <div class="page" id="page-hiit">
       <div class="ph">
-        <div class="ph-title">HIIT<em>TIMER</em></div>
+        <div class="ph-title">CRO<em>NOS</em></div>
+      </div>
+
+      <!-- Títol secció HIIT -->
+      <div style="display:flex;align-items:center;gap:10px;padding:0 16px 14px">
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+        <div style="font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text)">⚡ HIIT</div>
+        <div style="flex:1;height:1px;background:var(--border)"></div>
       </div>
 
       <!-- Config -->
@@ -563,9 +570,12 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 
       <!-- ── TEMPORITZADOR DE DESCANS ── -->
       <div style="margin:24px 0 0;border-top:1px solid var(--border);padding-top:20px">
-        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:14px;padding:0 16px">⏱ TEMPORITZADOR DE DESCANS</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:0 16px 14px">
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+          <div style="font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text)">⏱ DESCANS</div>
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+        </div>
         <div style="padding:0 16px">
-          <!-- Presets -->
           <div style="display:flex;gap:6px;margin-bottom:12px">
             <button class="btn btn-g btn-sm" style="flex:1" onclick="restSetTime(30)">30s</button>
             <button class="btn btn-g btn-sm" style="flex:1" onclick="restSetTime(60)">1min</button>
@@ -573,13 +583,10 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
             <button class="btn btn-g btn-sm" style="flex:1" onclick="restSetTime(120)">2min</button>
             <button class="btn btn-g btn-sm" style="flex:1" onclick="restSetTime(180)">3min</button>
           </div>
-          <!-- Display -->
           <div id="rest-display" style="font-family:var(--font-display);font-size:80px;font-weight:900;text-align:center;line-height:1;margin-bottom:8px;color:var(--accent);transition:color .3s">1:00</div>
-          <!-- Progress bar -->
           <div style="height:4px;background:var(--s3);border-radius:2px;margin-bottom:18px;overflow:hidden">
             <div id="rest-bar" style="height:100%;border-radius:2px;background:var(--accent);width:100%;transition:width .25s linear,background .3s"></div>
           </div>
-          <!-- Controls -->
           <div style="display:flex;gap:8px">
             <button class="btn btn-y" style="flex:2;font-size:16px;padding:14px" id="rest-btn-start" onclick="restToggle()">▶ INICIAR</button>
             <button class="btn btn-g" style="flex:1" onclick="restReset()">↺</button>
@@ -593,6 +600,10 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 
   <!-- ══ NAV ══ -->
   <nav id="nav">
+    <button class="nav-btn" onclick="openModal('m-backup')" id="nb-backup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      PERFIL
+    </button>
     <button class="nav-btn" onclick="nav('exercises')" id="nb-exercises">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6.5 6.5h11M6.5 17.5h11M3 12h18"/></svg>
       EJERC.
@@ -603,15 +614,11 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     </button>
     <button class="nav-btn" onclick="nav('hiit')" id="nb-hiit">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-      HIIT
+      CRONOS
     </button>
     <button class="nav-btn" onclick="nav('stats')" id="nb-stats">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       STATS
-    </button>
-    <button class="nav-btn" onclick="openModal('m-backup')" id="nb-backup">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      ⚙
     </button>
   </nav>
 
@@ -623,7 +630,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 <div class="overlay" id="m-backup">
   <div class="modal">
     <div class="drag-handle"></div>
-    <div class="modal-title">Ajustos</div>
+    <div class="modal-title">Perfil</div>
 
     <!-- Usuari -->
     <div class="card" style="margin:0 0 10px">
@@ -864,25 +871,20 @@ async function initLogin() {
     if(snap.exists()) {
       users = snap.data().list || [];
     } else {
+      // Primera vegada: crea l'usuari Sergi per defecte
       users = [{ id: 'sergi_roures', name: 'Sergi Roures' }];
-      try { await setDoc(USERS_DOC, { list: users }); } catch(e){}
+      await setDoc(USERS_DOC, { list: users });
     }
   } catch(e) {
-    console.warn('initLogin Firebase error:', e.message);
     users = JSON.parse(localStorage.getItem('ub_users') || '[]');
     if(!users.length) users = [{ id: 'sergi_roures', name: 'Sergi Roures' }];
   }
-
-  // Sempre guarda la llista al localStorage com a cache
-  localStorage.setItem('ub_users', JSON.stringify(users));
 
   // Comprova si hi ha sessió guardada
   const savedId = localStorage.getItem('ub_current_user');
   if(savedId) {
     const found = users.find(u=>u.id===savedId);
     if(found) { currentUser=found; startApp(users); return; }
-    // Si no troba l'ID guardat, esborra'l i mostra el login
-    localStorage.removeItem('ub_current_user');
   }
 
   renderLoginUsers(users);
@@ -901,11 +903,11 @@ function renderLoginUsers(users) {
 }
 
 window.loginAs = async function(userId) {
-  let users = JSON.parse(localStorage.getItem('ub_users')||'[]');
+  let users = [];
   try {
     const snap = await getDoc(USERS_DOC);
-    if(snap.exists()) { users = snap.data().list || []; localStorage.setItem('ub_users', JSON.stringify(users)); }
-  } catch(e) {}
+    if(snap.exists()) users = snap.data().list || [];
+  } catch(e) { users = JSON.parse(localStorage.getItem('ub_users')||'[]'); }
   const found = users.find(u=>u.id===userId);
   if(!found) return;
   currentUser = found;
@@ -917,11 +919,11 @@ window.loginRegister = async function() {
   const name = (qs('login-new-name').value||'').trim();
   if(!name) { qs('login-err').textContent='Escriu el teu nom!'; return; }
 
-  let users = JSON.parse(localStorage.getItem('ub_users')||'[]');
+  let users = [];
   try {
     const snap = await getDoc(USERS_DOC);
     if(snap.exists()) users = snap.data().list || [];
-  } catch(e) {}
+  } catch(e) { users = JSON.parse(localStorage.getItem('ub_users')||'[]'); }
 
   if(users.find(u=>u.name.toLowerCase()===name.toLowerCase())) {
     qs('login-err').textContent='Aquest nom ja existeix!'; return;
@@ -929,7 +931,9 @@ window.loginRegister = async function() {
 
   const newUser = { id: Date.now().toString(36)+Math.random().toString(36).slice(2,5), name };
   users.push(newUser);
-  try { await setDoc(USERS_DOC, { list: users }); } catch(e){}
+  try {
+    await setDoc(USERS_DOC, { list: users });
+  } catch(e) {}
   localStorage.setItem('ub_users', JSON.stringify(users));
 
   currentUser = newUser;
@@ -941,7 +945,7 @@ function startApp(users) {
   qs('login-screen').style.display = 'none';
   qs('loader').style.display = 'flex';
   renderUserBadge();
-  loadPhysData().catch(()=>{}).then(() => loadData());
+  loadPhysData().then(() => loadData());
 }
 
 function renderUserBadge() {
@@ -1918,14 +1922,16 @@ function renderStatsGlobal() {
     : 0;
 
   // Gràfics setmanals per dies únics
-  const weekVol={}, weekKcal={};
+  const weekVol={}, weekKcal={}, weekCount={};
   Object.entries(dayMap).forEach(([ds,d])=>{
     const k=weekKey(ds);
     weekVol[k]  = (weekVol[k]||0)  + d.vol;
     weekKcal[k] = (weekKcal[k]||0) + d.kcal;
+    weekCount[k]= (weekCount[k]||0) + 1;
   });
   const allWeeks = Object.keys(weekVol).sort().slice(-10);
   const volData  = allWeeks.map(k=>Math.round(weekVol[k]));
+  const freqData = allWeeks.map(k=>weekCount[k]);
   const kcalData = allWeeks.map(k=>Math.round(weekKcal[k]));
   const weekLbls = allWeeks.map(k=>{const d=new Date(k+'T12:00:00');return d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});});
 
@@ -1960,6 +1966,11 @@ function renderStatsGlobal() {
       <div class="chart-sub">ESTIMACIÓ PER MET × PES CORPORAL</div>
       <canvas id="cg-kcal" height="130"></canvas>
     </div>`:''}
+    <div class="chart-wrap">
+      <div class="chart-title">Freqüència setmanal <span style="color:var(--accent3);font-size:10px">(dies)</span></div>
+      <div class="chart-sub">DIES D'ENTRENO PER SETMANA</div>
+      <canvas id="cg-freq" height="110"></canvas>
+    </div>
     ${prs.length?`
     <div style="padding:0 16px 4px">
       <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">🏆 ELS MEUS RÈCORDS</div>
@@ -1978,6 +1989,7 @@ function renderStatsGlobal() {
   setTimeout(()=>{
     if(volData.length)  drawBarChart('cg-vol',  weekLbls, volData,  '#d4ff00');
     if(!noPhys&&kcalData.some(v=>v>0)) drawBarChart('cg-kcal', weekLbls, kcalData, '#ff4520');
+    if(freqData.length) drawBarChart('cg-freq', weekLbls, freqData, '#00cfff', true);
   },60);
 }
 
@@ -2296,18 +2308,6 @@ let hiitIv    = null;
 
 function initHiitPage() {} // res a inicialitzar
 
-function countdownBeep() {
-  try {
-    const ctx = new (window.AudioContext||window.webkitAudioContext)();
-    const o = ctx.createOscillator(), g = ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.frequency.value = 660;
-    g.gain.setValueAtTime(.25, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime+.08);
-    o.start(); o.stop(ctx.currentTime+.1);
-  } catch(e){}
-}
-
 function hiitBeep(type) {
   try {
     const ctx = new (window.AudioContext||window.webkitAudioContext)();
@@ -2321,12 +2321,12 @@ function hiitBeep(type) {
 }
 
 window.hiitStart = function() {
-  const work   = Math.max(5,  parseInt(qs('hiit-work').value)  || 30);
-  const rest   = Math.max(5,  parseInt(qs('hiit-rest').value)  || 15);
-  const rround = Math.max(10, parseInt(qs('hiit-rround').value)|| 90);
-  const rounds = Math.max(1,  parseInt(qs('hiit-rounds').value)|| 4);
-  const nexs   = Math.max(1,  parseInt(qs('hiit-nexs').value)  || 4);
-  const exs    = Array.from({length:nexs},(_,i)=>`Exercici ${i+1}`);
+  const work   = Math.max(5,  parseInt(qs('hiit-work').value)   || 30);
+  const rest   = Math.max(5,  parseInt(qs('hiit-rest').value)   || 15);
+  const rround = Math.max(10, parseInt(qs('hiit-rround').value) || 90);
+  const rounds = Math.max(1,  parseInt(qs('hiit-rounds').value) || 4);
+  const nexs   = Math.max(1,  parseInt(qs('hiit-nexs').value)   || 4);
+  const exs    = Array.from({length:nexs}, (_,i) => `Exercici ${i+1}`);
 
   hiitState = { round:0, ex:0, phase:'work', remaining:work, total:work,
                 work, rest, rround, rounds, exs, paused:false };
@@ -2364,7 +2364,7 @@ window.hiitReset = function() {
 function hiitTick() {
   if(!hiitState||hiitState.paused) return;
   hiitState.remaining--;
-  if(hiitState.remaining>0 && hiitState.remaining<=3) countdownBeep();
+  if(hiitState.remaining>0&&hiitState.remaining<=3) countdownBeep();
   if(hiitState.remaining<=0) hiitAdvance();
   else hiitRender();
 }
@@ -2391,7 +2391,7 @@ function hiitFinish() {
   hiitBeep('done');
   qs('hiit-running').style.display='none';
   qs('hiit-done').style.display='block';
-  qs('hiit-done-sub').textContent = `${hiitState.rounds} rondes · ${hiitState.exs.length} exercicis/ronda · ${hiitState.work}s treball / ${hiitState.rest}s descans`;
+  qs('hiit-done-sub').textContent = hiitState.rounds+' rondes · '+hiitState.exs.length+' exercicis · '+Math.round((hiitState.rounds*(hiitState.exs.length*hiitState.work+(hiitState.exs.length-1)*hiitState.rest)+( hiitState.rounds-1)*hiitState.rround)/60)+' min aprox.';
 }
 
 function hiitRender() {
@@ -2448,77 +2448,76 @@ function hiitRender() {
 }
 
 // ── TEMPORITZADOR DE DESCANS ──────────────────────────────────
-let restTotal   = 60;   // segons configurats
-let restLeft    = 60;   // segons restants
+let restTotal   = 60;
+let restLeft    = 60;
 let restIv      = null;
 let restRunning = false;
 
 function restFmt(s) {
-  const m = Math.floor(s/60), sec = s%60;
+  const m=Math.floor(s/60), sec=s%60;
   return m>0 ? `${m}:${String(sec).padStart(2,'0')}` : `${s}`;
 }
-
 function restUpdateUI() {
   const pct = restTotal>0 ? (restLeft/restTotal)*100 : 0;
   qs('rest-display').textContent = restFmt(restLeft);
   qs('rest-bar').style.width = pct+'%';
-  // Color: verd→taronja→vermell a mesura que s'acaba
   const color = pct>50 ? 'var(--accent)' : pct>20 ? '#ffaa00' : 'var(--accent2)';
   qs('rest-display').style.color = color;
   qs('rest-bar').style.background = color;
 }
-
 window.restSetTime = function(secs) {
-  restStop();
-  restTotal = secs; restLeft = secs;
-  restUpdateUI();
-  qs('rest-btn-start').textContent = '▶ INICIAR';
+  restStop(); restTotal=secs; restLeft=secs;
+  restUpdateUI(); qs('rest-btn-start').textContent='▶ INICIAR';
 }
-
 window.restToggle = function() {
-  if(restRunning) { restStop(); }
-  else {
-    if(restLeft<=0) { restLeft=restTotal; }
-    restRunning=true;
-    qs('rest-btn-start').textContent = '⏸ PAUSA';
-    restIv = setInterval(()=>{
-      restLeft--;
-      if(restLeft>0 && restLeft<=3) countdownBeep();
-      restUpdateUI();
-      if(restLeft<=0) {
-        restStop();
-        restBeep();
-        qs('rest-display').textContent = '✓';
-        qs('rest-display').style.color = 'var(--accent)';
-        qs('rest-bar').style.width = '0%';
-        qs('rest-btn-start').textContent = '▶ INICIAR';
-      }
-    },1000);
-  }
+  if(restRunning) { restStop(); return; }
+  if(restLeft<=0) restLeft=restTotal;
+  restRunning=true;
+  qs('rest-btn-start').textContent='⏸ PAUSA';
+  restIv=setInterval(()=>{
+    restLeft--;
+    if(restLeft>0&&restLeft<=3) countdownBeep();
+    restUpdateUI();
+    if(restLeft<=0) {
+      restStop(); restBeep();
+      qs('rest-display').textContent='✓';
+      qs('rest-display').style.color='var(--accent)';
+      qs('rest-bar').style.width='0%';
+      qs('rest-btn-start').textContent='▶ INICIAR';
+    }
+  },1000);
 }
-
 function restStop() {
   clearInterval(restIv); restIv=null; restRunning=false;
   qs('rest-btn-start').textContent = restLeft>0&&restLeft<restTotal ? '▶ REPRENDRE' : '▶ INICIAR';
 }
-
 window.restReset = function() {
   restStop(); restLeft=restTotal; restUpdateUI();
-  qs('rest-btn-start').textContent = '▶ INICIAR';
+  qs('rest-btn-start').textContent='▶ INICIAR';
 }
-
 function restBeep() {
   try {
-    const ctx = new (window.AudioContext||window.webkitAudioContext)();
-    [0, 0.15, 0.3].forEach(t => {
-      const o=ctx.createOscillator(), g=ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [0,.15,.3].forEach(t=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
       o.frequency.value=880;
-      g.gain.setValueAtTime(.3, ctx.currentTime+t);
-      g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime+t+.12);
-      o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+.15);
+      g.gain.setValueAtTime(.3,ctx.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+t+.12);
+      o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+.15);
     });
-  } catch(e){}
+  }catch(e){}
+}
+function countdownBeep() {
+  try {
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.frequency.value=660;
+    g.gain.setValueAtTime(.25,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.08);
+    o.start();o.stop(ctx.currentTime+.1);
+  }catch(e){}
 }
 
 // ── BOOT ──────────────────────────────────────────────────────
