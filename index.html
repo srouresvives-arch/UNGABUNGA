@@ -59,7 +59,9 @@ body::after{
   border-top:1px solid var(--border);
   backdrop-filter:blur(20px);
   padding-bottom:env(safe-area-inset-bottom);
-  flex-shrink:0;
+  position:fixed;
+  bottom:0;left:0;right:0;
+  z-index:100;
 }
 .nav-btn{
   display:flex;flex-direction:column;align-items:center;gap:3px;
@@ -72,7 +74,7 @@ body::after{
 .nav-btn.on{color:var(--accent)}
 
 /* ── PAGES ── */
-.page{display:none;padding:0 0 24px;min-height:100%}
+.page{display:none;padding:0 0 90px}
 .page.on{display:block;animation:fadeUp .2s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
@@ -441,7 +443,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <div class="cal-wrap">
         <div class="cal-grid" id="cal-grid"></div>
       </div>
-      <div id="cal-day-detail" class="px16"></div>
+      <div id="cal-day-detail" class="px16" style="padding-bottom:16px"></div>
     </div>
 
     <!-- ══ EXERCICIS + RUTINES ══ -->
@@ -744,40 +746,6 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <input type="file" accept=".json" onchange="importData(event)" style="display:none">
         </label>
         <div id="bk-status" style="font-family:var(--font-mono);font-size:9px;text-align:center;margin-top:8px"></div>
-        </div>
-
-        <!-- Generador d'historial retroactiu -->
-        <div class="card" style="margin:0 0 10px">
-          <div class="card-title">Generar historial</div>
-          <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:12px;line-height:1.8">
-            Genera entrenos retroactius des de l'1 de gener fins a una data,<br>
-            alternant les teves rutines de força amb el ratio 2/3 dies.<br>
-            Els pesos seran els teus actuals <span style="color:var(--accent)">−2.5 kg</span> per exercici.
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-            <div>
-              <label class="lbl">Des de</label>
-              <input class="inp" id="gen-from" type="date" value="2026-01-01">
-            </div>
-            <div>
-              <label class="lbl">Fins a</label>
-              <input class="inp" id="gen-to" type="date" value="2026-03-07">
-            </div>
-          </div>
-          <div style="margin-bottom:10px">
-            <label class="lbl">Reducció de pes per exercici</label>
-            <select class="inp" id="gen-reduction">
-              <option value="2.5" selected>−2.5 kg</option>
-              <option value="5">−5 kg</option>
-              <option value="0">Mateixos pesos actuals</option>
-            </select>
-          </div>
-          <div id="gen-preview" style="display:none;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px;margin-bottom:10px;font-family:var(--font-mono);font-size:9px;color:var(--muted);line-height:2"></div>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-g btn-w" style="flex:1" onclick="previewHistorial()">👁 PREVISUALITZAR</button>
-            <button class="btn btn-y btn-w" style="flex:1" id="gen-confirm-btn" onclick="generateHistorial()" style="display:none">✓ GENERAR</button>
-          </div>
-          <div id="gen-status" style="font-family:var(--font-mono);font-size:9px;text-align:center;margin-top:8px;min-height:14px"></div>
         </div>
       </div>
     </div>
@@ -3038,162 +3006,6 @@ window.importData = function(ev) {
   fr.readAsText(f); ev.target.value='';
 }
 
-// ── GENERADOR D'HISTORIAL RETROACTIU ─────────────────────────
-let _genWorkouts  = []; // preview cache
-let _genRestNotes = {}; // preview rest notes cache
-
-function buildRetroWorkouts(fromDs, toDs, reductionKg) {
-  // Rutines de força (en ordre de rotació, excloem HIIT per simplicitat)
-  const forceRoutineNames = [
-    'Sessió 1 — Esquena + Bíceps',
-    'Sessió 2 — Cames + Espatlles',
-    'Sessió 4 — Pectoral + Tríceps',
-    'Sessió 5 — Cames',
-  ];
-  const forceRoutines = forceRoutineNames
-    .map(n => routines.find(r => r.name === n))
-    .filter(Boolean);
-
-  if(!forceRoutines.length) return [];
-
-  // Patró setmanal: dilluns, dimarts, dijous, divendres, dissabte = 5 dies
-  // (66% de 7 = 4.6, arrodonit a 5, saltant dimecres i diumenge)
-  const TRAIN_DAYS = [1,2,4,5,6]; // 0=diumenge, 1=dilluns...
-
-  const from = new Date(fromDs + 'T12:00:00');
-  const to   = new Date(toDs   + 'T12:00:00');
-
-  // Busca els pesos actuals de cada exercici (màxim PR de la BD)
-  function getCurrentWeight(exId) {
-    const ex = exercises.find(e => e.id === exId);
-    if(!ex) return 0;
-    if(ex.type === 'bodyweight' || ex.type === 'tiempo' || ex.type === 'cardio') return 0;
-    let max = 0;
-    workouts.forEach(w => w.exercises.forEach(ae => {
-      if(ae.exerciseId !== exId) return;
-      ae.sets.forEach(s => { max = Math.max(max, parseFloat(s.weight)||0); });
-    }));
-    return max;
-  }
-
-  const generated = [];
-  const restNotes = {}; // { ds: { type:'rest', note:'' } }
-  let rtIdx = 0;
-  const cur = new Date(from);
-
-  while(cur <= to) {
-    const dow = cur.getDay();
-    const ds  = cur.toISOString().slice(0,10);
-    if(TRAIN_DAYS.includes(dow)) {
-      const rt = forceRoutines[rtIdx % forceRoutines.length];
-      rtIdx++;
-
-      const exList = rt.exerciseIds.map(eId => {
-        const ex = exercises.find(e => e.id === eId);
-        if(!ex) return null;
-        const curW = getCurrentWeight(eId);
-        const useW = ex.type === 'fuerza' ? Math.max(0, curW - reductionKg) : 0;
-        const sets = Array.from({length:3}, () => ({
-          weight: useW > 0 ? String(useW) : '',
-          reps:   ex.type === 'bodyweight' ? '10'
-                : ex.type === 'tiempo'     ? '30'
-                : ex.type === 'cardio'     ? '300'
-                : '10'
-        }));
-        return { id: uid(), exerciseId: eId, name: ex.name, sets };
-      }).filter(Boolean);
-
-      generated.push({
-        id: uid(), date: new Date(ds+'T09:00:00').toISOString(),
-        startTime: new Date(ds+'T09:00:00').getTime(),
-        duration: 75*60*1000, exercises: exList, routineId: rt.id,
-        energyStart: null, energyEnd: null, note: '', noteEnd: '', _retro: true,
-      });
-    } else {
-      // Dia de descans — etiqueta automàtica
-      restNotes[ds] = { type: 'rest', note: '' };
-    }
-    cur.setDate(cur.getDate() + 1);
-  }
-  return { generated, restNotes };
-}
-
-window.previewHistorial = function() {
-  const fromDs = qs('gen-from').value;
-  const toDs   = qs('gen-to').value;
-  const red    = parseFloat(qs('gen-reduction').value) || 0;
-  const prev   = qs('gen-preview');
-  const btn    = qs('gen-confirm-btn');
-  const st     = qs('gen-status');
-
-  if(!fromDs || !toDs || fromDs >= toDs) {
-    st.style.color = 'var(--accent2)'; st.textContent = 'Comprova les dates!'; return;
-  }
-
-  const { generated, restNotes } = buildRetroWorkouts(fromDs, toDs, red);
-  _genWorkouts = generated;
-  _genRestNotes = restNotes;
-
-  if(!generated.length) {
-    prev.style.display = 'block';
-    prev.innerHTML = '<span style="color:var(--accent2)">No s\'han trobat rutines de força.</span>';
-    btn.style.display = 'none'; return;
-  }
-
-  const byWeek = {};
-  generated.forEach(w => {
-    const k = weekKey(w.date.slice(0,10));
-    if(!byWeek[k]) byWeek[k] = [];
-    byWeek[k].push(w);
-  });
-
-  const nRest = Object.keys(restNotes).length;
-  let html = `<div style="color:var(--accent);font-weight:600;margin-bottom:6px">
-    ${generated.length} entrenos · ${Object.keys(byWeek).length} setmanes · ${nRest} dies descans 😴
-    ${red>0?' · pesos −'+red+'kg':''}
-  </div>`;
-  Object.entries(byWeek).sort().forEach(([wk, ws]) => {
-    const d = new Date(wk+'T12:00:00').toLocaleDateString('ca-ES',{day:'numeric',month:'short'});
-    html += `<div>Setm. ${d}: ${ws.length} entrenos — ${ws.map(w=>new Date(w.date).toLocaleDateString('ca-ES',{weekday:'short'})).join(', ')}</div>`;
-  });
-
-  prev.style.display = 'block';
-  prev.innerHTML = html;
-  btn.style.display = 'block';
-  st.textContent = '';
-}
-
-window.generateHistorial = function() {
-  if(!_genWorkouts.length) return;
-  const st = qs('gen-status');
-
-  const existingDays = new Set(workouts.map(w => w.date.slice(0,10)));
-  const toAdd    = _genWorkouts.filter(w => !existingDays.has(w.date.slice(0,10)));
-  const skipped  = _genWorkouts.length - toAdd.length;
-  const nRest    = Object.keys(_genRestNotes).length;
-
-  if(!confirm(
-    `S'afegiran ${toAdd.length} entrenos retroactius i ${nRest} etiquetes de descans actiu.`+
-    `${skipped>0?'\n('+skipped+' dies ja tenien entreno, s\'han saltat)':''}\n\n⚠ Continuar?`
-  )) return;
-
-  // Afegeix entrenos
-  workouts = [...workouts, ...toAdd].sort((a,b) => new Date(b.date)-new Date(a.date));
-
-  // Afegeix etiquetes de descans (sense sobreescriure les existents)
-  Object.entries(_genRestNotes).forEach(([ds, dn]) => {
-    if(!dayNotes[ds]) dayNotes[ds] = dn;
-  });
-
-  save();
-  _genWorkouts = []; _genRestNotes = {};
-  qs('gen-preview').style.display = 'none';
-  qs('gen-confirm-btn').style.display = 'none';
-  st.style.color = 'var(--accent)';
-  st.textContent = `✓ ${toAdd.length} entrenos + ${nRest} descansos afegits!`;
-  renderPerfilPage();
-  setTimeout(() => { st.textContent = ''; }, 3000);
-}
 
 // ── MODALS ────────────────────────────────────────────────────
 window.openModal = function(id) {
