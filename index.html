@@ -745,6 +745,40 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         </label>
         <div id="bk-status" style="font-family:var(--font-mono);font-size:9px;text-align:center;margin-top:8px"></div>
         </div>
+
+        <!-- Generador d'historial retroactiu -->
+        <div class="card" style="margin:0 0 10px">
+          <div class="card-title">Generar historial</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:12px;line-height:1.8">
+            Genera entrenos retroactius des de l'1 de gener fins a una data,<br>
+            alternant les teves rutines de força amb el ratio 2/3 dies.<br>
+            Els pesos seran els teus actuals <span style="color:var(--accent)">−2.5 kg</span> per exercici.
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+            <div>
+              <label class="lbl">Des de</label>
+              <input class="inp" id="gen-from" type="date" value="2026-01-01">
+            </div>
+            <div>
+              <label class="lbl">Fins a</label>
+              <input class="inp" id="gen-to" type="date" value="2026-03-07">
+            </div>
+          </div>
+          <div style="margin-bottom:10px">
+            <label class="lbl">Reducció de pes per exercici</label>
+            <select class="inp" id="gen-reduction">
+              <option value="2.5" selected>−2.5 kg</option>
+              <option value="5">−5 kg</option>
+              <option value="0">Mateixos pesos actuals</option>
+            </select>
+          </div>
+          <div id="gen-preview" style="display:none;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px;margin-bottom:10px;font-family:var(--font-mono);font-size:9px;color:var(--muted);line-height:2"></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-g btn-w" style="flex:1" onclick="previewHistorial()">👁 PREVISUALITZAR</button>
+            <button class="btn btn-y btn-w" style="flex:1" id="gen-confirm-btn" onclick="generateHistorial()" style="display:none">✓ GENERAR</button>
+          </div>
+          <div id="gen-status" style="font-family:var(--font-mono);font-size:9px;text-align:center;margin-top:8px;min-height:14px"></div>
+        </div>
       </div>
     </div>
 
@@ -778,8 +812,32 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 
 <!-- ══════════════════════════════════════════ MODALS ══════════════════════════════════════════ -->
 
+<!-- ENERGY CHECK -->
+<div class="overlay" id="m-energy">
+  <div class="modal" style="text-align:center">
+    <div class="drag-handle"></div>
+    <div id="m-energy-title" class="modal-title" style="margin-bottom:6px">Com et trobes?</div>
+    <div id="m-energy-sub" style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:20px"></div>
+    <!-- Escala 1-5 -->
+    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:20px" id="energy-btns">
+      <button onclick="selectEnergy(1)" class="energy-btn" data-val="1" style="font-size:22px;background:none;border:2px solid var(--border);border-radius:50%;width:52px;height:52px;cursor:pointer;transition:.15s">😴</button>
+      <button onclick="selectEnergy(2)" class="energy-btn" data-val="2" style="font-size:22px;background:none;border:2px solid var(--border);border-radius:50%;width:52px;height:52px;cursor:pointer;transition:.15s">😕</button>
+      <button onclick="selectEnergy(3)" class="energy-btn" data-val="3" style="font-size:22px;background:none;border:2px solid var(--border);border-radius:50%;width:52px;height:52px;cursor:pointer;transition:.15s">😐</button>
+      <button onclick="selectEnergy(4)" class="energy-btn" data-val="4" style="font-size:22px;background:none;border:2px solid var(--border);border-radius:50%;width:52px;height:52px;cursor:pointer;transition:.15s">😊</button>
+      <button onclick="selectEnergy(5)" class="energy-btn" data-val="5" style="font-size:22px;background:none;border:2px solid var(--border);border-radius:50%;width:52px;height:52px;cursor:pointer;transition:.15s">🔥</button>
+    </div>
+    <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:1px;margin-bottom:16px" id="energy-labels">
+      <span>CANSAT</span>
+      <span style="float:right">EXPLOSIU</span>
+    </div>
+    <!-- Nota opcional -->
+    <textarea id="energy-note" class="inp" placeholder="Nota opcional (dormir poc, estrès, lesió...)" style="width:100%;min-height:60px;resize:none;font-size:12px;margin-bottom:14px"></textarea>
+    <button class="btn btn-y btn-w" onclick="confirmEnergy()" id="energy-confirm-btn">CONTINUAR →</button>
+    <button onclick="skipEnergy()" style="display:block;width:100%;margin-top:8px;font-family:var(--font-mono);font-size:9px;color:var(--muted);background:none;border:none;cursor:pointer;letter-spacing:1px;padding:4px">SALTAR</button>
+  </div>
+</div>
 
-<!-- EDIT EXERCISE -->
+
 <div class="overlay" id="m-exercise">
   <div class="modal">
     <div class="drag-handle"></div>
@@ -934,6 +992,8 @@ const USERS_DOC = doc(db, 'ungabunga', 'users');
 let currentUser = null; // { id, name }
 let physData    = null; // { weight, height, age, sex, ... }
 let physHistory = [];  // [{ date, weight, fat, water, muscle, bone, bmr, bmi }, ...]
+let energyMode  = null; // 'start' | 'end'
+let energyVal   = 0;    // valor seleccionat 1-5
 
 function userDoc() {
   return doc(db, 'ungabunga', 'user_' + currentUser.id);
@@ -1047,6 +1107,7 @@ function renderUserBadge() {
 let exercises   = [];
 let workouts    = [];
 let routines    = [];
+let dayNotes    = {}; // { 'YYYY-MM-DD': { type:'rest'|'vacation'|'sick'|'travel'|'other', note:'' } }
 
 let activeWo   = null;
 let timerIv    = null;
@@ -1071,7 +1132,7 @@ const today = () => new Date().toISOString().split('T')[0];
 // ── FIRESTORE SYNC ────────────────────────────────────────────
 async function saveRemote() {
   try {
-    await setDoc(userDoc(), { exercises, workouts, routines, updated: Date.now() });
+    await setDoc(userDoc(), { exercises, workouts, routines, dayNotes, updated: Date.now() });
   } catch(e) { console.error('saveRemote failed:', e); }
 }
 
@@ -1090,10 +1151,12 @@ async function loadData() {
       exercises = d.exercises || [];
       workouts  = d.workouts  || [];
       routines  = d.routines  || [];
+      dayNotes  = d.dayNotes  || {};
     } else {
       exercises = getDefaultExercises();
       workouts  = getSeedWorkouts(exercises);
       routines  = getDefaultRoutines(exercises);
+      dayNotes  = {};
       await saveRemote();
     }
   } catch(e) {
@@ -1102,6 +1165,7 @@ async function loadData() {
     exercises = cached?.exercises || getDefaultExercises();
     workouts  = cached?.workouts  || [];
     routines  = cached?.routines  || [];
+    dayNotes  = cached?.dayNotes  || {};
   } finally {
     // Migració silenciosa: corregeix tipus d'exercicis mal etiquetats
     let migrated = false;
@@ -1121,7 +1185,7 @@ async function loadData() {
 
 function save() {
   const lsKey = 'ub_data_' + currentUser.id;
-  localStorage.setItem(lsKey, JSON.stringify({exercises,workouts,routines}));
+  localStorage.setItem(lsKey, JSON.stringify({exercises,workouts,routines,dayNotes}));
   saveRemote();
 }
 
@@ -1691,9 +1755,9 @@ function getLastSets(exId) { return getBestSets(exId); }
 
 // ── WORKOUT FLOW ──────────────────────────────────────────────
 window.startWorkout = function(routineId) {
-  if(activeWo && !confirm('Ya hay un entreno activo. ¿Descartarlo?')) return;
+  if(activeWo && !confirm('Ja hi ha un entreno actiu. Descartar-lo?')) return;
   clearInterval(timerIv);
-  activeWo={id:uid(),date:new Date().toISOString(),startTime:Date.now(),exercises:[],routineId:routineId||null};
+  activeWo={id:uid(),date:new Date().toISOString(),startTime:Date.now(),exercises:[],routineId:routineId||null,energyStart:null,energyEnd:null,note:''};
   if(routineId){
     const rt=routines.find(r=>r.id===routineId);
     if(rt) rt.exerciseIds.forEach(eId=>{
@@ -1701,10 +1765,8 @@ window.startWorkout = function(routineId) {
       if(ex) activeWo.exercises.push({id:uid(),exerciseId:eId,name:ex.name,sets:getLastSets(eId)});
     });
   }
-  qs('active-bar').classList.add('on');
-  startTimer();
-  nav('workout');
-  renderWorkout();
+  // Mostra modal d'energia inicial
+  openEnergyModal('start');
 }
 
 function startTimer() {
@@ -1722,17 +1784,82 @@ function startTimer() {
 window.finishWorkout = function() {
   if(!activeWo) return;
   if(activeWo.exercises.length===0){
-    if(!confirm('Sin ejercicios. ¿Descartar?')) return;
+    if(!confirm('Sense exercicis. Descartar?')) return;
     activeWo=null; clearInterval(timerIv);
     qs('active-bar').classList.remove('on');
     nav('cal'); return;
   }
   activeWo.duration=Date.now()-activeWo.startTime;
-  workouts.push(activeWo);
-  save();
-  activeWo=null; clearInterval(timerIv);
+  // Mostra modal d'energia final
+  openEnergyModal('end');
+}
+
+// ── ENERGIA / NOTES ───────────────────────────────────────────
+const ENERGY_EMOJI  = ['','😴','😕','😐','😊','🔥'];
+const ENERGY_LABEL  = ['','Cansat/da','Baix','Normal','Bé','Explosiu/va'];
+
+function openEnergyModal(mode) {
+  energyMode = mode;
+  energyVal  = 0;
+  qs('m-energy-title').textContent = mode==='start' ? 'Com et trobes ara?' : 'Com has acabat?';
+  qs('m-energy-sub').textContent   = mode==='start' ? 'ENERGIA INICIAL' : 'ENERGIA FINAL';
+  qs('energy-note').value          = mode==='start' ? (activeWo?.note||'') : (activeWo?.noteEnd||'');
+  // Reset botons
+  document.querySelectorAll('.energy-btn').forEach(b=>{
+    b.style.borderColor = 'var(--border)';
+    b.style.background  = 'none';
+    b.style.transform   = 'scale(1)';
+  });
+  openModal('m-energy');
+}
+
+window.selectEnergy = function(val) {
+  energyVal = val;
+  document.querySelectorAll('.energy-btn').forEach(b=>{
+    const v = parseInt(b.dataset.val);
+    b.style.borderColor = v===val ? 'var(--accent)' : 'var(--border)';
+    b.style.background  = v===val ? 'rgba(212,255,0,.15)' : 'none';
+    b.style.transform   = v===val ? 'scale(1.15)' : 'scale(1)';
+  });
+}
+
+window.confirmEnergy = function() {
+  const note = qs('energy-note').value.trim();
+  if(energyMode==='start') {
+    activeWo.energyStart = energyVal || null;
+    activeWo.note        = note;
+    closeModal('m-energy');
+    nav('workout');
+    startTimer();
+    renderWorkout();
+  } else {
+    activeWo.energyEnd = energyVal || null;
+    activeWo.noteEnd   = note;
+    closeModal('m-energy');
+    _saveFinishedWorkout();
+  }
+}
+
+window.skipEnergy = function() {
+  if(energyMode==='start') {
+    closeModal('m-energy');
+    nav('workout');
+    startTimer();
+    renderWorkout();
+  } else {
+    closeModal('m-energy');
+    _saveFinishedWorkout();
+  }
+}
+
+function _saveFinishedWorkout() {
+  workouts.unshift(activeWo);
+  activeWo = null;
+  clearInterval(timerIv);
   qs('active-bar').classList.remove('on');
+  save();
   nav('cal');
+  renderCalendar();
 }
 
 function renderWorkout() {
@@ -1998,6 +2125,17 @@ window.deleteExercise = function() {
 }
 
 // ── CALENDAR ──────────────────────────────────────────────────
+const DAY_TYPE_OPTS = [
+  { val:'rest',     emoji:'😴', label:'Descans actiu' },
+  { val:'vacation', emoji:'🏖', label:'Vacances / Viatge' },
+  { val:'sick',     emoji:'🤒', label:'Malalt/a' },
+  { val:'travel',   emoji:'✈️',  label:'Fora de casa' },
+  { val:'other',    emoji:'📝', label:'Altre motiu' },
+];
+const DAY_TYPE_COLOR = {
+  rest:'#555', vacation:'#2563eb', sick:'#dc2626', travel:'#7c3aed', other:'#666'
+};
+
 function renderCalendar() {
   const y=calDate.getFullYear(), m=calDate.getMonth();
   const MONTHS=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
@@ -2015,7 +2153,10 @@ function renderCalendar() {
     const dt=new Date(y,m,d); dt.setHours(0,0,0,0);
     const isT=dt.getTime()===tod.getTime();
     const hasW=woDays.has(ds);
-    grid.innerHTML+=`<div class="cal-d ${hasW?'has':''} ${isT?'today':''}" data-ds="${ds}">${d}</div>`;
+    const dn=dayNotes[ds];
+    const dotColor=dn?DAY_TYPE_COLOR[dn.type]||'#666':'';
+    const dot=dn?`<span style="display:block;width:5px;height:5px;border-radius:50%;background:${dotColor};margin:1px auto 0"></span>`:'';
+    grid.innerHTML+=`<div class="cal-d ${hasW?'has':''} ${isT?'today':''}" data-ds="${ds}">${d}${dot}</div>`;
   }
   qs('cal-day-detail').innerHTML='';
   grid.querySelectorAll('.cal-d:not(.empty)').forEach(el=>{
@@ -2029,15 +2170,41 @@ window.calSelectDay = function(ds, el) {
   document.querySelectorAll('.cal-d').forEach(d=>d.classList.remove('sel'));
   el.classList.add('sel');
   const dayWos=workouts.filter(w=>w.date.startsWith(ds));
+  const dn=dayNotes[ds]||null;
   const det=qs('cal-day-detail');
-  const dateLabel=new Date(ds+'T12:00:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
-  let html=`<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin:12px 0 8px">${dateLabel}</div>`;
-  if(!dayWos.length){
-    html+=`<div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-bottom:12px">Sin entrenos</div>`;
-  } else {
+  const dateLabel=new Date(ds+'T12:00:00').toLocaleDateString('ca-ES',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
+
+  let html=`<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin:12px 0 10px">${dateLabel}</div>`;
+
+  // Etiqueta del dia (si existeix)
+  if(dn) {
+    const opt=DAY_TYPE_OPTS.find(o=>o.val===dn.type)||DAY_TYPE_OPTS[4];
+    html+=`<div style="display:flex;align-items:center;justify-content:space-between;background:var(--s1);border:1px solid ${DAY_TYPE_COLOR[dn.type]}55;border-radius:var(--r);padding:10px 12px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:18px">${opt.emoji}</span>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:10px;font-weight:600;color:${DAY_TYPE_COLOR[dn.type]};letter-spacing:1px">${opt.label.toUpperCase()}</div>
+          ${dn.note?`<div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-top:2px;font-style:italic">"${dn.note}"</div>`:''}
+        </div>
+      </div>
+      <button onclick="removeDayNote('${ds}')" style="font-family:var(--font-mono);font-size:9px;color:var(--accent2);background:none;border:none;cursor:pointer;padding:4px 6px">✕</button>
+    </div>`;
+  }
+
+  if(dayWos.length) {
     html+=dayWos.map(w=>{
-      const kcal=calcKcal(w);
-      const kgMin=calcKgPerMin(w);
+      const kcal=calcKcal(w),kgMin=calcKgPerMin(w);
+      const eS=w.energyStart,eE=w.energyEnd;
+      const energyBar=(eS||eE)?`<div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+        ${eS?`<span style="font-size:16px">${ENERGY_EMOJI[eS]}</span>`:''}
+        ${(eS&&eE)?`<span style="font-family:var(--font-mono);font-size:9px;color:var(--muted)">→</span>`:''}
+        ${eE?`<span style="font-size:16px">${ENERGY_EMOJI[eE]}</span>`:''}
+        ${(eS&&eE&&eE>eS)?`<span style="font-size:8px;color:#4ade80">↑</span>`:''}
+        ${(eS&&eE&&eE<eS)?`<span style="font-size:8px;color:#f87171">↓</span>`:''}
+      </div>`:'';
+      const noteBlock=(w.note||w.noteEnd)?`<div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-top:6px;font-style:italic">
+        ${w.note?`"${w.note}"`:''}${w.noteEnd&&w.noteEnd!==w.note?`${w.note?'<br>':''}→ "${w.noteEnd}"`:''}
+      </div>`:'';
       return `<div class="wo-item" onclick="showWoEdit('${w.id}')">
         <div class="wo-exs">${w.exercises.map(e=>e.name).join(' · ')}</div>
         <div class="tags mt8">
@@ -2045,13 +2212,76 @@ window.calSelectDay = function(ds, el) {
           ${kcal?`<span class="tag tag-g">🔥 ${kcal} kcal</span>`:''}
           ${kgMin?`<span class="tag" style="background:rgba(0,207,255,.12);color:#00cfff;border-color:rgba(0,207,255,.3)">${kgMin} kg/min</span>`:''}
           <span class="tag tag-b">✏ EDITAR</span>
-        </div>
+        </div>${energyBar}${noteBlock}
       </div>`;
     }).join('');
+  } else if(!dn) {
+    html+=`<div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-bottom:10px">Sense entrenos</div>`;
   }
-  html+=`<button class="btn btn-g btn-w mt8" style="font-size:12px" onclick="startWorkoutOnDate('${ds}')">+ AÑADIR ENTRENO ESTE DÍA</button>`;
+
+  html+=`<div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
+    <button class="btn btn-y btn-w" style="font-size:15px;padding:12px" onclick="startWorkoutOnDate('${ds}')">+ AFEGIR ENTRENO</button>
+    ${!dn?`<button class="btn btn-g btn-w" style="font-size:12px;padding:9px" onclick="openDayNoteModal('${ds}')">📝 ETIQUETAR DIA</button>`:''}
+  </div>`;
   det.innerHTML=html;
 }
+
+let _selectedDayType=null;
+
+window.openDayNoteModal = function(ds) {
+  const existing=dayNotes[ds]||{};
+  _selectedDayType=existing.type||null;
+  const form=document.createElement('div');
+  form.id='day-note-form';
+  form.style.cssText='margin-top:10px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px';
+  form.innerHTML=`<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);margin-bottom:12px">ETIQUETAR DIA</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+      ${DAY_TYPE_OPTS.map(o=>`<button onclick="selectDayType('${o.val}')" id="dnt-${o.val}"
+        style="display:flex;align-items:center;gap:6px;padding:9px 10px;background:${existing.type===o.val?'rgba(212,255,0,.15)':'var(--s2)'};border:1px solid ${existing.type===o.val?'var(--accent)':'var(--border)'};border-radius:var(--r);cursor:pointer;font-family:var(--font-mono);font-size:9px;color:${existing.type===o.val?'var(--accent)':'var(--muted)'};text-align:left;transition:.15s">
+        <span style="font-size:16px">${o.emoji}</span><span>${o.label}</span>
+      </button>`).join('')}
+    </div>
+    <textarea id="day-note-text" class="inp" placeholder="Nota opcional (Barcelona, dolor de genoll...)" style="width:100%;min-height:50px;resize:none;font-size:12px;margin-bottom:10px">${existing.note||''}</textarea>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <button class="btn btn-g btn-w" onclick="closeDayNoteForm()">CANCEL·LAR</button>
+      <button class="btn btn-y btn-w" onclick="saveDayNote('${ds}')">GUARDAR</button>
+    </div>`;
+  qs('cal-day-detail').appendChild(form);
+}
+
+window.selectDayType = function(val) {
+  _selectedDayType=val;
+  DAY_TYPE_OPTS.forEach(o=>{
+    const b=document.getElementById('dnt-'+o.val); if(!b) return;
+    b.style.background  = o.val===val?'rgba(212,255,0,.15)':'var(--s2)';
+    b.style.borderColor = o.val===val?'var(--accent)':'var(--border)';
+    b.style.color       = o.val===val?'var(--accent)':'var(--muted)';
+  });
+}
+
+window.saveDayNote = function(ds) {
+  const type=_selectedDayType||'other';
+  const note=(qs('day-note-text')?.value||'').trim();
+  dayNotes[ds]={type,note};
+  _selectedDayType=null;
+  save();
+  renderCalendar();
+  const newEl=document.querySelector(`.cal-d[data-ds="${ds}"]`);
+  if(newEl) calSelectDay(ds,newEl);
+}
+
+window.removeDayNote = function(ds) {
+  delete dayNotes[ds];
+  save();
+  renderCalendar();
+  const newEl=document.querySelector(`.cal-d[data-ds="${ds}"]`);
+  if(newEl) calSelectDay(ds,newEl);
+}
+
+window.closeDayNoteForm = function() {
+  const f=qs('day-note-form'); if(f) f.remove();
+}
+
 
 window.startWorkoutOnDate = function(ds) {
   if(activeWo&&!confirm('Hay un entreno activo. ¿Descartarlo?')) return;
@@ -2065,6 +2295,7 @@ window.showWoEdit = function(wId) {
   editWoId=wId;
   const w=workouts.find(x=>x.id===wId); if(!w) return;
   const d=new Date(w.date);
+  const eS = w.energyStart, eE = w.energyEnd;
   let html=`
     <div class="row-between mb12">
       <div>
@@ -2076,7 +2307,14 @@ window.showWoEdit = function(wId) {
     <div class="tags mb12">
       <span class="tag tag-y">${calcVol(w)} kg vol.</span>
       <span class="tag tag-y">${w.exercises.length} ejercicios</span>
-    </div>`;
+      ${eS?`<span class="tag" style="background:var(--s2)">${ENERGY_EMOJI[eS]} inici</span>`:''}
+      ${eE?`<span class="tag" style="background:var(--s2)">${ENERGY_EMOJI[eE]} final</span>`:''}
+    </div>
+    ${(w.note||w.noteEnd)?`<div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-family:var(--font-mono);font-size:9px;color:var(--muted);line-height:1.8;font-style:italic">
+      ${w.note?`<div>"${w.note}"</div>`:''}
+      ${w.noteEnd&&w.noteEnd!==w.note?`<div style="margin-top:4px">→ "${w.noteEnd}"</div>`:''}
+    </div>`:''}`;
+
   w.exercises.forEach(ae=>{
     html+=`<div class="card" style="margin:0 0 8px">
       <div class="row-between mb8">
@@ -2228,6 +2466,14 @@ function weekKey(dateStr) {
   return mon.toISOString().slice(0,10);
 }
 
+function isConsecutiveWeek(wk1, wk2) {
+  // Retorna true si wk2 és exactament la setmana següent a wk1
+  const d1 = new Date(wk1+'T12:00:00');
+  const d2 = new Date(wk2+'T12:00:00');
+  const diff = Math.round((d2-d1)/(7*24*60*60*1000));
+  return diff===1;
+}
+
 function renderStats() {
   renderStatsGlobal();
   const sel=qs('stats-sel');
@@ -2295,15 +2541,126 @@ function renderStatsGlobal() {
 
   const noPhys = !physData?.weight;
 
+  // ── RACXA 66% ─────────────────────────────────────────────────
+  // Objectiu: entrenar ≥ 2 de cada 3 dies (66%)
+  // Calculem per setmanes ISO: setmana OK si ≥ 4 dies d'entreno (66% de 7)
+  // Racxa = setmanes consecutives complertes fins avui
+  const GOAL_DAYS_PER_WEEK = Math.ceil(7 * 0.66); // = 5 dies, però usem 4 per ser realista
+  const GOAL = 4; // 4+ dies/setmana = objectiu complert
+
+  const trainedDays = new Set(workouts.map(w=>w.date.slice(0,10)));
+
+  // Agrupa per setmana ISO
+  const weekTrainMap = {};
+  trainedDays.forEach(ds => {
+    const k = weekKey(ds);
+    weekTrainMap[k] = (weekTrainMap[k]||0) + 1;
+  });
+
+  // Setmana actual i anteriors, fins trobar una que no compleixi
+  const todayKey = weekKey(today());
+  let streak = 0, bestStreak = 0, tempStreak = 0;
+  const sortedWeeks = Object.keys(weekTrainMap).sort().reverse();
+  let prevKey = null;
+  for(const wk of sortedWeeks) {
+    const ok = (weekTrainMap[wk]||0) >= GOAL;
+    if(ok) {
+      tempStreak++;
+      if(prevKey===null || isConsecutiveWeek(wk, prevKey)) {
+        if(wk===todayKey || isConsecutiveWeek(todayKey, wk) || todayKey===wk) streak = tempStreak;
+      }
+    } else {
+      tempStreak = 0;
+    }
+    bestStreak = Math.max(bestStreak, tempStreak);
+    prevKey = wk;
+  }
+  // Racxa actual: setmanes consecutives complertes des de la més recent cap enrere
+  const sortedDesc = Object.keys(weekTrainMap).sort().reverse();
+  let currentStreak = 0;
+  for(let i=0; i<sortedDesc.length; i++) {
+    const wk = sortedDesc[i];
+    const ok = (weekTrainMap[wk]||0) >= GOAL;
+    if(!ok) break;
+    if(i>0 && !isConsecutiveWeek(sortedDesc[i], sortedDesc[i-1])) break;
+    currentStreak++;
+  }
+  bestStreak = Math.max(...Object.keys(weekTrainMap).reduce((acc, wk, i, arr)=>{
+    // recalculate best streak properly
+    return acc;
+  }, [0]), currentStreak);
+
+  // Recalcula millor racxa correctament
+  let best=0, cur=0;
+  const allWks = Object.keys(weekTrainMap).sort();
+  for(let i=0;i<allWks.length;i++) {
+    if((weekTrainMap[allWks[i]]||0)>=GOAL) {
+      if(i===0 || isConsecutiveWeek(allWks[i-1], allWks[i])) { cur++; }
+      else cur=1;
+      best=Math.max(best,cur);
+    } else { cur=0; }
+  }
+  bestStreak=best;
+
+  // Dies entrenant aquesta setmana
+  const thisWeekDays = weekTrainMap[todayKey] || 0;
+  const streakColor  = currentStreak>=3?'var(--accent)':currentStreak>=1?'#facc15':'var(--muted)';
+
   c.innerHTML=`
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 16px 14px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 16px 14px">
       <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalDays}</div><div class="stat-lbl" style="font-size:8px">dies gym</div></div>
       <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalKg>9999?(totalKg/1000).toFixed(1)+'t':totalKg+'k'}</div><div class="stat-lbl" style="font-size:8px">kg total</div></div>
       <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalSets}</div><div class="stat-lbl" style="font-size:8px">sèries</div></div>
-      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${avgKgMin||'—'}</div><div class="stat-lbl" style="font-size:8px">kg/min</div></div>
     </div>
+
+    <!-- RACXA -->
+    <div style="margin:0 16px 14px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px">
+      <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:10px">OBJECTIU: 4+ DIES / SETMANA (66%)</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
+        <div>
+          <div style="font-family:var(--font-display);font-size:28px;font-weight:900;color:${streakColor}">${currentStreak}<span style="font-size:14px">🔥</span></div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:1px;margin-top:2px">RACXA ACTUAL</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--muted)">setmanes</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-display);font-size:28px;font-weight:900;color:var(--accent)">${bestStreak}<span style="font-size:14px">🏆</span></div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:1px;margin-top:2px">MILLOR RACXA</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--muted)">setmanes</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-display);font-size:28px;font-weight:900;color:${thisWeekDays>=GOAL?'var(--accent)':'var(--text)'}">${thisWeekDays}<span style="font-size:14px;color:var(--muted)">/7</span></div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:1px;margin-top:2px">AQUESTA SETM.</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:${thisWeekDays>=GOAL?'var(--accent)':'var(--muted)'}">${thisWeekDays>=GOAL?'✓ OBJECTIU':'falta '+Math.max(0,GOAL-thisWeekDays)}</div>
+        </div>
+      </div>
+      <!-- Últimes 8 setmanes visualment -->
+      <div style="display:flex;gap:4px;margin-top:12px;justify-content:center">
+        ${allWks.slice(-8).map(wk=>{
+          const d=(weekTrainMap[wk]||0);
+          const ok=d>=GOAL;
+          const pct=Math.min(d/7*100,100);
+          return '<div style="flex:1;max-width:32px;text-align:center">'
+            +'<div style="height:32px;background:var(--s2);border-radius:3px;overflow:hidden;position:relative">'
+            +'<div style="position:absolute;bottom:0;left:0;right:0;height:'+pct+'%;background:'+(ok?'var(--accent)':'#555')+';border-radius:3px;transition:.3s"></div>'
+            +'</div>'
+            +'<div style="font-family:var(--font-mono);font-size:7px;color:'+(ok?'var(--accent)':'var(--muted)')+';margin-top:2px">'+d+'d</div>'
+            +'</div>';
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- QUESITO distribució de dies -->
+    <div class="chart-wrap" style="margin:0 16px 14px">
+      <div class="chart-title">Distribució de dies</div>
+      <div class="chart-sub">ENTRENO · DESCANS · VACANCES · ALTRES</div>
+      <div style="display:flex;align-items:center;gap:16px;padding:8px 0">
+        <canvas id="cg-pie" width="140" height="140" style="flex-shrink:0"></canvas>
+        <div id="cg-pie-legend" style="font-family:var(--font-mono);font-size:9px;color:var(--muted);line-height:2.2;min-width:0"></div>
+      </div>
+    </div>
+
     ${noPhys?`<div style="margin:0 16px 14px;padding:10px 12px;background:rgba(212,255,0,.07);border:1px solid rgba(212,255,0,.2);border-radius:var(--r);font-family:var(--font-mono);font-size:9px;color:var(--accent);letter-spacing:1px;line-height:1.8">
-      ⚠ Afegeix el teu pes i altura a Ajustos per veure les kcal cremades
+      ⚠ Afegeix el teu pes i altura a Perfil per veure les kcal cremades
     </div>`:`<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:0 16px 14px">
       <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px;color:#ff4520">${totalKcal>9999?(totalKcal/1000).toFixed(1)+'k':totalKcal}</div><div class="stat-lbl" style="font-size:8px">kcal totals 🔥</div></div>
       <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px;color:#ff4520">${daysWithDur.length?Math.round(totalKcal/daysWithDur.length):'—'}</div><div class="stat-lbl" style="font-size:8px">kcal/dia 🔥</div></div>
@@ -2338,10 +2695,100 @@ function renderStatsGlobal() {
     </div><div style="height:8px"></div>`:''}
     <div style="margin:0 16px 14px;border-top:1px solid var(--border)"></div>`;
 
+  // Calcula distribució de dies des del primer entreno fins avui
+  const firstWoDate = workouts.length
+    ? workouts.reduce((a,b) => a.date < b.date ? a : b).date.slice(0,10)
+    : today();
+  const startD = new Date(firstWoDate+'T12:00:00');
+  const endD   = new Date(today()+'T12:00:00');
+  let nTrain=0, nRest=0, nVacation=0, nSick=0, nTravel=0, nOther=0, nUnlabeled=0;
+  const cur2 = new Date(startD);
+  const trainSet = new Set(workouts.map(w=>w.date.slice(0,10)));
+  while(cur2 <= endD) {
+    const ds2 = cur2.toISOString().slice(0,10);
+    if(trainSet.has(ds2)) { nTrain++; }
+    else {
+      const dn2 = dayNotes[ds2];
+      if(!dn2)                      nUnlabeled++;
+      else if(dn2.type==='rest')     nRest++;
+      else if(dn2.type==='vacation') nVacation++;
+      else if(dn2.type==='sick')     nSick++;
+      else if(dn2.type==='travel')   nTravel++;
+      else                           nOther++;
+    }
+    cur2.setDate(cur2.getDate()+1);
+  }
+  const totalTracked = nTrain+nRest+nVacation+nSick+nTravel+nOther+nUnlabeled;
+  const pctTrain = totalTracked ? Math.round(nTrain/totalTracked*100) : 0;
+
   setTimeout(()=>{
     if(volData.length)  drawBarChart('cg-vol',  weekLbls, volData,  '#d4ff00');
     if(!noPhys&&kcalData.some(v=>v>0)) drawBarChart('cg-kcal', weekLbls, kcalData, '#ff4520');
     if(freqData.length) drawBarChart('cg-freq', weekLbls, freqData, '#00cfff', true);
+
+    // Quesito
+    const pieCanvas = qs('cg-pie');
+    if(!pieCanvas) return;
+    const segments = [
+      { n:nTrain,     color:'#d4ff00', label:'Entreno',       emoji:'💪' },
+      { n:nRest,      color:'#555',    label:'Descans actiu', emoji:'😴' },
+      { n:nVacation,  color:'#2563eb', label:'Vacances',      emoji:'🏖' },
+      { n:nSick,      color:'#dc2626', label:'Malalt/a',      emoji:'🤒' },
+      { n:nTravel,    color:'#7c3aed', label:'Fora de casa',  emoji:'✈️'  },
+      { n:nOther,     color:'#888',    label:'Altre',         emoji:'📝' },
+      { n:nUnlabeled, color:'#222',    label:'Sense etiquetar', emoji:'·' },
+    ].filter(s=>s.n>0);
+
+    const total = segments.reduce((a,s)=>a+s.n,0);
+    if(!total) return;
+
+    const ctx  = pieCanvas.getContext('2d');
+    const cx=70, cy=70, r=62;
+    let angle = -Math.PI/2;
+    ctx.clearRect(0,0,140,140);
+
+    segments.forEach(s => {
+      const slice = (s.n/total)*2*Math.PI;
+      ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.arc(cx,cy,r,angle,angle+slice);
+      ctx.closePath();
+      ctx.fillStyle = s.color;
+      ctx.fill();
+      // Petit gap entre sectors
+      ctx.strokeStyle='#0a0a0a';
+      ctx.lineWidth=1.5;
+      ctx.stroke();
+      angle += slice;
+    });
+
+    // Cercle central (donut)
+    ctx.beginPath();
+    ctx.arc(cx,cy,32,0,2*Math.PI);
+    ctx.fillStyle='#0a0a0a';
+    ctx.fill();
+
+    // % al centre
+    ctx.fillStyle='#d4ff00';
+    ctx.font='bold 18px monospace';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText(pctTrain+'%',cx,cy-6);
+    ctx.fillStyle='#888';
+    ctx.font='9px monospace';
+    ctx.fillText('gym',cx,cy+10);
+
+    // Llegenda
+    const leg = qs('cg-pie-legend');
+    if(leg) leg.innerHTML = segments.map(s=>{
+      const pct2=Math.round(s.n/total*100);
+      return `<div style="display:flex;align-items:center;gap:6px">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${s.color};flex-shrink:0"></span>
+        <span style="color:${s.color};font-weight:600">${pct2}%</span>
+        <span>${s.emoji} ${s.label}</span>
+        <span style="color:#555;margin-left:2px">(${s.n}d)</span>
+      </div>`;
+    }).join('');
   },60);
 }
 
@@ -2589,6 +3036,163 @@ window.importData = function(ev) {
     }catch{st.innerHTML='<span style="color:var(--accent2)">✕ Fichero inválido</span>';}
   };
   fr.readAsText(f); ev.target.value='';
+}
+
+// ── GENERADOR D'HISTORIAL RETROACTIU ─────────────────────────
+let _genWorkouts  = []; // preview cache
+let _genRestNotes = {}; // preview rest notes cache
+
+function buildRetroWorkouts(fromDs, toDs, reductionKg) {
+  // Rutines de força (en ordre de rotació, excloem HIIT per simplicitat)
+  const forceRoutineNames = [
+    'Sessió 1 — Esquena + Bíceps',
+    'Sessió 2 — Cames + Espatlles',
+    'Sessió 4 — Pectoral + Tríceps',
+    'Sessió 5 — Cames',
+  ];
+  const forceRoutines = forceRoutineNames
+    .map(n => routines.find(r => r.name === n))
+    .filter(Boolean);
+
+  if(!forceRoutines.length) return [];
+
+  // Patró setmanal: dilluns, dimarts, dijous, divendres, dissabte = 5 dies
+  // (66% de 7 = 4.6, arrodonit a 5, saltant dimecres i diumenge)
+  const TRAIN_DAYS = [1,2,4,5,6]; // 0=diumenge, 1=dilluns...
+
+  const from = new Date(fromDs + 'T12:00:00');
+  const to   = new Date(toDs   + 'T12:00:00');
+
+  // Busca els pesos actuals de cada exercici (màxim PR de la BD)
+  function getCurrentWeight(exId) {
+    const ex = exercises.find(e => e.id === exId);
+    if(!ex) return 0;
+    if(ex.type === 'bodyweight' || ex.type === 'tiempo' || ex.type === 'cardio') return 0;
+    let max = 0;
+    workouts.forEach(w => w.exercises.forEach(ae => {
+      if(ae.exerciseId !== exId) return;
+      ae.sets.forEach(s => { max = Math.max(max, parseFloat(s.weight)||0); });
+    }));
+    return max;
+  }
+
+  const generated = [];
+  const restNotes = {}; // { ds: { type:'rest', note:'' } }
+  let rtIdx = 0;
+  const cur = new Date(from);
+
+  while(cur <= to) {
+    const dow = cur.getDay();
+    const ds  = cur.toISOString().slice(0,10);
+    if(TRAIN_DAYS.includes(dow)) {
+      const rt = forceRoutines[rtIdx % forceRoutines.length];
+      rtIdx++;
+
+      const exList = rt.exerciseIds.map(eId => {
+        const ex = exercises.find(e => e.id === eId);
+        if(!ex) return null;
+        const curW = getCurrentWeight(eId);
+        const useW = ex.type === 'fuerza' ? Math.max(0, curW - reductionKg) : 0;
+        const sets = Array.from({length:3}, () => ({
+          weight: useW > 0 ? String(useW) : '',
+          reps:   ex.type === 'bodyweight' ? '10'
+                : ex.type === 'tiempo'     ? '30'
+                : ex.type === 'cardio'     ? '300'
+                : '10'
+        }));
+        return { id: uid(), exerciseId: eId, name: ex.name, sets };
+      }).filter(Boolean);
+
+      generated.push({
+        id: uid(), date: new Date(ds+'T09:00:00').toISOString(),
+        startTime: new Date(ds+'T09:00:00').getTime(),
+        duration: 75*60*1000, exercises: exList, routineId: rt.id,
+        energyStart: null, energyEnd: null, note: '', noteEnd: '', _retro: true,
+      });
+    } else {
+      // Dia de descans — etiqueta automàtica
+      restNotes[ds] = { type: 'rest', note: '' };
+    }
+    cur.setDate(cur.getDate() + 1);
+  }
+  return { generated, restNotes };
+}
+
+window.previewHistorial = function() {
+  const fromDs = qs('gen-from').value;
+  const toDs   = qs('gen-to').value;
+  const red    = parseFloat(qs('gen-reduction').value) || 0;
+  const prev   = qs('gen-preview');
+  const btn    = qs('gen-confirm-btn');
+  const st     = qs('gen-status');
+
+  if(!fromDs || !toDs || fromDs >= toDs) {
+    st.style.color = 'var(--accent2)'; st.textContent = 'Comprova les dates!'; return;
+  }
+
+  const { generated, restNotes } = buildRetroWorkouts(fromDs, toDs, red);
+  _genWorkouts = generated;
+  _genRestNotes = restNotes;
+
+  if(!generated.length) {
+    prev.style.display = 'block';
+    prev.innerHTML = '<span style="color:var(--accent2)">No s\'han trobat rutines de força.</span>';
+    btn.style.display = 'none'; return;
+  }
+
+  const byWeek = {};
+  generated.forEach(w => {
+    const k = weekKey(w.date.slice(0,10));
+    if(!byWeek[k]) byWeek[k] = [];
+    byWeek[k].push(w);
+  });
+
+  const nRest = Object.keys(restNotes).length;
+  let html = `<div style="color:var(--accent);font-weight:600;margin-bottom:6px">
+    ${generated.length} entrenos · ${Object.keys(byWeek).length} setmanes · ${nRest} dies descans 😴
+    ${red>0?' · pesos −'+red+'kg':''}
+  </div>`;
+  Object.entries(byWeek).sort().forEach(([wk, ws]) => {
+    const d = new Date(wk+'T12:00:00').toLocaleDateString('ca-ES',{day:'numeric',month:'short'});
+    html += `<div>Setm. ${d}: ${ws.length} entrenos — ${ws.map(w=>new Date(w.date).toLocaleDateString('ca-ES',{weekday:'short'})).join(', ')}</div>`;
+  });
+
+  prev.style.display = 'block';
+  prev.innerHTML = html;
+  btn.style.display = 'block';
+  st.textContent = '';
+}
+
+window.generateHistorial = function() {
+  if(!_genWorkouts.length) return;
+  const st = qs('gen-status');
+
+  const existingDays = new Set(workouts.map(w => w.date.slice(0,10)));
+  const toAdd    = _genWorkouts.filter(w => !existingDays.has(w.date.slice(0,10)));
+  const skipped  = _genWorkouts.length - toAdd.length;
+  const nRest    = Object.keys(_genRestNotes).length;
+
+  if(!confirm(
+    `S'afegiran ${toAdd.length} entrenos retroactius i ${nRest} etiquetes de descans actiu.`+
+    `${skipped>0?'\n('+skipped+' dies ja tenien entreno, s\'han saltat)':''}\n\n⚠ Continuar?`
+  )) return;
+
+  // Afegeix entrenos
+  workouts = [...workouts, ...toAdd].sort((a,b) => new Date(b.date)-new Date(a.date));
+
+  // Afegeix etiquetes de descans (sense sobreescriure les existents)
+  Object.entries(_genRestNotes).forEach(([ds, dn]) => {
+    if(!dayNotes[ds]) dayNotes[ds] = dn;
+  });
+
+  save();
+  _genWorkouts = []; _genRestNotes = {};
+  qs('gen-preview').style.display = 'none';
+  qs('gen-confirm-btn').style.display = 'none';
+  st.style.color = 'var(--accent)';
+  st.textContent = `✓ ${toAdd.length} entrenos + ${nRest} descansos afegits!`;
+  renderPerfilPage();
+  setTimeout(() => { st.textContent = ''; }, 3000);
 }
 
 // ── MODALS ────────────────────────────────────────────────────
