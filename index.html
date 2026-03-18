@@ -3119,7 +3119,8 @@ window.hiitStart = function() {
   const exs    = Array.from({length:nexs}, (_,i) => `Exercici ${i+1}`);
 
   hiitState = { round:0, ex:0, phase:'work', remaining:work, total:work,
-                work, rest, rround, rounds, exs, paused:false };
+                work, rest, rround, rounds, exs, paused:false,
+                phaseEndTime: Date.now() + work*1000 };
 
   qs('hiit-config').style.display  = 'none';
   qs('hiit-running').style.display = 'block';
@@ -3134,7 +3135,7 @@ window.hiitStart = function() {
 
   hiitBeep('work');
   hiitRender();
-  hiitIv = setInterval(hiitTick, 1000);
+  hiitIv = setInterval(hiitTick, 250);
 
   // Programa notificació per quan acabi la sessió completa
   const totalSecs = rounds * (nexs * work + (nexs-1) * rest) + (rounds-1) * rround;
@@ -3157,9 +3158,11 @@ window.hiitReset = function() {
 
 function hiitTick() {
   if(!hiitState||hiitState.paused) return;
-  hiitState.remaining--;
-  if(hiitState.remaining>0&&hiitState.remaining<=3) countdownBeep();
-  if(hiitState.remaining<=0) hiitAdvance();
+  // Calcula des del timestamp real de la fase actual
+  const left = Math.max(0, Math.round((hiitState.phaseEndTime - Date.now()) / 1000));
+  hiitState.remaining = left;
+  if(left>0&&left<=3) countdownBeep();
+  if(left<=0) hiitAdvance();
   else hiitRender();
 }
 
@@ -3167,13 +3170,13 @@ function hiitAdvance() {
   const s = hiitState;
   const nexPhase = () => {
     if(s.phase==='work') {
-      if(s.ex < s.exs.length-1) { s.phase='rest'; s.remaining=s.rest; s.total=s.rest; hiitBeep('rest'); }
-      else if(s.round < s.rounds-1) { s.phase='round_rest'; s.remaining=s.rround; s.total=s.rround; hiitBeep('rest'); }
+      if(s.ex < s.exs.length-1) { s.phase='rest'; s.remaining=s.rest; s.total=s.rest; s.phaseEndTime=Date.now()+s.rest*1000; hiitBeep('rest'); }
+      else if(s.round < s.rounds-1) { s.phase='round_rest'; s.remaining=s.rround; s.total=s.rround; s.phaseEndTime=Date.now()+s.rround*1000; hiitBeep('rest'); }
       else { hiitFinish(); return; }
     } else if(s.phase==='rest') {
-      s.ex++; s.phase='work'; s.remaining=s.work; s.total=s.work; hiitBeep('work');
+      s.ex++; s.phase='work'; s.remaining=s.work; s.total=s.work; s.phaseEndTime=Date.now()+s.work*1000; hiitBeep('work');
     } else if(s.phase==='round_rest') {
-      s.round++; s.ex=0; s.phase='work'; s.remaining=s.work; s.total=s.work; hiitBeep('work');
+      s.round++; s.ex=0; s.phase='work'; s.remaining=s.work; s.total=s.work; s.phaseEndTime=Date.now()+s.work*1000; hiitBeep('work');
     }
     hiitRender();
   };
@@ -3246,6 +3249,7 @@ let restTotal   = 60;
 let restLeft    = 60;
 let restIv      = null;
 let restRunning = false;
+let restEndTime = null; // timestamp absolut de quan acaba
 
 function restFmt(s) {
   const m=Math.floor(s/60), sec=s%60;
@@ -3260,20 +3264,21 @@ function restUpdateUI() {
   qs('rest-bar').style.background = color;
 }
 window.restSetTime = function(secs) {
-  restStop(); restTotal=secs; restLeft=secs;
+  restStop(); restTotal=secs; restLeft=secs; restEndTime=null;
   restUpdateUI(); qs('rest-btn-start').textContent='▶ INICIAR';
 }
 window.restToggle = function() {
   if(restRunning) { restStop(); return; }
   if(restLeft<=0) restLeft=restTotal;
   restRunning=true;
+  restEndTime = Date.now() + restLeft*1000; // timestamp absolut
   qs('rest-btn-start').textContent='⏸ PAUSA';
-  // Programa notificació per quan acabi el descans
   const mins = Math.round(restLeft/60);
   const label = mins>=1 ? `Descans de ${mins}min acabat! Torna a entrenar 💪` : `Descans acabat! Torna a entrenar 💪`;
   scheduleNotification?.(label, restLeft);
   restIv=setInterval(()=>{
-    restLeft--;
+    // Calcula temps restant des del timestamp real — funciona si l'app estava en segon pla
+    restLeft = Math.max(0, Math.round((restEndTime - Date.now()) / 1000));
     if(restLeft>0&&restLeft<=3) countdownBeep();
     restUpdateUI();
     if(restLeft<=0) {
@@ -3283,7 +3288,7 @@ window.restToggle = function() {
       qs('rest-bar').style.width='0%';
       qs('rest-btn-start').textContent='▶ INICIAR';
     }
-  },1000);
+  },250); // 250ms per més precisió
 }
 function restStop() {
   clearInterval(restIv); restIv=null; restRunning=false;
