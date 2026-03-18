@@ -3566,6 +3566,41 @@ function renderMuscleMap() {
 
 // ── BOOT ──────────────────────────────────────────────────────
 initLogin();
+
+// ── RESYNC TIMERS QUAN TORNEM A LA APP ────────────────────────
+// Els setInterval es congelen en segon pla al mòbil.
+// Quan l'usuari torna, recalculem des dels timestamps absoluts.
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden) return; // sortint → res a fer
+
+  // Resync timer de descans
+  if(restRunning && restEndTime) {
+    restLeft = Math.max(0, Math.round((restEndTime - Date.now()) / 1000));
+    if(restLeft <= 0) {
+      // Ha acabat mentre érem fora
+      restStop(); restBeep();
+      qs('rest-display').textContent = '✓';
+      qs('rest-display').style.color = 'var(--accent)';
+      qs('rest-bar').style.width = '0%';
+      qs('rest-btn-start').textContent = '▶ INICIAR';
+    } else {
+      restUpdateUI();
+    }
+  }
+
+  // Resync HIIT
+  if(hiitState && !hiitState.paused && hiitState.phaseEndTime) {
+    const left = Math.max(0, Math.round((hiitState.phaseEndTime - Date.now()) / 1000));
+    if(left <= 0) {
+      // La fase ha acabat mentre érem fora — avancem tantes fases com calgui
+      hiitState.remaining = 0;
+      hiitAdvance();
+    } else {
+      hiitState.remaining = left;
+      hiitRender();
+    }
+  }
+});
 </script>
 <!-- ══ SERVICE WORKER + NOTIFICACIONS ══ -->
 <script>
