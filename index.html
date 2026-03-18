@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="UNGABUNGA">
 <meta name="theme-color" content="#080808">
+<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;UNGABUNGA&quot;,&quot;short_name&quot;:&quot;UNGABUNGA&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%23080808&quot;,&quot;theme_color&quot;:&quot;%23080808&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23080808'/%3E%3Ctext x='256' y='340' font-size='280' text-anchor='middle' fill='%23d4ff00'%3E💪%3C/text%3E%3C/svg%3E&quot;,&quot;sizes&quot;:&quot;512x512&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
 <title>UNGABUNGA</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -232,6 +233,10 @@ select.inp{appearance:none}
 .cal-d.has::after{
   content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
   width:4px;height:4px;border-radius:50%;background:var(--accent);
+}
+.cal-d.noted::after{
+  content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--noted-color, #555);
 }
 .cal-d.today{color:var(--accent);font-weight:700;background:rgba(212,255,0,.05)}
 .cal-d.sel{background:var(--accent)!important;color:#000!important;font-weight:700}
@@ -831,10 +836,12 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <option value="cardio">Cardio (tiempo / distancia)</option>
       </select>
     </div>
-    <div class="g2 mt8">
-      <button class="btn btn-r" id="ex-del-btn" onclick="deleteExercise()" style="display:none">ELIMINAR</button>
-      <button class="btn btn-g" onclick="closeModal('m-exercise')">CANCELAR</button>
-      <button class="btn btn-y" onclick="saveExercise()">GUARDAR</button>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-g" style="flex:1" onclick="closeModal('m-exercise')">CANCELAR</button>
+        <button class="btn btn-y" style="flex:1" onclick="saveExercise()">GUARDAR</button>
+      </div>
+      <button class="btn btn-r btn-w" id="ex-del-btn" onclick="deleteExercise()" style="display:none">ELIMINAR EXERCICI</button>
     </div>
   </div>
 </div>
@@ -845,11 +852,13 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     <div class="drag-handle"></div>
     <div class="row-between mb4">
       <div style="font-family:var(--font-display);font-size:24px;font-weight:900;letter-spacing:1px;text-transform:uppercase" id="exd-name"></div>
-      <button class="btn btn-g btn-sm" onclick="closeModal('m-ex-detail');openEditExercise(exDetailId)">EDITAR</button>
     </div>
     <div class="tags mb12" id="exd-tags"></div>
     <div id="exd-body"></div>
-    <button class="btn btn-g btn-w mt12" onclick="closeModal('m-ex-detail')">CERRAR</button>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+      <button class="btn btn-g btn-w" onclick="closeModal('m-ex-detail')">TANCAR</button>
+      <button class="btn btn-r btn-w" onclick="deleteExFromDetail()">🗑 ELIMINAR DE LA BIBLIOTECA</button>
+    </div>
   </div>
 </div>
 
@@ -1380,9 +1389,18 @@ function getMET(exName, exType, muscle) {
   return ['pierna','gluteo','esquena','espalda'].includes(muscle) ? 5.0 : 3.5;
 }
 
+function getWeightForDate(ds) {
+  // Busca la mesura de balança més propera (anterior o igual) a la data de l'entreno
+  // Fallback: physData.weight actual
+  if(!physHistory?.length) return physData?.weight || 0;
+  const sorted = [...physHistory].filter(e=>e.weight&&e.date<=ds).sort((a,b)=>b.date.localeCompare(a.date));
+  return sorted.length ? sorted[0].weight : (physData?.weight || 0);
+}
+
 function calcKcal(workout) {
   if(!physData?.weight) return 0;
-  const bw  = physData.weight;
+  const ds = workout.date ? workout.date.slice(0,10) : today();
+  const bw = getWeightForDate(ds) || physData.weight;
   const MET_REST = 1.3;
   let activeKcal = 0, activeSecs = 0;
 
@@ -2035,6 +2053,16 @@ function renderExercises() {
 
 window.setMuscleFilter = function(m) { filterMuscle=m; renderExercises(); }
 
+window.deleteExFromDetail = function() {
+  const ex = exercises.find(e=>e.id===exDetailId);
+  if(!ex) return;
+  if(!confirm(`Eliminar "${ex.name}" de la biblioteca?\n\nL'historial d'entrenos es conserva.`)) return;
+  exercises = exercises.filter(e=>e.id!==exDetailId);
+  save();
+  closeModal('m-ex-detail');
+  renderExercises();
+}
+
 window.openExDetail = function(id) {
   exDetailId=id;
   const ex=exercises.find(e=>e.id===id); if(!ex) return;
@@ -2123,8 +2151,9 @@ function renderCalendar() {
     const hasW=woDays.has(ds);
     const dn=dayNotes[ds];
     const dotColor=dn?DAY_TYPE_COLOR[dn.type]||'#666':'';
-    const dot=dn?`<span style="display:block;width:5px;height:5px;border-radius:50%;background:${dotColor};margin:1px auto 0"></span>`:'';
-    grid.innerHTML+=`<div class="cal-d ${hasW?'has':''} ${isT?'today':''}" data-ds="${ds}">${d}${dot}</div>`;
+    const notedClass = (!hasW && dn) ? 'noted' : '';
+    const notedStyle = (!hasW && dn) ? `--noted-color:${dotColor}` : '';
+    grid.innerHTML+=`<div class="cal-d ${hasW?'has':''} ${isT?'today':''} ${notedClass}" data-ds="${ds}" style="${notedStyle}">${d}</div>`;
   }
   qs('cal-day-detail').innerHTML='';
   grid.querySelectorAll('.cal-d:not(.empty)').forEach(el=>{
@@ -2611,12 +2640,12 @@ function renderStatsGlobal() {
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
         <div>
           <div style="font-family:var(--font-display);font-size:28px;font-weight:900;color:${streakColor}">${currentStreak}<span style="font-size:14px">🔥</span></div>
-          <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:1px;margin-top:2px">RACXA ACTUAL</div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:1px;margin-top:2px">RATXA ACTUAL</div>
           <div style="font-family:var(--font-mono);font-size:7px;color:var(--muted)">setmanes</div>
         </div>
         <div>
           <div style="font-family:var(--font-display);font-size:28px;font-weight:900;color:var(--accent)">${bestStreak}<span style="font-size:14px">🏆</span></div>
-          <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:1px;margin-top:2px">MILLOR RACXA</div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:1px;margin-top:2px">MILLOR RATXA</div>
           <div style="font-family:var(--font-mono);font-size:7px;color:var(--muted)">setmanes</div>
         </div>
         <div>
@@ -3010,7 +3039,10 @@ window.importData = function(ev) {
 
 // ── MODALS ────────────────────────────────────────────────────
 window.openModal = function(id) {
-  qs(id).classList.add('on');
+  const el = qs(id);
+  el.classList.add('on');
+  // Evita que el click que ha obert el modal el tanqui immediatament
+  el.addEventListener('click', e => e.stopPropagation(), { once: true, capture: true });
 }
 window.closeModal = function(id) { qs(id).classList.remove('on'); }
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on');}));
@@ -3103,6 +3135,10 @@ window.hiitStart = function() {
   hiitBeep('work');
   hiitRender();
   hiitIv = setInterval(hiitTick, 1000);
+
+  // Programa notificació per quan acabi la sessió completa
+  const totalSecs = rounds * (nexs * work + (nexs-1) * rest) + (rounds-1) * rround;
+  scheduleNotification?.('HIIT completat! 🔥 '+rounds+' rondes acabades', totalSecs);
 }
 
 window.hiitPause = function() {
@@ -3232,6 +3268,10 @@ window.restToggle = function() {
   if(restLeft<=0) restLeft=restTotal;
   restRunning=true;
   qs('rest-btn-start').textContent='⏸ PAUSA';
+  // Programa notificació per quan acabi el descans
+  const mins = Math.round(restLeft/60);
+  const label = mins>=1 ? `Descans de ${mins}min acabat! Torna a entrenar 💪` : `Descans acabat! Torna a entrenar 💪`;
+  scheduleNotification?.(label, restLeft);
   restIv=setInterval(()=>{
     restLeft--;
     if(restLeft>0&&restLeft<=3) countdownBeep();
@@ -3521,6 +3561,70 @@ function renderMuscleMap() {
 
 // ── BOOT ──────────────────────────────────────────────────────
 initLogin();
+</script>
+<!-- ══ SERVICE WORKER + NOTIFICACIONS ══ -->
+<script>
+// Registra el Service Worker (inline via Blob per funcionar sense servidor)
+const SW_CODE = `
+self.addEventListener('message', e => {
+  const { type, label, secs } = e.data || {};
+  if(type === 'schedule') {
+    setTimeout(() => {
+      self.registration.showNotification('UNGABUNGA \u{1F4AA}', {
+        body: label || 'Timer acabat!',
+        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" fill="%23080808"/><text x="256" y="340" font-size="280" text-anchor="middle" fill="%23d4ff00">\u{1F4AA}</text></svg>',
+        vibrate: [200, 100, 200],
+        requireInteraction: false,
+        tag: 'ungabunga-timer',
+        renotify: true,
+      });
+    }, secs * 1000);
+  }
+});
+`;
+
+let _sw = null;
+let _notifPermission = false;
+
+async function initPWA() {
+  // Registra SW
+  if('serviceWorker' in navigator) {
+    try {
+      const blob = new Blob([SW_CODE], { type: 'application/javascript' });
+      const url  = URL.createObjectURL(blob);
+      const reg  = await navigator.serviceWorker.register(url, { scope: '/' });
+      _sw = reg;
+      console.log('SW registered');
+    } catch(e) { console.log('SW not available:', e.message); }
+  }
+
+  // Demana permís de notificació
+  if('Notification' in window && Notification.permission === 'default') {
+    const p = await Notification.requestPermission();
+    _notifPermission = p === 'granted';
+  } else {
+    _notifPermission = Notification?.permission === 'granted';
+  }
+}
+
+function scheduleNotification(label, secs) {
+  if(!_notifPermission) return;
+  // Intenta via SW (funciona en segon pla)
+  if(_sw?.active) {
+    _sw.active.postMessage({ type:'schedule', label, secs });
+    return;
+  }
+  // Fallback: setTimeout normal (només funciona si l'app és oberta)
+  setTimeout(() => {
+    try { new Notification('UNGABUNGA 💪', { body: label, silent: false }); } catch(e){}
+  }, secs * 1000);
+}
+
+// Inicialitza quan la pàgina carrega
+window.addEventListener('load', () => { initPWA(); });
+
+// Exposa globalment perquè els timers la puguin cridar
+window.scheduleNotification = scheduleNotification;
 </script>
 </body>
 </html>
