@@ -2574,6 +2574,30 @@ function renderStatsGlobal() {
   const thisWeekDays = weekTrainMap[todayKey] || 0;
   const streakColor  = currentStreak>=3?'var(--accent)':currentStreak>=1?'#facc15':'var(--muted)';
 
+  // Distribució de dies (pel quesito i el comptador)
+  const firstWoDate = workouts.reduce((a,b)=>a.date<b.date?a:b).date.slice(0,10);
+  const startD2 = new Date(firstWoDate+'T12:00:00');
+  const endD2   = new Date(today()+'T12:00:00');
+  const trainSet2 = new Set(workouts.map(w=>w.date.slice(0,10)));
+  let nTrain=0, nRest=0, nVacation=0, nSick=0, nTravel=0, nOther=0, nUnlabeled=0;
+  const cur3 = new Date(startD2);
+  while(cur3 <= endD2) {
+    const ds3 = cur3.toISOString().slice(0,10);
+    if(trainSet2.has(ds3)) { nTrain++; }
+    else {
+      const dn3 = dayNotes[ds3];
+      if(!dn3)                       nUnlabeled++;
+      else if(dn3.type==='rest')     nRest++;
+      else if(dn3.type==='vacation') nVacation++;
+      else if(dn3.type==='sick')     nSick++;
+      else if(dn3.type==='travel')   nTravel++;
+      else                           nOther++;
+    }
+    cur3.setDate(cur3.getDate()+1);
+  }
+  const totalTracked = nTrain+nRest+nVacation+nSick+nTravel+nOther+nUnlabeled;
+  const pctTrain = totalTracked ? Math.round(nTrain/totalTracked*100) : 0;
+
   c.innerHTML=`
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 16px 14px">
       <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalDays}</div><div class="stat-lbl" style="font-size:8px">dies gym</div></div>
@@ -2619,7 +2643,10 @@ function renderStatsGlobal() {
 
     <!-- QUESITO distribució de dies -->
     <div class="chart-wrap" style="margin:0 16px 14px">
-      <div class="chart-title">Distribució de dies</div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between">
+        <div class="chart-title">Distribució de dies</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);font-weight:600;padding-right:4px">${nTrain}<span style="color:var(--muted);font-weight:400"> / ${totalTracked} dies</span></div>
+      </div>
       <div class="chart-sub">ENTRENO · DESCANS · VACANCES · ALTRES</div>
       <div style="display:flex;align-items:center;gap:16px;padding:8px 0">
         <canvas id="cg-pie" width="140" height="140" style="flex-shrink:0"></canvas>
@@ -2662,32 +2689,6 @@ function renderStatsGlobal() {
         </div>`).join('')}
     </div><div style="height:8px"></div>`:''}
     <div style="margin:0 16px 14px;border-top:1px solid var(--border)"></div>`;
-
-  // Calcula distribució de dies des del primer entreno fins avui
-  const firstWoDate = workouts.length
-    ? workouts.reduce((a,b) => a.date < b.date ? a : b).date.slice(0,10)
-    : today();
-  const startD = new Date(firstWoDate+'T12:00:00');
-  const endD   = new Date(today()+'T12:00:00');
-  let nTrain=0, nRest=0, nVacation=0, nSick=0, nTravel=0, nOther=0, nUnlabeled=0;
-  const cur2 = new Date(startD);
-  const trainSet = new Set(workouts.map(w=>w.date.slice(0,10)));
-  while(cur2 <= endD) {
-    const ds2 = cur2.toISOString().slice(0,10);
-    if(trainSet.has(ds2)) { nTrain++; }
-    else {
-      const dn2 = dayNotes[ds2];
-      if(!dn2)                      nUnlabeled++;
-      else if(dn2.type==='rest')     nRest++;
-      else if(dn2.type==='vacation') nVacation++;
-      else if(dn2.type==='sick')     nSick++;
-      else if(dn2.type==='travel')   nTravel++;
-      else                           nOther++;
-    }
-    cur2.setDate(cur2.getDate()+1);
-  }
-  const totalTracked = nTrain+nRest+nVacation+nSick+nTravel+nOther+nUnlabeled;
-  const pctTrain = totalTracked ? Math.round(nTrain/totalTracked*100) : 0;
 
   setTimeout(()=>{
     if(volData.length)  drawBarChart('cg-vol',  weekLbls, volData,  '#d4ff00');
