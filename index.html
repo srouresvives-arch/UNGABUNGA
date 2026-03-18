@@ -33,7 +33,7 @@
   --font-mono:    'JetBrains Mono', 'Roboto Mono', monospace;
 
   /* Neon glows */
-  --glow-y:  0 0 20px rgba(212,255,0,.35), 0 0 60px rgba(212,255,0,.12);
+  --glow-y:  0 0 20px rgba(212,255,0,.35), 0 0 60px color-mix(in srgb, var(--accent) 12%, transparent);
   --glow-c:  0 0 20px rgba(0,229,255,.35), 0 0 60px rgba(0,229,255,.12);
   --glow-r:  0 0 20px rgba(255,61,90,.35),  0 0 60px rgba(255,61,90,.12);
   --glow-p:  0 0 20px rgba(191,90,242,.35), 0 0 60px rgba(191,90,242,.12);
@@ -61,7 +61,7 @@ body::before{
 body::after{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
-    radial-gradient(ellipse 60% 40% at 20% 0%, rgba(212,255,0,.04) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 20% 0%, color-mix(in srgb, var(--accent) 4%, transparent) 0%, transparent 70%),
     radial-gradient(ellipse 50% 40% at 80% 100%, rgba(0,229,255,.04) 0%, transparent 70%);
 }
 
@@ -96,7 +96,7 @@ body::after{
 .nav-btn.on::after{transform:translateX(-50%) scaleX(1)}
 .nav-btn svg{width:20px;height:20px;stroke-width:1.8;transition:all .2s}
 .nav-btn.on{color:var(--accent)}
-.nav-btn.on svg{filter:drop-shadow(0 0 6px rgba(212,255,0,.6))}
+.nav-btn.on svg{filter:drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 60%, transparent))}
 
 /* ── PAGES ── */
 .page{display:none;padding:0 0 90px}
@@ -160,7 +160,7 @@ body::after{
 }
 .stat::before{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(212,255,0,.04) 0%,transparent 60%);
+  background:linear-gradient(135deg,color-mix(in srgb, var(--accent) 4%, transparent) 0%,transparent 60%);
   pointer-events:none;
 }
 .stat-val{
@@ -190,7 +190,7 @@ body::after{
 .btn:active{transform:scale(.95)}
 .btn-y{
   background:var(--accent);color:#000;
-  box-shadow:0 4px 24px rgba(212,255,0,.3);
+  box-shadow:0 4px 24px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 .btn-y:hover{box-shadow:var(--glow-y)}
 .btn-y:active{background:#b8de00}
@@ -224,7 +224,7 @@ body::after{
 }
 .inp:focus{
   border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(212,255,0,.08);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 8%, transparent);
   background:var(--s3);
 }
 .inp::placeholder{color:var(--muted2)}
@@ -236,7 +236,7 @@ select.inp{appearance:none}
   display:inline-block;padding:3px 9px;border-radius:4px;
   font-family:var(--font-mono);font-size:8px;letter-spacing:1px;text-transform:uppercase;
 }
-.tag-y{background:rgba(212,255,0,.1);color:var(--accent);border:1px solid rgba(212,255,0,.2)}
+.tag-y{background:color-mix(in srgb, var(--accent) 10%, transparent);color:var(--accent);border:1px solid color-mix(in srgb, var(--accent) 20%, transparent)}
 .tag-r{background:rgba(255,61,90,.1);color:var(--accent2);border:1px solid rgba(255,61,90,.2)}
 .tag-b{background:rgba(0,229,255,.08);color:var(--accent3);border:1px solid rgba(0,229,255,.18)}
 .tag-g{background:var(--s2);color:var(--muted);border:1px solid var(--border)}
@@ -269,7 +269,7 @@ select.inp{appearance:none}
   font-family:var(--font-mono);font-size:13px;text-align:center;outline:none;
   transition:all .15s;
 }
-.sets-tbl td input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(212,255,0,.08)}
+.sets-tbl td input:focus{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 8%, transparent)}
 .set-num{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
 .chk-btn{
   width:28px;height:28px;border-radius:50%;border:2px solid var(--border2);
@@ -298,11 +298,11 @@ select.inp{appearance:none}
   color:var(--muted);cursor:pointer;position:relative;
   border-bottom:1px solid var(--border);
   border-right:1px solid var(--border);
-  -webkit-tap-highlight-color:rgba(212,255,0,.15);
+  -webkit-tap-highlight-color:color-mix(in srgb, var(--accent) 15%, transparent);
   user-select:none;transition:background .15s;
 }
 .cal-d:nth-child(7n){border-right:none}
-.cal-d.has{color:var(--text);background:rgba(212,255,0,.04)}
+.cal-d.has{color:var(--text);background:color-mix(in srgb, var(--accent) 4%, transparent)}
 .cal-d.has::after{
   content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
   width:4px;height:4px;border-radius:50%;background:var(--accent);
@@ -314,7 +314,7 @@ select.inp{appearance:none}
 }
 .cal-d.today{
   color:var(--accent);font-weight:700;
-  background:rgba(212,255,0,.06);
+  background:color-mix(in srgb, var(--accent) 6%, transparent);
 }
 .cal-d.sel{
   background:var(--accent)!important;color:#000!important;font-weight:700;
@@ -335,7 +335,7 @@ select.inp{appearance:none}
 }
 .chart-wrap::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(212,255,0,.2),transparent);
+  background:linear-gradient(90deg,transparent,color-mix(in srgb, var(--accent) 20%, transparent),transparent);
 }
 .chart-title{
   font-family:var(--font-display);font-size:13px;font-weight:700;
@@ -364,7 +364,7 @@ select.inp{appearance:none}
 }
 .modal::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(212,255,0,.15),transparent);
+  background:linear-gradient(90deg,transparent,color-mix(in srgb, var(--accent) 15%, transparent),transparent);
   border-radius:20px 20px 0 0;
 }
 .modal::-webkit-scrollbar{display:none}
@@ -386,7 +386,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 
 /* ── ACTIVE WORKOUT BAR ── */
 #active-bar{
-  background:linear-gradient(90deg,var(--accent) 0%,#aaff00 100%);
+  background:linear-gradient(90deg,var(--accent) 0%,color-mix(in srgb, var(--accent) 80%, white) 100%);
   color:#000;padding:11px 16px;flex-shrink:0;
   font-family:var(--font-display);font-size:14px;font-weight:800;letter-spacing:1.5px;
   display:none;align-items:center;justify-content:space-between;cursor:pointer;
@@ -400,7 +400,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
   padding:14px;margin:0 16px 8px;cursor:pointer;
   transition:all .18s;
 }
-.wo-item:active{border-color:rgba(212,255,0,.3);background:var(--s2);transform:scale(.99)}
+.wo-item:active{border-color:color-mix(in srgb, var(--accent) 30%, transparent);background:var(--s2);transform:scale(.99)}
 .wo-date{
   font-family:var(--font-mono);font-size:9px;letter-spacing:1px;
   color:var(--accent);margin-bottom:5px;text-transform:uppercase;
@@ -423,7 +423,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 .loader-bar{
   width:120px;height:2px;
   background:var(--s3);border-radius:1px;overflow:hidden;
-  box-shadow:0 0 8px rgba(212,255,0,.1);
+  box-shadow:0 0 8px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 .loader-prog{
   height:100%;
@@ -498,9 +498,9 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
   cursor:pointer;transition:all .18s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;
 }
 .chip.on{
-  background:rgba(212,255,0,.1);color:var(--accent);
-  border-color:rgba(212,255,0,.3);
-  box-shadow:0 0 12px rgba(212,255,0,.1);
+  background:color-mix(in srgb, var(--accent) 10%, transparent);color:var(--accent);
+  border-color:color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow:0 0 12px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 /* ── HIIT SPECIFIC ── */
@@ -874,6 +874,11 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         </div>
 
         <!-- Backup -->
+        <div class="card" style="margin:0 0 10px">
+        <div class="card-title">🎨 Tema visual</div>
+        <div id="theme-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px"></div>
+        </div>
+
         <div class="card" style="margin:0 0 10px">
         <div class="card-title">Exportar</div>
         <div id="bk-summary" style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.9"></div>
@@ -1437,7 +1442,7 @@ let filterMuscle = 'all';
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
 const qs  = id => document.getElementById(id);
 const epley = (w,r) => r===1 ? w : w*(1+r/30);
-const today = () => new Date().toISOString().split('T')[0];
+const today = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
 
 // ── FIRESTORE SYNC ────────────────────────────────────────────
 async function saveRemote() {
@@ -1661,7 +1666,7 @@ function renderPhysHistory() {
     </div>`;
 
   setTimeout(()=>{
-    if(weights.length>=2) drawLineChart('phys-chart-weight', weights.map(e=>fmt(e.date)), weights.map(e=>e.val), '#d4ff00');
+    if(weights.length>=2) drawLineChart('phys-chart-weight', weights.map(e=>fmt(e.date)), weights.map(e=>e.val), getAccent());
     if(muscles.length>=2) drawLineChart('phys-chart-muscle', muscles.map(e=>fmt(e.date)), muscles.map(e=>e.val), '#00cfff');
     if(fats.length>=2)    drawLineChart('phys-chart-fat',    fats.map(e=>fmt(e.date)),    fats.map(e=>e.val),    '#ff4520');
   }, 60);
@@ -1948,6 +1953,7 @@ function renderPerfilPage() {
   qs('phys-date').value = today();
   renderPhysHistory();
   setPhysMode(physData?.mode || 'basic');
+  renderThemeGrid();
 }
 
 // ── WORKOUT HELPERS ───────────────────────────────────────────
@@ -2102,7 +2108,7 @@ window.selectEnergy = function(val) {
   document.querySelectorAll('.energy-btn').forEach(b=>{
     const v = parseInt(b.dataset.val);
     b.style.borderColor = v===val ? 'var(--accent)' : 'var(--border)';
-    b.style.background  = v===val ? 'rgba(212,255,0,.15)' : 'none';
+    b.style.background  = v===val ? getAccent()+'26' : 'none';
     b.style.transform   = v===val ? 'scale(1.15)' : 'scale(1)';
   });
 }
@@ -2548,7 +2554,7 @@ window.selectDayType = function(val) {
   _selectedDayType=val;
   DAY_TYPE_OPTS.forEach(o=>{
     const b=document.getElementById('dnt-'+o.val); if(!b) return;
-    b.style.background  = o.val===val?'rgba(212,255,0,.15)':'var(--s2)';
+    b.style.background  = o.val===val?getAccent()+'26':'var(--s2)';
     b.style.borderColor = o.val===val?'var(--accent)':'var(--border)';
     b.style.color       = o.val===val?'var(--accent)':'var(--muted)';
   });
@@ -2902,15 +2908,18 @@ function renderStatsGlobal() {
   const thisWeekDays = weekTrainMap[todayKey] || 0;
   const streakColor  = currentStreak>=3?'var(--accent)':currentStreak>=1?'#facc15':'var(--muted)';
 
-  // Distribució de dies (pel quesito i el comptador)
+  // Distribució de dies — compta des de l'1 de gener de l'any del primer entreno
   const firstWoDate = workouts.reduce((a,b)=>a.date<b.date?a:b).date.slice(0,10);
-  const startD2 = new Date(firstWoDate+'T12:00:00');
-  const endD2   = new Date(today()+'T12:00:00');
+  const firstYear   = firstWoDate.slice(0,4);
+  const yearStart   = `${firstYear}-01-01`;
+  const startD2 = new Date(yearStart+'T00:00:00');
+  const endD2   = new Date(today()+'T00:00:00');
   const trainSet2 = new Set(workouts.map(w=>w.date.slice(0,10)));
   let nTrain=0, nRest=0, nVacation=0, nSick=0, nTravel=0, nOther=0, nUnlabeled=0;
   const cur3 = new Date(startD2);
   while(cur3 <= endD2) {
-    const ds3 = cur3.toISOString().slice(0,10);
+    // Usar format local (no UTC) per evitar desfasament de zona horària
+    const ds3 = cur3.getFullYear()+'-'+String(cur3.getMonth()+1).padStart(2,'0')+'-'+String(cur3.getDate()).padStart(2,'0');
     if(trainSet2.has(ds3)) { nTrain++; }
     else {
       const dn3 = dayNotes[ds3];
@@ -2976,9 +2985,9 @@ function renderStatsGlobal() {
         <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);font-weight:600;padding-right:4px">${nTrain}<span style="color:var(--muted);font-weight:400"> / ${totalTracked} dies</span></div>
       </div>
       <div class="chart-sub">ENTRENO · DESCANS · VACANCES · ALTRES</div>
-      <div style="display:flex;align-items:center;gap:16px;padding:8px 0">
-        <canvas id="cg-pie" width="140" height="140" style="flex-shrink:0"></canvas>
-        <div id="cg-pie-legend" style="font-family:var(--font-mono);font-size:9px;color:var(--muted);line-height:2.2;min-width:0"></div>
+      <div style="display:flex;align-items:center;gap:20px;padding:4px 0">
+        <canvas id="cg-pie" style="flex-shrink:0;width:160px;height:160px"></canvas>
+        <div id="cg-pie-legend" style="font-family:var(--font-mono);font-size:10px;color:var(--muted);line-height:2.4;flex:1;min-width:0"></div>
       </div>
     </div>
 
@@ -3019,7 +3028,7 @@ function renderStatsGlobal() {
     <div style="margin:0 16px 14px;border-top:1px solid var(--border)"></div>`;
 
   setTimeout(()=>{
-    if(volData.length)  drawBarChart('cg-vol',  weekLbls, volData,  '#d4ff00');
+    if(volData.length)  drawBarChart('cg-vol',  weekLbls, volData,  getAccent());
     if(!noPhys&&kcalData.some(v=>v>0)) drawBarChart('cg-kcal', weekLbls, kcalData, '#ff4520');
     if(freqData.length) drawBarChart('cg-freq', weekLbls, freqData, '#00cfff', true);
 
@@ -3027,22 +3036,27 @@ function renderStatsGlobal() {
     const pieCanvas = qs('cg-pie');
     if(!pieCanvas) return;
     const segments = [
-      { n:nTrain,     color:'#d4ff00', label:'Entreno',       emoji:'💪' },
-      { n:nRest,      color:'#555',    label:'Descans actiu', emoji:'😴' },
-      { n:nVacation,  color:'#2563eb', label:'Vacances',      emoji:'🏖' },
-      { n:nSick,      color:'#dc2626', label:'Malalt/a',      emoji:'🤒' },
-      { n:nTravel,    color:'#7c3aed', label:'Fora de casa',  emoji:'✈️'  },
-      { n:nOther,     color:'#888',    label:'Altre',         emoji:'📝' },
-      { n:nUnlabeled, color:'#222',    label:'Sense etiquetar', emoji:'·' },
+      { n:nTrain,     color:getAccent(), label:'Entreno',         emoji:'💪' },
+      { n:nRest,      color:'#555',    label:'Descans actiu',   emoji:'😴' },
+      { n:nVacation,  color:'#2563eb', label:'Vacances',        emoji:'🏖' },
+      { n:nSick,      color:'#dc2626', label:'Malalt/a',        emoji:'🤒' },
+      { n:nTravel,    color:'#7c3aed', label:'Fora de casa',    emoji:'✈️'  },
+      { n:nOther,     color:'#888',    label:'Altre',           emoji:'📝' },
+      { n:nUnlabeled, color:'#2a2a2a', label:'Sense etiquetar', emoji:'·' },
     ].filter(s=>s.n>0);
 
     const total = segments.reduce((a,s)=>a+s.n,0);
     if(!total) return;
 
-    const ctx  = pieCanvas.getContext('2d');
-    const cx=70, cy=70, r=62;
+    const dpr = window.devicePixelRatio || 1;
+    const SIZE = 160;
+    pieCanvas.width  = SIZE * dpr;
+    pieCanvas.height = SIZE * dpr;
+    const ctx = pieCanvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    const cx = SIZE/2, cy = SIZE/2, r = SIZE/2 - 6, rInner = SIZE/2 - 44;
     let angle = -Math.PI/2;
-    ctx.clearRect(0,0,140,140);
 
     segments.forEach(s => {
       const slice = (s.n/total)*2*Math.PI;
@@ -3051,39 +3065,44 @@ function renderStatsGlobal() {
       ctx.arc(cx,cy,r,angle,angle+slice);
       ctx.closePath();
       ctx.fillStyle = s.color;
+      // Glow on training segment
+      if(s.n===nTrain) { ctx.shadowColor=s.color; ctx.shadowBlur=12; }
       ctx.fill();
-      // Petit gap entre sectors
-      ctx.strokeStyle='#0a0a0a';
-      ctx.lineWidth=1.5;
+      ctx.shadowBlur=0;
+      ctx.strokeStyle = 'rgba(0,0,0,.6)';
+      ctx.lineWidth = 2;
       ctx.stroke();
       angle += slice;
     });
 
-    // Cercle central (donut)
+    // Donut hole
     ctx.beginPath();
-    ctx.arc(cx,cy,32,0,2*Math.PI);
-    ctx.fillStyle='#0a0a0a';
+    ctx.arc(cx,cy,rInner,0,2*Math.PI);
+    ctx.fillStyle = getBg();
     ctx.fill();
 
-    // % al centre
-    ctx.fillStyle='#d4ff00';
-    ctx.font='bold 18px monospace';
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
-    ctx.fillText(pctTrain+'%',cx,cy-6);
-    ctx.fillStyle='#888';
-    ctx.font='9px monospace';
-    ctx.fillText('gym',cx,cy+10);
+    // % centre
+    const accentColor = getAccent();
+    ctx.fillStyle = accentColor;
+    ctx.font = `bold ${Math.round(SIZE*0.13)}px JetBrains Mono,monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = accentColor; ctx.shadowBlur = 10;
+    ctx.fillText(pctTrain+'%', cx, cy-7);
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#666';
+    ctx.font = `${Math.round(SIZE*0.07)}px JetBrains Mono,monospace`;
+    ctx.fillText('gym', cx, cy+10);
 
     // Llegenda
     const leg = qs('cg-pie-legend');
     if(leg) leg.innerHTML = segments.map(s=>{
-      const pct2=Math.round(s.n/total*100);
-      return `<div style="display:flex;align-items:center;gap:6px">
-        <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${s.color};flex-shrink:0"></span>
-        <span style="color:${s.color};font-weight:600">${pct2}%</span>
-        <span>${s.emoji} ${s.label}</span>
-        <span style="color:#555;margin-left:2px">(${s.n}d)</span>
+      const pct2 = Math.round(s.n/total*100);
+      return `<div style="display:flex;align-items:center;gap:8px">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${s.color};flex-shrink:0;box-shadow:0 0 6px ${s.color}88"></span>
+        <span style="color:${s.color};font-weight:700;min-width:30px">${pct2}%</span>
+        <span style="color:var(--text)">${s.emoji} ${s.label}</span>
+        <span style="color:var(--muted)">(${s.n}d)</span>
       </div>`;
     }).join('');
   },60);
@@ -3208,14 +3227,14 @@ window.renderStatsDetail = function() {
 
   setTimeout(()=>{
     if(isTiempo||ex.type==='fuerza') {
-      drawLineChart('cd-w', lbls, pts.map(p=>p.maxW), '#d4ff00');
+      drawLineChart('cd-w', lbls, pts.map(p=>p.maxW), getAccent());
       drawLineChart('cd-v', lbls, pts.map(p=>p.vol),  '#ff4520');
       if(ex.type==='fuerza') {
         const best1rm=Math.max(...pts.map(p=>p.orm));
         if(best1rm>0) drawLineChart('cd-1rm', lbls, pts.map(p=>p.orm), '#00cfff');
       }
     } else if(isBW) {
-      drawLineChart('cd-w', lbls, pts.map(p=>p.maxR), '#d4ff00');
+      drawLineChart('cd-w', lbls, pts.map(p=>p.maxR), getAccent());
       drawLineChart('cd-v', lbls, pts.map(p=>p.vol),  '#ff4520');
     }
   },60);
@@ -3521,7 +3540,7 @@ function hiitRender() {
   const phaseEmoji = s.phase==='work' ? '💪' : s.phase==='rest' ? '😮‍💨' : '⏳';
   document.title = `${phaseEmoji} ${t}s — UNGABUNGA`;
 
-  const ACCENT  = '#d4ff00';
+  const ACCENT  = getAccent();
   const GREEN   = '#1D9E75';
   const BLUE    = '#00cfff';
 
@@ -3889,7 +3908,7 @@ window.updateChallengePreview = function() {
   if(!ch.target&&type!=='consistency'){prev.style.display='none';return;}
   const {lines,feasibility}=getChallengeGuide(ch);
   if(!lines.length){prev.style.display='none';return;}
-  const borderColor=feasibility==='ok'?'rgba(212,255,0,.3)':feasibility==='hard'?'rgba(250,180,0,.3)':'rgba(248,113,113,.3)';
+  const ac=getAccent(); const borderColor=feasibility==='ok'?ac+'55':feasibility==='hard'?'rgba(250,180,0,.3)':'rgba(248,113,113,.3)';
   prev.style.display='block'; prev.style.borderColor=borderColor;
   prev.innerHTML=lines.map(l=>`<div>${l}</div>`).join('');
 }
@@ -4042,7 +4061,150 @@ function renderChallenges() {
 }
 
 
+// ── TEMES VISUALS ─────────────────────────────────────────────
+const THEMES = [
+  {
+    id: 'neon',
+    name: 'NEON',
+    preview: ['#d4ff00','#00e5ff','#ff3d5a'],
+    vars: {
+      '--bg':'#06060a','--s1':'#0e0e14','--s2':'#14141c','--s3':'#1c1c28',
+      '--border':'#1e1e2e','--border2':'#2a2a3e',
+      '--accent':'#d4ff00','--accent2':'#ff3d5a','--accent3':'#00e5ff','--accent4':'#bf5af2',
+      '--text':'#f0f0f8','--muted':'#52526e','--muted2':'#333348',
+      '--glow-y':'0 0 20px rgba(212,255,0,.35), 0 0 60px rgba(212,255,0,.12)',
+      '--glow-c':'0 0 20px rgba(0,229,255,.35), 0 0 60px rgba(0,229,255,.12)',
+      '--glow-r':'0 0 20px rgba(255,61,90,.35), 0 0 60px rgba(255,61,90,.12)',
+    }
+  },
+  {
+    id: 'cyber',
+    name: 'CYBER',
+    preview: ['#ff6b35','#ff3d5a','#ffd60a'],
+    vars: {
+      '--bg':'#080506','--s1':'#110a08','--s2':'#180e0b','--s3':'#221410',
+      '--border':'#2a1510','--border2':'#3a1e14',
+      '--accent':'#ff6b35','--accent2':'#ffd60a','--accent3':'#ff3d5a','--accent4':'#ff9f1c',
+      '--text':'#fff0eb','--muted':'#6e4a3e','--muted2':'#3d2218',
+      '--glow-y':'0 0 20px rgba(255,107,53,.4), 0 0 60px rgba(255,107,53,.15)',
+      '--glow-c':'0 0 20px rgba(255,214,10,.3), 0 0 60px rgba(255,214,10,.1)',
+      '--glow-r':'0 0 20px rgba(255,61,90,.35), 0 0 60px rgba(255,61,90,.12)',
+    }
+  },
+  {
+    id: 'ice',
+    name: 'ICE',
+    preview: ['#00e5ff','#7b2fff','#00ffcc'],
+    vars: {
+      '--bg':'#04080f','--s1':'#080f1a','--s2':'#0c1525','--s3':'#111d30',
+      '--border':'#152035','--border2':'#1e2e48',
+      '--accent':'#00e5ff','--accent2':'#7b2fff','--accent3':'#00ffcc','--accent4':'#4fc3f7',
+      '--text':'#e8f4ff','--muted':'#3a5570','--muted2':'#1e3348',
+      '--glow-y':'0 0 20px rgba(0,229,255,.4), 0 0 60px rgba(0,229,255,.15)',
+      '--glow-c':'0 0 20px rgba(0,255,204,.3), 0 0 60px rgba(0,255,204,.1)',
+      '--glow-r':'0 0 20px rgba(123,47,255,.35), 0 0 60px rgba(123,47,255,.12)',
+    }
+  },
+  {
+    id: 'matrix',
+    name: 'MATRIX',
+    preview: ['#00ff41','#008f11','#003b00'],
+    vars: {
+      '--bg':'#010a01','--s1':'#030f03','--s2':'#051505','--s3':'#081d08',
+      '--border':'#0d2b0d','--border2':'#123a12',
+      '--accent':'#00ff41','--accent2':'#ff3d5a','--accent3':'#39ff14','--accent4':'#69ff47',
+      '--text':'#ccffcc','--muted':'#2e6e2e','--muted2':'#1a3d1a',
+      '--glow-y':'0 0 20px rgba(0,255,65,.4), 0 0 60px rgba(0,255,65,.15)',
+      '--glow-c':'0 0 20px rgba(57,255,20,.3), 0 0 60px rgba(57,255,20,.1)',
+      '--glow-r':'0 0 20px rgba(255,61,90,.35), 0 0 60px rgba(255,61,90,.12)',
+    }
+  },
+  {
+    id: 'rose',
+    name: 'ROSE',
+    preview: ['#ff2d78','#ff9de2','#bf5af2'],
+    vars: {
+      '--bg':'#08040a','--s1':'#120810','--s2':'#180c18','--s3':'#201020',
+      '--border':'#2a1228','--border2':'#3a1a38',
+      '--accent':'#ff2d78','--accent2':'#bf5af2','--accent3':'#ff9de2','--accent4':'#ff6ec7',
+      '--text':'#fff0f8','--muted':'#6e3a5a','--muted2':'#3d1a30',
+      '--glow-y':'0 0 20px rgba(255,45,120,.4), 0 0 60px rgba(255,45,120,.15)',
+      '--glow-c':'0 0 20px rgba(255,157,226,.3), 0 0 60px rgba(255,157,226,.1)',
+      '--glow-r':'0 0 20px rgba(191,90,242,.35), 0 0 60px rgba(191,90,242,.12)',
+    }
+  },
+  {
+    id: 'gold',
+    name: 'GOLD',
+    preview: ['#ffd700','#ff8c00','#b8860b'],
+    vars: {
+      '--bg':'#080700','--s1':'#120f00','--s2':'#181300','--s3':'#201a00',
+      '--border':'#2a2200','--border2':'#3a3000',
+      '--accent':'#ffd700','--accent2':'#ff8c00','--accent3':'#ffe066','--accent4':'#ffb347',
+      '--text':'#fffaeb','--muted':'#6e5a20','--muted2':'#3d3210',
+      '--glow-y':'0 0 20px rgba(255,215,0,.4), 0 0 60px rgba(255,215,0,.15)',
+      '--glow-c':'0 0 20px rgba(255,224,102,.3), 0 0 60px rgba(255,224,102,.1)',
+      '--glow-r':'0 0 20px rgba(255,140,0,.35), 0 0 60px rgba(255,140,0,.12)',
+    }
+  },
+  {
+    id: 'mono',
+    name: 'MONO',
+    preview: ['#ffffff','#aaaaaa','#555555'],
+    vars: {
+      '--bg':'#060606','--s1':'#0f0f0f','--s2':'#161616','--s3':'#1f1f1f',
+      '--border':'#252525','--border2':'#333333',
+      '--accent':'#ffffff','--accent2':'#ff3d5a','--accent3':'#aaaaaa','--accent4':'#888888',
+      '--text':'#f5f5f5','--muted':'#555555','--muted2':'#333333',
+      '--glow-y':'0 0 20px rgba(255,255,255,.2), 0 0 60px rgba(255,255,255,.06)',
+      '--glow-c':'0 0 20px rgba(170,170,170,.2), 0 0 60px rgba(170,170,170,.06)',
+      '--glow-r':'0 0 20px rgba(255,61,90,.35), 0 0 60px rgba(255,61,90,.12)',
+    }
+  },
+  {
+    id: 'vapor',
+    name: 'VAPOR',
+    preview: ['#ff71ce','#01cdfe','#05ffa1'],
+    vars: {
+      '--bg':'#06040f','--s1':'#0d0820','--s2':'#120c2c','--s3':'#181038',
+      '--border':'#1e1442','--border2':'#281c55',
+      '--accent':'#ff71ce','--accent2':'#05ffa1','--accent3':'#01cdfe','--accent4':'#b967ff',
+      '--text':'#f5eeff','--muted':'#5a4275','--muted2':'#2e1e45',
+      '--glow-y':'0 0 20px rgba(255,113,206,.4), 0 0 60px rgba(255,113,206,.15)',
+      '--glow-c':'0 0 20px rgba(1,205,254,.3), 0 0 60px rgba(1,205,254,.1)',
+      '--glow-r':'0 0 20px rgba(5,255,161,.3), 0 0 60px rgba(5,255,161,.1)',
+    }
+  },
+];
+
+let currentThemeId = localStorage.getItem('ub_theme') || 'neon';
+
+window.applyTheme = function(id) {
+  const theme = THEMES.find(t=>t.id===id) || THEMES[0];
+  const root  = document.documentElement;
+  Object.entries(theme.vars).forEach(([k,v]) => root.style.setProperty(k, v));
+  currentThemeId = id;
+  localStorage.setItem('ub_theme', id);
+}
+
+window.renderThemeGrid = function() {
+  const grid = qs('theme-grid'); if(!grid) return;
+  grid.innerHTML = THEMES.map(t => {
+    const active = t.id === currentThemeId;
+    return `<button onclick="applyTheme('${t.id}');renderThemeGrid()" style="border:2px solid ${active?t.preview[0]:'var(--border)'};border-radius:10px;padding:10px 6px 8px;background:var(--s2);cursor:pointer;transition:all .2s;box-shadow:${active?`0 0 14px ${t.preview[0]}55`:'none'};display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div style="display:flex;gap:4px">${t.preview.map(c=>`<span style="width:12px;height:12px;border-radius:50%;background:${c};box-shadow:0 0 6px ${c}88;display:block"></span>`).join('')}</div>
+      <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;color:${active?t.preview[0]:'var(--muted)'}">${t.name}</div>
+    </button>`;
+  }).join('');
+}
+
+// Helper: llegeix el color d'accent actual del tema
+function getAccent()  { return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#d4ff00'; }
+function getAccent3() { return getComputedStyle(document.documentElement).getPropertyValue('--accent3').trim() || '#00e5ff'; }
+function getBg()      { return getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#06060a'; }
+
 // ── BOOT ──────────────────────────────────────────────────────
+applyTheme(currentThemeId);
 initLogin();
 
 // ── RESYNC TIMERS QUAN TORNEM A LA APP ────────────────────────
