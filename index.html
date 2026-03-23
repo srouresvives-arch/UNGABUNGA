@@ -520,7 +520,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 <!-- LOGIN -->
 <div id="login-screen" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px">
   <div style="font-family:var(--font-display);font-size:48px;font-weight:900;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px">UNGA<em style="color:var(--accent);font-style:normal">BUNGA</em></div>
-  <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:40px">Qui ets?</div>
+  <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:40px">Who are you?</div>
 
   <!-- Usuaris coneguts -->
   <div id="login-users" style="width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;margin-bottom:24px"></div>
@@ -528,14 +528,14 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
   <!-- Separador -->
   <div style="display:flex;align-items:center;gap:10px;width:100%;max-width:320px;margin-bottom:20px">
     <div style="flex:1;height:1px;background:var(--border)"></div>
-    <span style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px">O SÓC NOU</span>
+    <span style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px">OR I'M NEW</span>
     <div style="flex:1;height:1px;background:var(--border)"></div>
   </div>
 
   <!-- Registre nou usuari -->
   <div style="width:100%;max-width:320px;display:flex;flex-direction:column;gap:8px">
-    <input class="inp" id="login-new-name" placeholder="El teu nom..." style="text-align:center">
-    <button class="btn btn-g btn-w" onclick="loginRegister()">REGISTRAR-ME</button>
+    <input class="inp" id="login-new-name" placeholder="Your name..." style="text-align:center">
+    <button class="btn btn-g btn-w" onclick="loginRegister()">REGISTER</button>
   </div>
   <div id="login-err" style="font-family:var(--font-mono);font-size:9px;color:var(--accent2);text-align:center;margin-top:10px;min-height:16px"></div>
 </div>
@@ -563,22 +563,22 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     <div class="page" id="page-workout">
       <div class="ph">
         <div>
-          <div class="ph-title">ENTRENO<br><em>ACTIVO</em></div>
+          <div class="ph-title">ACTIVE<br><em>WORKOUT</em></div>
           <div class="ph-sub" id="wo-timer-big">00:00</div>
         </div>
-        <button class="btn btn-y" onclick="finishWorkout()">✓ TERMINAR</button>
+        <button class="btn btn-y" onclick="finishWorkout()">✓ FINISH</button>
       </div>
       <div id="wo-exercises"></div>
       <div class="px16 mt8" style="display:flex;flex-direction:column;gap:8px">
-        <button class="btn btn-y btn-w" onclick="openImportRoutine()">⬇ IMPORTAR RUTINA</button>
-        <button class="btn btn-g btn-w" onclick="openPickExercise('workout')">+ EJERCICIO SUELTO</button>
+        <button class="btn btn-y btn-w" onclick="openImportRoutine()">⬇ IMPORT ROUTINE</button>
+        <button class="btn btn-g btn-w" onclick="openPickExercise('workout')">+ ADD EXERCISE</button>
       </div>
     </div>
 
     <!-- ══ CALENDAR ══ -->
     <div class="page on" id="page-cal">
       <div class="ph">
-        <div class="ph-title">CALEN<em>DARIO</em></div>
+        <div class="ph-title">CALEN<em>DAR</em></div>
       </div>
       <div class="cal-nav">
         <button class="btn btn-g btn-sm btn-icon" onclick="calMove(-1)">‹</button>
@@ -586,7 +586,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <button class="btn btn-g btn-sm btn-icon" onclick="calMove(1)">›</button>
       </div>
       <div class="px16" style="margin-bottom:12px">
-        <button class="btn btn-y btn-w" style="font-size:15px;padding:12px" onclick="startWorkout()">+ NUEVO ENTRENO</button>
+        <button class="btn btn-y btn-w" style="font-size:15px;padding:12px" onclick="startWorkout()">+ NEW WORKOUT</button>
       </div>
       <div class="cal-wrap">
         <div class="cal-grid" id="cal-grid"></div>
@@ -597,8 +597,8 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     <!-- ══ EXERCICIS + RUTINES ══ -->
     <div class="page" id="page-exercises">
       <div class="ph">
-        <div class="ph-title">ENTRE<em>NO</em></div>
-        <button class="btn btn-y btn-sm" id="exrt-add-btn" onclick="exrtAdd()">+ NOU</button>
+        <div class="ph-title">EXER<em>CISE</em></div>
+        <button class="btn btn-y btn-sm" id="exrt-add-btn" onclick="exrtAdd()">+ NEW</button>
       </div>
 
       <!-- Tab switcher -->
@@ -631,7 +631,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     <!-- ══ STATS ══ -->
     <div class="page" id="page-stats">
       <div class="ph">
-        <div class="ph-title">ESTA<em>DÍSTICAS</em></div>
+        <div class="ph-title">STA<em>TISTICS</em></div>
       </div>
 
       <!-- REPTES — dalt de tot, mateix pack que el 66% -->
@@ -644,11 +644,11 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <div id="stats-global"></div>
 
       <div style="padding:0 16px 6px;display:flex;align-items:center;gap:8px">
-        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;flex:1">DETALLE POR EJERCICIO</div>
+        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;flex:1">EXERCISE DETAIL</div>
       </div>
       <div style="padding:0 16px 12px">
         <select class="inp" id="stats-sel" onchange="renderStatsDetail()">
-          <option value="">— Selecciona ejercicio —</option>
+          <option value="">— Select exercise —</option>
         </select>
       </div>
       <div id="stats-detail"></div>
@@ -657,7 +657,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     <!-- ══ CRONOS ══ -->
     <div class="page" id="page-hiit">
       <div class="ph">
-        <div class="ph-title">CRO<em>NOS</em></div>
+        <div class="ph-title">TI<em>MERS</em></div>
       </div>
 
       <!-- Títol secció HIIT -->
@@ -671,27 +671,27 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <div id="hiit-config" style="padding:0 16px 16px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
           <div>
-            <label class="lbl">Treball (s)</label>
+            <label class="lbl">Work (s)</label>
             <input class="inp" id="hiit-work" type="number" value="30" min="5" max="120">
           </div>
           <div>
-            <label class="lbl">Descans (s)</label>
+            <label class="lbl">Rest (s)</label>
             <input class="inp" id="hiit-rest" type="number" value="15" min="5" max="60">
           </div>
           <div>
-            <label class="lbl">Desc. ronda (s)</label>
+            <label class="lbl">Round rest (s)</label>
             <input class="inp" id="hiit-rround" type="number" value="90" min="10" max="300">
           </div>
           <div>
-            <label class="lbl">Rondes</label>
+            <label class="lbl">Rounds</label>
             <input class="inp" id="hiit-rounds" type="number" value="4" min="1" max="10">
           </div>
           <div>
-            <label class="lbl">Exercicis / ronda</label>
+            <label class="lbl">Exercises / round</label>
             <input class="inp" id="hiit-nexs" type="number" value="4" min="1" max="10">
           </div>
         </div>
-        <button class="btn btn-y btn-w" style="font-size:18px;padding:16px" onclick="hiitStart()">▶ INICIAR</button>
+        <button class="btn btn-y btn-w" style="font-size:18px;padding:16px" onclick="hiitStart()">▶ START</button>
       </div>
 
       <!-- Timer running -->
@@ -712,7 +712,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         </div>
 
         <!-- Round label -->
-        <div id="hiit-round-lbl" style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--muted);text-align:center;margin-bottom:14px">Ronda – / –</div>
+        <div id="hiit-round-lbl" style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--muted);text-align:center;margin-bottom:14px">Round – / –</div>
 
         <!-- Round dots -->
         <div id="hiit-rdots" style="display:flex;justify-content:center;gap:10px;margin-bottom:10px"></div>
@@ -725,7 +725,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 
         <!-- Controls -->
         <div style="display:flex;gap:10px">
-          <button class="btn btn-g" style="flex:1" id="hiit-btn-pause" onclick="hiitPause()">⏸ PAUSA</button>
+          <button class="btn btn-g" style="flex:1" id="hiit-btn-pause" onclick="hiitPause()">⏸ PAUSE</button>
           <button class="btn btn-r" style="flex:1" onclick="hiitReset()">↺ RESET</button>
         </div>
       </div>
@@ -733,16 +733,16 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <!-- Finished -->
       <div id="hiit-done" style="display:none;padding:40px 16px;text-align:center">
         <div style="font-size:48px;margin-bottom:12px">🏆</div>
-        <div style="font-family:var(--font-display);font-size:40px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--accent)">COMPLETAT!</div>
+        <div style="font-family:var(--font-display);font-size:40px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--accent)">COMPLETED!</div>
         <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;color:var(--muted);margin-top:8px;margin-bottom:28px" id="hiit-done-sub"></div>
-        <button class="btn btn-y btn-w" onclick="hiitReset()">↺ TORNAR A FER</button>
+        <button class="btn btn-y btn-w" onclick="hiitReset()">↺ DO IT AGAIN</button>
       </div>
 
-      <!-- ── TEMPORITZADOR DE DESCANS ── -->
+      <!-- ── TEMPORITZADOR DE REST ── -->
       <div style="margin:24px 0 0;border-top:1px solid var(--border);padding-top:20px">
         <div style="display:flex;align-items:center;gap:10px;padding:0 16px 14px">
           <div style="flex:1;height:1px;background:var(--border)"></div>
-          <div style="font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text)">⏱ DESCANS</div>
+          <div style="font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text)">⏱ REST</div>
           <div style="flex:1;height:1px;background:var(--border)"></div>
         </div>
         <div style="padding:0 16px">
@@ -758,7 +758,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
             <div id="rest-bar" style="height:100%;border-radius:2px;background:var(--accent);width:100%;transition:width .25s linear,background .3s"></div>
           </div>
           <div style="display:flex;gap:8px">
-            <button class="btn btn-y" style="flex:2;font-size:16px;padding:14px" id="rest-btn-start" onclick="restToggle()">▶ INICIAR</button>
+            <button class="btn btn-y" style="flex:2;font-size:16px;padding:14px" id="rest-btn-start" onclick="restToggle()">▶ START</button>
             <button class="btn btn-g" style="flex:1" onclick="restReset()">↺</button>
           </div>
         </div>
@@ -770,7 +770,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     <!-- ══ PERFIL ══ -->
     <div class="page" id="page-perfil">
       <div class="ph">
-        <div class="ph-title">PER<em>FIL</em></div>
+        <div class="ph-title">PRO<em>FILE</em></div>
       </div>
       <div class="px16" style="padding-bottom:24px">
 
@@ -778,57 +778,57 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <div class="card" style="margin:0 0 10px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <div>
-        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:2px">Sessió activa</div>
+        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:2px">Active session</div>
         <div id="backup-username" style="font-family:var(--font-display);font-size:18px;font-weight:800;letter-spacing:1px;text-transform:uppercase"></div>
         </div>
-        <button class="btn btn-r btn-sm" onclick="logoutUser()">↩ SORTIR</button>
+        <button class="btn btn-r btn-sm" onclick="logoutUser()">↩ SIGN OUT</button>
         </div>
         <div style="display:flex;gap:8px;margin-top:6px">
-        <input class="inp" id="edit-username-inp" placeholder="Nou nom..." style="flex:1">
+        <input class="inp" id="edit-username-inp" placeholder="New name..." style="flex:1">
         <button class="btn btn-y btn-sm" onclick="saveUsername()">✓</button>
         </div>
         <div id="edit-username-status" style="font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-top:6px;min-height:14px"></div>
         </div>
 
-        <!-- Dades físiques -->
+        <!-- Physical data -->
         <div class="card" style="margin:0 0 10px">
-        <div class="card-title">Dades físiques</div>
+        <div class="card-title">Physical data</div>
 
         <!-- Mode switcher -->
         <div style="display:flex;gap:6px;margin-bottom:14px">
         <button id="phys-mode-basic" onclick="setPhysMode('basic')"
         style="flex:1;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;padding:8px;border-radius:var(--r);border:1px solid var(--accent);background:var(--accent);color:#000;cursor:pointer;transition:.15s">
-        BÀSIC<br><span style="font-weight:400;font-size:8px;opacity:.7">Pes + altura</span>
+        BASIC<br><span style="font-weight:400;font-size:8px;opacity:.7">Weight + height</span>
         </button>
         <button id="phys-mode-scale" onclick="setPhysMode('scale')"
         style="flex:1;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;padding:8px;border-radius:var(--r);border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:.15s">
-        BALANÇA<br><span style="font-weight:400;font-size:8px;opacity:.7">Composició corporal</span>
+        SCALE<br><span style="font-weight:400;font-size:8px;opacity:.7">Body composition</span>
         </button>
         </div>
 
         <!-- Camps comuns (sempre visibles) -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <div><label class="lbl">Pes (kg)</label>
+        <div><label class="lbl">Weight (kg)</label>
         <input class="inp" id="phys-weight" type="number" placeholder="75" min="30" max="250" step="0.1"></div>
-        <div><label class="lbl">Altura (cm)</label>
+        <div><label class="lbl">Height (cm)</label>
         <input class="inp" id="phys-height" type="number" placeholder="175" min="100" max="250"></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <div><label class="lbl">Edat</label>
+        <div><label class="lbl">Age</label>
         <input class="inp" id="phys-age" type="number" placeholder="25" min="10" max="100"></div>
-        <div><label class="lbl">Sexe</label>
+        <div><label class="lbl">Sex</label>
         <select class="inp" id="phys-sex">
-        <option value="m">Home</option>
-        <option value="f">Dona</option>
+        <option value="m">Male</option>
+        <option value="f">Female</option>
         </select></div>
         </div>
         <div style="margin-bottom:12px">
-        <label class="lbl">Activitat fora del gym</label>
+        <label class="lbl">Activity outside gym</label>
         <select class="inp" id="phys-activity">
-        <option value="1.2">Sedentari (oficina, poc moviment)</option>
-        <option value="1.375">Poc actiu (caminar, tasques lleus)</option>
-        <option value="1.55" selected>Moderadament actiu (normal)</option>
-        <option value="1.725">Molt actiu (feina física, esport diari)</option>
+        <option value="1.2">Sedentary (office, little movement)</option>
+        <option value="1.375">Lightly active (walking, light tasks)</option>
+        <option value="1.55" selected>Moderately active (normal)</option>
+        <option value="1.725">Very active (physical work, daily sport)</option>
         </select>
         </div>
 
@@ -836,29 +836,29 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <div id="phys-scale-section" style="display:none">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
         <div style="flex:1;height:1px;background:var(--border)"></div>
-        <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;color:var(--muted)">BALANÇA — NOVA MESURA</div>
+        <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;color:var(--muted)">SCALE — NOVA MESURA</div>
         <div style="flex:1;height:1px;background:var(--border)"></div>
         </div>
         <div style="margin-bottom:8px">
-        <label class="lbl">Data de la mesura</label>
+        <label class="lbl">Measurement date</label>
         <input class="inp" id="phys-date" type="date">
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <div><label class="lbl">% Greix corporal</label>
+        <div><label class="lbl">% Body fat</label>
         <input class="inp" id="phys-fat" type="number" placeholder="18.0" min="3" max="60" step="0.1"></div>
-        <div><label class="lbl">% Aigua corporal</label>
+        <div><label class="lbl">% Body water</label>
         <input class="inp" id="phys-water" type="number" placeholder="60.0" min="20" max="80" step="0.1"></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <div><label class="lbl">Massa muscular (kg)</label>
+        <div><label class="lbl">Muscle mass (kg)</label>
         <input class="inp" id="phys-muscle" type="number" placeholder="35.0" min="10" max="120" step="0.1"></div>
-        <div><label class="lbl">Massa òssia (kg)</label>
+        <div><label class="lbl">Bone mass (kg)</label>
         <input class="inp" id="phys-bone" type="number" placeholder="3.2" min="1" max="8" step="0.1"></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-        <div><label class="lbl">BMR (kcal/dia)</label>
+        <div><label class="lbl">BMR (kcal/day)</label>
         <input class="inp" id="phys-bmr" type="number" placeholder="1800" min="800" max="5000"></div>
-        <div><label class="lbl">IMC</label>
+        <div><label class="lbl">BMI</label>
         <input class="inp" id="phys-bmi" type="number" placeholder="22.5" min="10" max="50" step="0.1"></div>
         </div>
         </div>
@@ -866,11 +866,17 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <!-- Resum calculat -->
         <div id="phys-summary" style="display:none;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px;margin-bottom:10px;font-family:var(--font-mono);font-size:9px;color:var(--muted);line-height:2"></div>
 
-        <button class="btn btn-y btn-w" onclick="savePhysData()">GUARDAR DADES</button>
+        <button class="btn btn-y btn-w" onclick="savePhysData()">SAVE DATA</button>
         <div id="phys-status" style="font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-top:6px;min-height:14px"></div>
 
-        <!-- Historial de mesures (només mode balança) -->
+        <!-- History de mesures (només mode balança) -->
         <div id="phys-history" style="margin-top:14px"></div>
+        </div>
+
+        <!-- Medalles -->
+        <div class="card" style="margin:0 0 10px">
+        <div class="card-title">🏅 Medalles</div>
+        <div id="medals-grid" style="min-height:40px"></div>
         </div>
 
         <!-- Backup -->
@@ -880,15 +886,15 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         </div>
 
         <div class="card" style="margin:0 0 10px">
-        <div class="card-title">Exportar</div>
+        <div class="card-title">Export</div>
         <div id="bk-summary" style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.9"></div>
-        <button class="btn btn-y btn-w" onclick="exportData()">↓ DESCARGAR .JSON</button>
+        <button class="btn btn-y btn-w" onclick="exportData()">↓ DOWNLOAD .JSON</button>
         </div>
         <div class="card" style="margin:0 0 10px">
-        <div class="card-title">Importar</div>
-        <p style="font-family:var(--font-mono);font-size:9px;color:var(--accent2);letter-spacing:1px;margin-bottom:10px;line-height:1.8">⚠ REEMPLAZA TODOS LOS DATOS ACTUALES</p>
+        <div class="card-title">Import</div>
+        <p style="font-family:var(--font-mono);font-size:9px;color:var(--accent2);letter-spacing:1px;margin-bottom:10px;line-height:1.8">⚠ REPLACES ALL CURRENT DATA</p>
         <label class="btn btn-g btn-w" style="cursor:pointer">
-        ↑ SELECCIONAR .JSON
+        ↑ SELECT .JSON
         <input type="file" accept=".json" onchange="importData(event)" style="display:none">
         </label>
         <div id="bk-status" style="font-family:var(--font-mono);font-size:9px;text-align:center;margin-top:8px"></div>
@@ -955,32 +961,32 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 <div class="overlay" id="m-exercise">
   <div class="modal">
     <div class="drag-handle"></div>
-    <div class="modal-title" id="m-ex-title">Nuevo ejercicio</div>
-    <div class="ig"><label class="lbl">Nombre</label><input class="inp" id="ex-inp-name" placeholder="Press banca..."></div>
+    <div class="modal-title" id="m-ex-title">New exercise</div>
+    <div class="ig"><label class="lbl">Name</label><input class="inp" id="ex-inp-name" placeholder="Press banca..."></div>
     <div class="ig">
-      <label class="lbl">Músculo principal</label>
+      <label class="lbl">Main muscle</label>
       <select class="inp" id="ex-inp-muscle">
-        <option value="pecho">Pecho</option><option value="espalda">Espalda</option>
-        <option value="hombros">Hombros</option><option value="pierna">Pierna</option>
-        <option value="bicep">Bícep</option><option value="tricep">Trícep</option>
-        <option value="core">Core / Abs</option><option value="gluteo">Glúteo</option>
-        <option value="gemelos">Gemelos</option><option value="cardio">Cardio</option>
-        <option value="otro">Otro</option>
+        <option value="chest">Chest</option><option value="espalda">Back</option>
+        <option value="shoulders">Shoulders</option><option value="legs">Legs</option>
+        <option value="bicep">Bicep</option><option value="tricep">Tricep</option>
+        <option value="core">Core / Abs</option><option value="glutes">Glutes</option>
+        <option value="calves">Calves</option><option value="cardio">Cardio</option>
+        <option value="other">Other</option>
       </select>
     </div>
     <div class="ig">
       <label class="lbl">Tipo</label>
       <select class="inp" id="ex-inp-type">
-        <option value="fuerza">Fuerza (peso × reps)</option>
-        <option value="bodyweight">Bodyweight (solo reps)</option>
-        <option value="tiempo">Tiempo (duración)</option>
-        <option value="cardio">Cardio (tiempo / distancia)</option>
+        <option value="strength">Strength (weight × reps)</option>
+        <option value="bodyweight">Bodyweight (reps only)</option>
+        <option value="time">Time (duration)</option>
+        <option value="cardio">Cardio (time / distance)</option>
       </select>
     </div>
     <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
       <div style="display:flex;gap:6px">
-        <button class="btn btn-g" style="flex:1" onclick="closeModal('m-exercise')">CANCELAR</button>
-        <button class="btn btn-y" style="flex:1" onclick="saveExercise()">GUARDAR</button>
+        <button class="btn btn-g" style="flex:1" onclick="closeModal('m-exercise')">CANCEL</button>
+        <button class="btn btn-y" style="flex:1" onclick="saveExercise()">SAVE</button>
       </div>
       <button class="btn btn-r btn-w" id="ex-del-btn" onclick="deleteExercise()" style="display:none">ELIMINAR EXERCICI</button>
     </div>
@@ -997,16 +1003,16 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       <select class="inp" id="ch-type" onchange="onChallengeTypeChange()">
         <optgroup label="🏋️ Exercici">
           <option value="pr_reps">💪 Pes màxim a X reps — ex: 100kg × 10 reps</option>
-          <option value="tiempo">⏱ Temps màxim — ex: Hangtime 90 segons</option>
+          <option value="time">⏱ Temps màxim — ex: Hangtime 90 segons</option>
           <option value="cardio_dist">🏃 Distància cardio — ex: 10km en 45min</option>
           <option value="volume">📦 Volum acumulat — ex: aixecar 50 tones</option>
-          <option value="kcal">🔥 Kcal cremades — ex: cremar 10.000 kcal</option>
+          <option value="kcal">🔥 Calories Burned — ex: cremar 10.000 kcal</option>
           <option value="consistency">📅 Consistència — ex: 4 dies/setmana</option>
-          <option value="sets">🔢 Sèries totals — ex: 500 sèries</option>
+          <option value="sets">🔢 Sèries totals — ex: 500 sets</option>
         </optgroup>
         <optgroup label="🌿 Hàbits">
           <option value="habit_water">💧 Hidratació — beure X litres al dia</option>
-          <option value="habit_kcal">🥗 Ingesta calòrica — menjar màx X kcal/dia</option>
+          <option value="habit_kcal">🥗 Ingesta calòrica — menjar màx X kcal/day</option>
           <option value="habit_custom">📝 Hàbit personalitzat — registre lliure</option>
         </optgroup>
         <optgroup label="⚖️ Cos">
@@ -1071,7 +1077,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
       </div>
     </div>
 
-    <!-- Kcal cremades -->
+    <!-- Calories Burned -->
     <div id="ch-kcal-fields" style="display:none">
       <div style="margin-bottom:8px">
         <label class="lbl">Kcal a cremar fent exercici</label>
@@ -1163,7 +1169,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     <div id="ch-preview" style="display:none;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px;margin-bottom:12px;font-family:var(--font-mono);font-size:9px;color:var(--muted);line-height:1.9"></div>
     <div style="display:flex;gap:8px">
       <button class="btn btn-g" style="flex:1" onclick="closeModal('m-challenge')">CANCEL·LAR</button>
-      <button class="btn btn-y" style="flex:1" onclick="saveChallenge()">GUARDAR</button>
+      <button class="btn btn-y" style="flex:1" onclick="saveChallenge()">SAVE</button>
     </div>
   </div>
 </div>
@@ -1179,24 +1185,16 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     </div>
     <div style="display:flex;gap:8px">
       <button class="btn btn-g" style="flex:1" onclick="closeModal('m-habit-log')">CANCEL·LAR</button>
-      <button class="btn btn-y" style="flex:1" onclick="saveHabitLog()">GUARDAR</button>
+      <button class="btn btn-y" style="flex:1" onclick="saveHabitLog()">SAVE</button>
     </div>
   </div>
 </div>
 
 <!-- EXERCISE DETAIL: PR + best sets -->
 <div class="overlay" id="m-ex-detail">
-  <div class="modal">
+  <div class="modal" style="max-height:92vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom)">
     <div class="drag-handle"></div>
-    <div class="row-between mb4">
-      <div style="font-family:var(--font-display);font-size:24px;font-weight:900;letter-spacing:1px;text-transform:uppercase" id="exd-name"></div>
-    </div>
-    <div class="tags mb12" id="exd-tags"></div>
     <div id="exd-body"></div>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
-      <button class="btn btn-g btn-w" onclick="closeModal('m-ex-detail')">TANCAR</button>
-      <button class="btn btn-r btn-w" onclick="deleteExFromDetail()">🗑 ELIMINAR DE LA BIBLIOTECA</button>
-    </div>
   </div>
 </div>
 
@@ -1204,12 +1202,12 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 <div class="overlay" id="m-import-routine">
   <div class="modal">
     <div class="drag-handle"></div>
-    <div class="modal-title">Importar rutina</div>
+    <div class="modal-title">Import rutina</div>
     <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:14px;line-height:1.8">
-      CARGA LOS EJERCICIOS DE UNA RUTINA<br>CON LOS PESOS DEL ÚLTIMO ENTRENO
+      LOADS THE EXERCISES FROM A ROUTINE<br>WITH WEIGHTS FROM THE LAST SESSION
     </div>
     <div id="import-routine-list"></div>
-    <button class="btn btn-g btn-w mt12" onclick="closeModal('m-import-routine')">CANCELAR</button>
+    <button class="btn btn-g btn-w mt12" onclick="closeModal('m-import-routine')">CANCEL</button>
   </div>
 </div>
 
@@ -1217,9 +1215,9 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 <div class="overlay" id="m-pick-ex">
   <div class="modal">
     <div class="drag-handle"></div>
-    <div class="modal-title">Añadir ejercicio</div>
+    <div class="modal-title">Add exercise</div>
     <div id="pick-ex-list"></div>
-    <button class="btn btn-g btn-w mt12" onclick="closeModal('m-pick-ex')">CANCELAR</button>
+    <button class="btn btn-g btn-w mt12" onclick="closeModal('m-pick-ex')">CANCEL</button>
   </div>
 </div>
 
@@ -1235,12 +1233,12 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <tbody id="sets-tbody"></tbody>
       </table>
     </div>
-    <button class="btn btn-g btn-w mt8" onclick="addSet()">+ SERIE</button>
+    <button class="btn btn-g btn-w mt8" onclick="addSet()">+ SET</button>
     <div class="orm-live" id="orm-live"></div>
     <hr>
     <div class="g2">
-      <button class="btn btn-g" onclick="closeModal('m-sets')">CERRAR</button>
-      <button class="btn btn-y" onclick="saveSets()">GUARDAR</button>
+      <button class="btn btn-g" onclick="closeModal('m-sets')">CLOSE</button>
+      <button class="btn btn-y" onclick="saveSets()">SAVE</button>
     </div>
   </div>
 </div>
@@ -1250,26 +1248,26 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
   <div class="modal">
     <div class="drag-handle"></div>
     <div id="rt-panel-form">
-      <div class="modal-title" id="m-rt-title">Nueva rutina</div>
-      <div class="ig"><label class="lbl">Nombre</label><input class="inp" id="rt-inp-name" placeholder="Día A — Empuje..."></div>
-      <div class="ig"><label class="lbl">Descripción (opcional)</label><input class="inp" id="rt-inp-desc" placeholder="Lunes y jueves"></div>
+      <div class="modal-title" id="m-rt-title">New routine</div>
+      <div class="ig"><label class="lbl">Name</label><input class="inp" id="rt-inp-name" placeholder="Día A — Empuje..."></div>
+      <div class="ig"><label class="lbl">Description (optional)</label><input class="inp" id="rt-inp-desc" placeholder="Monday & Thursday"></div>
       <hr>
-      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);margin-bottom:10px;text-transform:uppercase">Ejercicios en esta rutina</div>
+      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);margin-bottom:10px;text-transform:uppercase">Exercises in this routine</div>
       <div id="rt-ex-list"></div>
-      <button class="btn btn-g btn-w mt8" onclick="showRtExPicker()">+ AÑADIR EJERCICIO</button>
+      <button class="btn btn-g btn-w mt8" onclick="showRtExPicker()">+ ADD EXERCISE</button>
       <hr>
       <div class="row" style="flex-wrap:wrap;gap:8px">
-        <button class="btn btn-r btn-sm" id="rt-del-btn" onclick="deleteRoutine()" style="display:none">ELIMINAR</button>
-        <button class="btn btn-g" style="flex:1" onclick="closeModal('m-routine')">CANCELAR</button>
-        <button class="btn btn-y" style="flex:1" onclick="saveRoutine()">GUARDAR</button>
+        <button class="btn btn-r btn-sm" id="rt-del-btn" onclick="deleteRoutine()" style="display:none">DELETE</button>
+        <button class="btn btn-g" style="flex:1" onclick="closeModal('m-routine')">CANCEL</button>
+        <button class="btn btn-y" style="flex:1" onclick="saveRoutine()">SAVE</button>
       </div>
     </div>
     <div id="rt-panel-picker" style="display:none">
       <div class="row-between mb12">
-        <div class="modal-title" style="margin:0">Añadir ejercicio</div>
-        <button class="btn btn-g btn-sm" onclick="hideRtExPicker()">← VOLVER</button>
+        <div class="modal-title" style="margin:0">Add exercise</div>
+        <button class="btn btn-g btn-sm" onclick="hideRtExPicker()">← BACK</button>
       </div>
-      <input class="inp mb8" id="rt-picker-search" placeholder="Buscar..." oninput="renderRtPicker()">
+      <input class="inp mb8" id="rt-picker-search" placeholder="Search..." oninput="renderRtPicker()">
       <div id="rt-picker-list"></div>
     </div>
   </div>
@@ -1281,7 +1279,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
     <div class="drag-handle"></div>
     <div id="wo-detail-body"></div>
     <hr>
-    <button class="btn btn-g btn-w" onclick="closeModal('m-wo-detail')">CERRAR</button>
+    <button class="btn btn-g btn-w" onclick="closeModal('m-wo-detail')">CLOSE</button>
   </div>
 </div>
 
@@ -1354,7 +1352,7 @@ function renderLoginUsers(users) {
     <button class="btn btn-g btn-w" style="font-size:16px;padding:14px;display:flex;align-items:center;justify-content:space-between"
       onclick="loginAs('${u.id}')">
       <span>👤 ${u.name}</span>
-      <span style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px">ENTRAR →</span>
+      <span style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px">ENTER →</span>
     </button>
   `).join('');
 }
@@ -1374,7 +1372,7 @@ window.loginAs = async function(userId) {
 
 window.loginRegister = async function() {
   const name = (qs('login-new-name').value||'').trim();
-  if(!name) { qs('login-err').textContent='Escriu el teu nom!'; return; }
+  if(!name) { qs('login-err').textContent='Enter your name!'; return; }
 
   let users = [];
   try {
@@ -1383,7 +1381,7 @@ window.loginRegister = async function() {
   } catch(e) { users = JSON.parse(localStorage.getItem('ub_users')||'[]'); }
 
   if(users.find(u=>u.name.toLowerCase()===name.toLowerCase())) {
-    qs('login-err').textContent='Aquest nom ja existeix!'; return;
+    qs('login-err').textContent='This name already exists!'; return;
   }
 
   const newUser = { id: Date.now().toString(36)+Math.random().toString(36).slice(2,5), name };
@@ -1454,7 +1452,7 @@ async function saveRemote() {
 function setSyncStatus(s) { console.log('sync:', s); }
 
 async function loadData() {
-  qs('loader-txt').textContent = 'Carregant...';
+  qs('loader-txt').textContent = 'Loading...';
   const lsKey = 'ub_data_' + currentUser.id;
   try {
     const snap = await Promise.race([
@@ -1475,23 +1473,97 @@ async function loadData() {
       await saveRemote();
     }
   } catch(e) {
-    qs('loader-txt').textContent = 'Mode offline...';
+    qs('loader-txt').textContent = 'Offline mode...';
     const cached = JSON.parse(localStorage.getItem(lsKey)||'null');
     exercises = cached?.exercises || getDefaultExercises();
     workouts  = cached?.workouts  || [];
     routines  = cached?.routines  || [];
     dayNotes  = cached?.dayNotes  || {};
   } finally {
-    // Migració silenciosa: corregeix tipus d'exercicis mal etiquetats
+    // Migració silenciosa: corregeix tipus d'exercises mal etiquetats
     let migrated = false;
     exercises.forEach(ex => {
-      if(ex.name.toLowerCase().includes('hangtime') && ex.type !== 'tiempo') {
-        ex.type = 'tiempo'; migrated = true;
+      if(ex.name.toLowerCase().includes('hangtime') && ex.type !== 'time') {
+        ex.type = 'time'; migrated = true;
       }
-      if(ex.name.toLowerCase() === 'plancha' && ex.type !== 'tiempo') {
-        ex.type = 'tiempo'; migrated = true;
+      if(ex.name.toLowerCase() === 'plancha' && ex.type !== 'time') {
+        ex.type = 'time'; migrated = true;
+      }
+      if(ex.name.toLowerCase() === 'battle ropes' && ex.type !== 'time') {
+        ex.type = 'time'; migrated = true;
       }
     });
+
+    // Migració v2: afegeix nous exercises si no existeixen
+    const NEW_EXERCISES = [
+      ['Weighted Pull-Up','back','strength'],
+      ['Renegade Row','back','strength'],
+      ['Inverted Row','back','bodyweight'],
+      ['Concentration Curl','bicep','strength'],
+      ['Romanian Deadlift','legs','strength'],
+      ['Dumbbell Lunge','legs','strength'],
+      ['Dumbbell Step-Up','legs','strength'],
+      ['Pistol Squat','legs','bodyweight'],
+      ['Barbell Hip Thrust','glutes','strength'],
+      ['Donkey Kick','glutes','bodyweight'],
+      ['Barbell Overhead Press','shoulders','strength'],
+      ['Face Pull','shoulders','strength'],
+      ['Arnold Press','shoulders','strength'],
+      ['Bench Press','chest','strength'],
+      ['Diamond Push-Up','tricep','bodyweight'],
+      ['Archer Push-Up','chest','bodyweight'],
+      ['Skull Crusher','tricep','strength'],
+      ['Tricep Kickback','tricep','strength'],
+      ['Side Plank','core','time'],
+      ['Hollow Body Hold','core','time'],
+      ['L-Sit','core','time'],
+      ['Dragon Flag','core','bodyweight'],
+      ['Ab Wheel Rollout','core','bodyweight'],
+      ['V-Up','core','bodyweight'],
+      ['Toes-to-Bar','core','bodyweight'],
+      ['Burpee Box Jump','cardio','time'],
+      ['Dumbbell Thruster','cardio','strength'],
+      ['Barbell Thruster','cardio','strength'],
+      ['Kettlebell Clean','cardio','strength'],
+      ['Kettlebell Snatch','cardio','strength'],
+      ['Turkish Get-Up','core','strength'],
+      ['Suitcase Carry','core','strength'],
+      ['Slam Ball','cardio','strength'],
+      ['Devil Press','cardio','strength'],
+      ['Inchworm','core','bodyweight'],
+      ['Bear Crawl','core','time'],
+      ['Crab Walk','core','time'],
+      ['World's Greatest Stretch','legs','time'],
+      ['Hip Airplane','glutes','bodyweight'],
+      ['Cossack Squat','legs','bodyweight'],
+      ['Jefferson Curl','back','strength'],
+      ['Paused Squat','legs','strength'],
+      ['Tempo Squat','legs','strength'],
+    ];
+    const existingNames = new Set(exercises.map(e => e.name.toLowerCase()));
+    NEW_EXERCISES.forEach(([name, muscle, type]) => {
+      if(!existingNames.has(name.toLowerCase())) {
+        exercises.push({id:uid(), name, muscle, type});
+        migrated = true;
+      }
+    });
+
+    // Migració v2: afegeix noves routines avançades si no existeixen
+    const NEW_ROUTINE_NAMES = [
+      '💪 Strength — Back + Biceps','💪 Strength — Legs + Glutes','💪 Strength — Chest + Triceps',
+      '💪 Strength — Shoulders + Core','🔥 Death by Thruster','🔥 Murph Inspired',
+      '🔥 Kettlebell Hell','🔥 Devil Circuit','🔥 Leg Destroyer','🔥 Upper Body Blitz',
+      '🔥 Core Annihilation','🔥 HYROX Sim — Lower Body','🔥 HYROX Sim — Full Body',
+      '🧘 Mobility — Pre-Session','🧘 Mobility — Posterior Chain',
+    ];
+    const existingRoutineNames = new Set(routines.map(r => r.name));
+    if(!NEW_ROUTINE_NAMES.some(n => existingRoutineNames.has(n))) {
+      // Afegim les noves routines que falten
+      const newRts = getDefaultRoutines(exercises).filter(r => NEW_ROUTINE_NAMES.includes(r.name));
+      routines = [...routines, ...newRts];
+      migrated = true;
+    }
+
     if(migrated) saveRemote();
     loadChallenges();
     hideLoader();
@@ -1565,7 +1637,7 @@ window.savePhysData = async function() {
   const st  = qs('phys-status');
   if(!w||!h||!age){ st.style.color='var(--accent2)'; st.textContent='Omple pes, altura i edat!'; return; }
 
-  // Data de la mesura (avui per defecte)
+  // Measurement date (avui per defecte)
   const dateVal = qs('phys-date').value || today();
 
   const fat    = parseFloat(qs('phys-fat').value)||null;
@@ -1615,18 +1687,18 @@ function renderPhysSummary() {
   const leanMass = fat ? Math.round(w*(1-fat/100)*10)/10 : null;
   const fatKg    = fat ? Math.round(w*fat/100*10)/10 : null;
   const bmiVal   = bmi || (h>0 ? Math.round(w/(h/100)**2*10)/10 : null);
-  const bmiCat   = !bmiVal?'':bmiVal<18.5?'Baix pes':bmiVal<25?'Normal':bmiVal<30?'Sobrepes':'Obesitat';
+  const bmiCat   = !bmiVal?'':bmiVal<18.5?'Underweight':bmiVal<25?'Normal':bmiVal<30?'Overweight':'Obesity';
 
   s.style.display='block';
   s.innerHTML = `
-    <div style="color:var(--accent);font-weight:600;margin-bottom:4px;letter-spacing:1px">RESUM CALCULAT</div>
+    <div style="color:var(--accent);font-weight:600;margin-bottom:4px;letter-spacing:1px">CALCULATED SUMMARY</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
-      <span>BMR ${bmrRaw?'(balança)':'(estimat)'}:</span><span style="color:var(--text)">${bmr} kcal/dia</span>
-      <span>TDEE (manteniment):</span><span style="color:var(--accent)">${tdee} kcal/dia</span>
-      ${leanMass?`<span>Massa magra:</span><span style="color:var(--text)">${leanMass} kg</span>`:''}
-      ${fatKg?`<span>Greix corporal:</span><span style="color:var(--text)">${fatKg} kg (${fat}%)</span>`:''}
-      ${muscle?`<span>Massa muscular:</span><span style="color:var(--text)">${muscle} kg</span>`:''}
-      ${bmiVal?`<span>IMC:</span><span style="color:var(--text)">${bmiVal} — ${bmiCat}</span>`:''}
+      <span>BMR ${bmrRaw?'(balança)':'(estimat)'}:</span><span style="color:var(--text)">${bmr} kcal/day</span>
+      <span>TDEE (maintenance):</span><span style="color:var(--accent)">${tdee} kcal/day</span>
+      ${leanMass?`<span>Lean mass:</span><span style="color:var(--text)">${leanMass} kg</span>`:''}
+      ${fatKg?`<span>Body fat:</span><span style="color:var(--text)">${fatKg} kg (${fat}%)</span>`:''}
+      ${muscle?`<span>Muscle mass:</span><span style="color:var(--text)">${muscle} kg</span>`:''}
+      ${bmiVal?`<span>BMI:</span><span style="color:var(--text)">${bmiVal} — ${bmiCat}</span>`:''}
     </div>`;
 }
 
@@ -1641,17 +1713,17 @@ function renderPhysHistory() {
   const fmt      = ds => new Date(ds+'T12:00:00').toLocaleDateString('ca-ES',{day:'numeric',month:'short'});
 
   c.innerHTML = `
-    <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px">Historial</div>
-    ${weights.length>=2?`<div class="chart-wrap" style="margin:0 0 8px"><div class="chart-title" style="font-size:11px">Pes (kg)</div><canvas id="phys-chart-weight" height="80"></canvas></div>`:''}
-    ${muscles.length>=2?`<div class="chart-wrap" style="margin:0 0 8px"><div class="chart-title" style="font-size:11px">Massa muscular (kg)</div><canvas id="phys-chart-muscle" height="80"></canvas></div>`:''}
-    ${fats.length>=2?`<div class="chart-wrap" style="margin:0 0 8px"><div class="chart-title" style="font-size:11px">% Greix corporal</div><canvas id="phys-chart-fat" height="80"></canvas></div>`:''}
+    <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px">History</div>
+    ${weights.length>=2?`<div class="chart-wrap" style="margin:0 0 8px"><div class="chart-title" style="font-size:11px">Weight (kg)</div><canvas id="phys-chart-weight" height="80"></canvas></div>`:''}
+    ${muscles.length>=2?`<div class="chart-wrap" style="margin:0 0 8px"><div class="chart-title" style="font-size:11px">Muscle mass (kg)</div><canvas id="phys-chart-muscle" height="80"></canvas></div>`:''}
+    ${fats.length>=2?`<div class="chart-wrap" style="margin:0 0 8px"><div class="chart-title" style="font-size:11px">% Body fat</div><canvas id="phys-chart-fat" height="80"></canvas></div>`:''}
     <div>
       ${sorted.map(e => {
         const d = new Date(e.date+'T12:00:00').toLocaleDateString('ca-ES',{day:'numeric',month:'short',year:'numeric'});
         const details = [
           e.weight && `${e.weight} kg`,
-          e.fat    && `${e.fat}% greix`,
-          e.muscle && `${e.muscle} kg múscul`,
+          e.fat    && `${e.fat}% fat`,
+          e.muscle && `${e.muscle} kg muscle`,
           e.bmr    && `BMR ${e.bmr}`,
         ].filter(Boolean).join(' · ');
         return `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)">
@@ -1673,7 +1745,7 @@ function renderPhysHistory() {
 }
 
 window.deletePhysMeasure = async function(date) {
-  if(!confirm(`Esborrar la mesura del ${date}?`)) return;
+  if(!confirm(`Delete measurement from ${date}?`)) return;
   physHistory = physHistory.filter(e => e.date !== date);
   // Actualitza physData amb l'última mesura restant
   if(physHistory.length) {
@@ -1696,40 +1768,40 @@ window.deletePhysMeasure = async function(date) {
 //    - Força: reps × 3s + 4s setup per sèrie
 //    - Bodyweight: reps × 2.5s + 3s setup
 //    - Tiempo/Cardio: temps real guardat
-// 2. Temps DESCANS = durada total workout - temps actiu
+// 2. Temps REST = durada total workout - temps actiu
 //    Comptabilitzat a MET 1.3 (repòs actiu, no dormir)
 // 3. kcal = (MET_actiu × tActiu + MET_descans × tDescans) × pes × hores
 // 4. +10% EPOC (mesurat científicament en força de resistència)
 
 const MET_TABLE = {
-  'Hangtime':3.0,'Plancha':3.5,'Plank Shoulder Taps':4.0,
-  'Burpees':14.0,'Salts Corda':12.3,'Skippings':11.0,
-  'Box Jumps':10.0,'Squat Jumps':10.0,'Lunges Saltant':9.5,
-  'Battle Ropes':10.5,'Climbers':9.0,'Arrossegar Trineu':11.0,
-  'Swing Kettlebell':8.0,'Goblet Squat':6.5,
-  'Llançament Wallball':8.5,'Press Militar Sandbag':7.0,
-  'Sentadilles Lliures':6.0,'Pes Mort Barra':6.0,
-  'Sumo Squat':5.5,'Squat Búlgar':5.5,
-  'Hip Thrust Màquina':4.5,'Nordic Curl':4.5,
-  'Elevació Bessons Step':3.5,'Dominades':6.0,
-  'Dips':5.0,'Flexions Plus':4.5,'Press Banca Inclinat':4.5,
-  'Rem Màquina':4.5,'One Arm Row':4.0,'Pullover Politja':3.5,
-  'Press Militar Mancuernes':4.0,'Elevació Lateral Politja':3.0,
-  'Extensió Tríceps Politja':3.0,'Bíceps Mancuernes Martell':3.0,
-  'Bíceps Barra Z':3.0,'Abdominals Russos':3.5,
-  'Farmer Walk Kettlebell':5.0,
+  'Dead Hang':3.0,'Plank':3.5,'Plank Shoulder Tap':4.0,
+  'Burpee':14.0,'Jump Rope':12.3,'High Knees':11.0,
+  'Box Jump':10.0,'Jump Squat':10.0,'Jump Lunge':9.5,
+  'Battle Ropes':10.5,'Mountain Climber':9.0,'Sled Pull':11.0,
+  'Kettlebell Swing':8.0,'Goblet Squat':6.5,
+  'Wall Ball':8.5,'Sandbag Press':7.0,
+  'Barbell Squat':6.0,'Deadlift':6.0,
+  'Sumo Squat':5.5,'Bulgarian Split Squat':5.5,
+  'Machine Hip Thrust':4.5,'Nordic Curl':4.5,
+  'Standing Calf Raise':3.5,'Pull-Up':6.0,
+  'Dips':5.0,'Push-Up':4.5,'Incline Bench Press':4.5,
+  'Seated Cable Row':4.5,'One-Arm Row':4.0,'Cable Pullover':3.5,
+  'Dumbbell Shoulder Press':4.0,'Cable Lateral Raise':3.0,
+  'Cable Tricep Pushdown':3.0,'Hammer Curl':3.0,
+  'Barbell Curl':3.0,'Russian Twist':3.5,
+  'Farmer Walk':5.0,
 };
 
 function getMET(exName, exType, muscle) {
   if(MET_TABLE[exName]) return MET_TABLE[exName];
   if(exType==='cardio')     return 9.0;
-  if(exType==='tiempo')     return 3.5;
+  if(exType==='time')     return 3.5;
   if(exType==='bodyweight') return 5.0;
-  return ['pierna','gluteo','esquena','espalda'].includes(muscle) ? 5.0 : 3.5;
+  return ['legs','glutes','back','espalda'].includes(muscle) ? 5.0 : 3.5;
 }
 
 function getWeightForDate(ds) {
-  // Busca la mesura de balança més propera (anterior o igual) a la data de l'entreno
+  // Busca la mesura de balança més propera (anterior o igual) a la data de l'workout
   // Fallback: physData.weight actual
   if(!physHistory?.length) return physData?.weight || 0;
   const sorted = [...physHistory].filter(e=>e.weight&&e.date<=ds).sort((a,b)=>b.date.localeCompare(a.date));
@@ -1748,7 +1820,7 @@ function calcKcal(workout) {
     if(!ex) return;
     const met = getMET(ex.name, ex.type, ex.muscle);
     let secs = 0;
-    if(ex.type==='tiempo'||ex.type==='cardio') {
+    if(ex.type==='time'||ex.type==='cardio') {
       secs = ae.sets.reduce((a,s)=>a+(parseFloat(s.weight)||0), 0);
     } else if(ex.type==='bodyweight') {
       secs = ae.sets.reduce((a,s)=>a+(parseFloat(s.reps)||8)*2.5+3, 0);
@@ -1789,43 +1861,97 @@ function calcKgPerMin(workout) {
 function getDefaultExercises() {
   const mk = (name,muscle,type) => ({id:uid(),name,muscle,type});
   return [
-    mk('Dominades','esquena','bodyweight'),
-    mk('Rem Màquina','esquena','fuerza'),
-    mk('One Arm Row','esquena','fuerza'),
-    mk('Pullover Politja','esquena','fuerza'),
-    mk('Bíceps Mancuernes Martell','bicep','fuerza'),
-    mk('Bíceps Barra Z','bicep','fuerza'),
-    mk('Sentadilles Lliures','pierna','fuerza'),
-    mk('Pes Mort Barra','pierna','fuerza'),
-    mk('Sumo Squat','pierna','fuerza'),
-    mk('Squat Búlgar','pierna','fuerza'),
-    mk('Hip Thrust Màquina','gluteo','fuerza'),
-    mk('Nordic Curl','pierna','bodyweight'),
-    mk('Elevació Bessons Step','gemelos','fuerza'),
-    mk('Press Militar Mancuernes','hombros','fuerza'),
-    mk('Elevació Lateral Politja','hombros','fuerza'),
-    mk('Press Banca Inclinat','pecho','fuerza'),
-    mk('Dips','pecho','bodyweight'),
-    mk('Flexions Plus','pecho','bodyweight'),
-    mk('Extensió Tríceps Politja','tricep','fuerza'),
-    mk('Hangtime','core','tiempo'),
-    mk('Plancha','core','tiempo'),
-    mk('Climbers','core','tiempo'),
-    mk('Abdominals Russos','core','fuerza'),
-    mk('Plank Shoulder Taps','core','tiempo'),
-    mk('Salts Corda','cardio','tiempo'),
-    mk('Arrossegar Trineu','cardio','tiempo'),
-    mk('Box Jumps','cardio','tiempo'),
-    mk('Goblet Squat','pierna','fuerza'),
-    mk('Skippings','cardio','tiempo'),
-    mk('Squat Jumps','cardio','tiempo'),
-    mk('Lunges Saltant','pierna','tiempo'),
-    mk('Battle Ropes','cardio','tiempo'),
-    mk('Swing Kettlebell','cardio','fuerza'),
-    mk('Press Militar Sandbag','cardio','fuerza'),
-    mk('Llançament Wallball','cardio','fuerza'),
-    mk('Burpees','cardio','tiempo'),
-    mk('Farmer Walk Kettlebell','core','fuerza'),
+    // ── ESQUENA ──
+    mk('Pull-Up','back','bodyweight'),
+    mk('Weighted Pull-Up','back','strength'),
+    mk('Seated Cable Row','back','strength'),
+    mk('One-Arm Row','back','strength'),
+    mk('Cable Pullover','back','strength'),
+    mk('Renegade Row','back','strength'),
+    mk('Inverted Row','back','bodyweight'),
+    // ── BÍCEPS ──
+    mk('Hammer Curl','bicep','strength'),
+    mk('Barbell Curl','bicep','strength'),
+    mk('Concentration Curl','bicep','strength'),
+    // ── CAMES ──
+    mk('Barbell Squat','legs','strength'),
+    mk('Deadlift','legs','strength'),
+    mk('Romanian Deadlift','legs','strength'),
+    mk('Sumo Squat','legs','strength'),
+    mk('Bulgarian Split Squat','legs','strength'),
+    mk('Dumbbell Lunge','legs','strength'),
+    mk('Goblet Squat','legs','strength'),
+    mk('Nordic Curl','legs','bodyweight'),
+    mk('Dumbbell Step-Up','legs','strength'),
+    mk('Pistol Squat','legs','bodyweight'),
+    // ── GLUTI ──
+    mk('Machine Hip Thrust','glutes','strength'),
+    mk('Barbell Hip Thrust','glutes','strength'),
+    mk('Donkey Kick','glutes','bodyweight'),
+    // ── BESSONS ──
+    mk('Standing Calf Raise','calves','strength'),
+    mk('Jump Rope','cardio','time'),
+    // ── ESPATLLES ──
+    mk('Dumbbell Shoulder Press','shoulders','strength'),
+    mk('Barbell Overhead Press','shoulders','strength'),
+    mk('Cable Lateral Raise','shoulders','strength'),
+    mk('Face Pull','shoulders','strength'),
+    mk('Arnold Press','shoulders','strength'),
+    // ── PECTORAL ──
+    mk('Incline Bench Press','chest','strength'),
+    mk('Bench Press','chest','strength'),
+    mk('Dips','chest','bodyweight'),
+    mk('Push-Up','chest','bodyweight'),
+    mk('Diamond Push-Up','tricep','bodyweight'),
+    mk('Archer Push-Up','chest','bodyweight'),
+    // ── TRÍCEPS ──
+    mk('Cable Tricep Pushdown','tricep','strength'),
+    mk('Skull Crusher','tricep','strength'),
+    mk('Tricep Kickback','tricep','strength'),
+    // ── CORE / ABS ──
+    mk('Dead Hang','core','time'),
+    mk('Plank','core','time'),
+    mk('Side Plank','core','time'),
+    mk('Mountain Climber','core','time'),
+    mk('Russian Twist','core','strength'),
+    mk('Plank Shoulder Tap','core','time'),
+    mk('Hollow Body Hold','core','time'),
+    mk('L-Sit','core','time'),
+    mk('Dragon Flag','core','bodyweight'),
+    mk('Ab Wheel Rollout','core','bodyweight'),
+    mk('V-Up','core','bodyweight'),
+    mk('Toes-to-Bar','core','bodyweight'),
+    // ── CARDIO / FUNCIONAL ──
+    mk('Sled Pull','cardio','time'),
+    mk('Box Jump','cardio','time'),
+    mk('High Knees','cardio','time'),
+    mk('Jump Squat','cardio','time'),
+    mk('Jump Lunge','legs','time'),
+    mk('Battle Ropes','cardio','time'),
+    mk('Burpee','cardio','time'),
+    mk('Burpee Box Jump','cardio','time'),
+    mk('Dumbbell Thruster','cardio','strength'),
+    mk('Barbell Thruster','cardio','strength'),
+    mk('Kettlebell Swing','cardio','strength'),
+    mk('Kettlebell Clean','cardio','strength'),
+    mk('Kettlebell Snatch','cardio','strength'),
+    mk('Turkish Get-Up','core','strength'),
+    mk('Farmer Walk','core','strength'),
+    mk('Suitcase Carry','core','strength'),
+    mk('Sandbag Press','cardio','strength'),
+    mk('Wall Ball','cardio','strength'),
+    mk('Slam Ball','cardio','strength'),
+    mk('Devil Press','cardio','strength'),
+    // ── MOBILITAT / FUNCIONAL ──
+    mk('Inchworm','core','bodyweight'),
+    mk('Bear Crawl','core','time'),
+    mk('Crab Walk','core','time'),
+    mk('World\'s Greatest Stretch','legs','time'),
+    mk('Hip Airplane','glutes','bodyweight'),
+    mk('Cossack Squat','legs','bodyweight'),
+    mk('Jefferson Curl','back','strength'),
+    mk('Paused Squat','legs','strength'),
+    mk('Tempo Squat','legs','strength'),
   ];
 }
 
@@ -1847,21 +1973,21 @@ function getSeedWorkouts(exs) {
   }
   return [
     mkWo(0, [
-      ['Dominades',            [{weight:null,reps:6},{weight:null,reps:6},{weight:null,reps:5}]],
-      ['Rem Màquina',          [{weight:60,reps:8},{weight:60,reps:8},{weight:60,reps:7}]],
-      ['One Arm Row',          [{weight:24,reps:10},{weight:24,reps:10},{weight:24,reps:10}]],
-      ['Bíceps Barra Z',       [{weight:20,reps:12},{weight:20,reps:11},{weight:20,reps:10}]],
+      ['Pull-Up',            [{weight:null,reps:6},{weight:null,reps:6},{weight:null,reps:5}]],
+      ['Seated Cable Row',          [{weight:60,reps:8},{weight:60,reps:8},{weight:60,reps:7}]],
+      ['One-Arm Row',          [{weight:24,reps:10},{weight:24,reps:10},{weight:24,reps:10}]],
+      ['Barbell Curl',       [{weight:20,reps:12},{weight:20,reps:11},{weight:20,reps:10}]],
     ]),
     mkWo(2, [
-      ['Sentadilles Lliures',  [{weight:60,reps:8},{weight:60,reps:8},{weight:60,reps:7}]],
-      ['Pes Mort Barra',       [{weight:70,reps:8},{weight:70,reps:8},{weight:70,reps:6}]],
-      ['Press Militar Mancuernes',[{weight:16,reps:12},{weight:16,reps:10},{weight:16,reps:10}]],
-      ['Elevació Lateral Politja',[{weight:8,reps:12},{weight:8,reps:12},{weight:8,reps:10}]],
+      ['Barbell Squat',  [{weight:60,reps:8},{weight:60,reps:8},{weight:60,reps:7}]],
+      ['Deadlift',       [{weight:70,reps:8},{weight:70,reps:8},{weight:70,reps:6}]],
+      ['Dumbbell Shoulder Press',[{weight:16,reps:12},{weight:16,reps:10},{weight:16,reps:10}]],
+      ['Cable Lateral Raise',[{weight:8,reps:12},{weight:8,reps:12},{weight:8,reps:10}]],
     ]),
     mkWo(4, [
-      ['Press Banca Inclinat', [{weight:50,reps:10},{weight:50,reps:9},{weight:50,reps:8}]],
+      ['Incline Bench Press', [{weight:50,reps:10},{weight:50,reps:9},{weight:50,reps:8}]],
       ['Dips',                 [{weight:null,reps:12},{weight:null,reps:10},{weight:null,reps:9}]],
-      ['Extensió Tríceps Politja',[{weight:20,reps:15},{weight:20,reps:13},{weight:20,reps:12}]],
+      ['Cable Tricep Pushdown',[{weight:20,reps:15},{weight:20,reps:13},{weight:20,reps:12}]],
     ]),
   ];
 }
@@ -1869,24 +1995,89 @@ function getSeedWorkouts(exs) {
 function getDefaultRoutines(exs) {
   const mk = (name,desc,names) => ({id:uid(),name,desc,exerciseIds:names.map(n=>exId(exs,n)).filter(Boolean)});
   return [
-    mk('Sessió 1 — Esquena + Bíceps','Força: esquena/bíceps · HIIT: tren inferior',
-      ['Dominades','Rem Màquina','One Arm Row','Pullover Politja','Bíceps Mancuernes Martell','Bíceps Barra Z']),
-    mk('Sessió 2 — Cames + Espatlles','Força: cames/espatlles · HIIT: tren superior',
-      ['Sentadilles Lliures','Pes Mort Barra','Press Militar Mancuernes','Elevació Lateral Politja']),
-    mk('Sessió 4 — Pectoral + Tríceps','Força: pectoral/tríceps · HIIT: core',
-      ['Press Banca Inclinat','Dips','Flexions Plus','Press Militar Mancuernes','Extensió Tríceps Politja']),
-    mk('Sessió 5 — Cames','Força: cames · HIIT: tren superior',
-      ['Sumo Squat','Squat Búlgar','Hip Thrust Màquina','Nordic Curl','Elevació Bessons Step']),
-    mk('HIIT — Tren Inferior A','3-4 × 30s all out / 15s rest · Corda, Trineu, Box, Medicinal',
-      ['Salts Corda','Arrossegar Trineu','Box Jumps','Goblet Squat']),
-    mk('HIIT — Tren Inferior B','3-4 × 30s all out / 15s rest · Corda, Skippings, Jumps',
-      ['Salts Corda','Skippings','Squat Jumps','Lunges Saltant']),
-    mk('HIIT — Tren Superior A','3-4 × 30s all out / 20s rest · Battle ropes, Kettlebell, Sandbag, Wallball',
-      ['Battle Ropes','Swing Kettlebell','Press Militar Sandbag','Llançament Wallball']),
-    mk('HIIT — Tren Superior B','3-4 × 30s all out / 15s rest · Burpees, Plancha, Climbers',
-      ['Burpees','Plancha','Climbers']),
-    mk('HIIT — Core','3-4 × 30s all out / 15s rest · Escaladors, Russos, Farmer, Planxa',
-      ['Climbers','Abdominals Russos','Farmer Walk Kettlebell','Plank Shoulder Taps']),
+    // ── FORÇA CLÀSSICA ──────────────────────────────────────────
+    mk('💪 Strength — Back + Biceps',
+      '4×6-8 each exercise · 2-3min rest · Weekly load progression',
+      ['Weighted Pull-Up','Seated Cable Row','One-Arm Row','Renegade Row','Barbell Curl','Concentration Curl']),
+
+    mk('💪 Strength — Legs + Glutes',
+      '4×6-8 · Squat + Deadlift as base · Finish with Nordic Curls',
+      ['Barbell Squat','Deadlift','Bulgarian Split Squat','Barbell Hip Thrust','Nordic Curl','Standing Calf Raise']),
+
+    mk('💪 Strength — Chest + Triceps',
+      '4×6-8 · Flat + incline press · Weighted dips as finisher',
+      ['Bench Press','Incline Bench Press','Dips','Archer Push-Up','Skull Crusher','Cable Tricep Pushdown']),
+
+    mk('💪 Strength — Shoulders + Core',
+      '4×8-10 · Vertical + lateral + rotational press',
+      ['Barbell Overhead Press','Arnold Press','Cable Lateral Raise','Face Pull','Toes-to-Bar','Dragon Flag']),
+
+    // ── SESSIONS BESTIALS ───────────────────────────────────────
+    mk('🔥 Death by Thruster',
+      'EMOM 20min: odd min 8 Barbell Thrusters / even min 10 Burpee Box Jumps · No mercy',
+      ['Barbell Thruster','Burpee Box Jump','Box Jump']),
+
+    mk('🔥 Murph Inspired',
+      '5 rds: 20 Pull-Ups · 30 Push-Ups · 40 Jump Squats · minimal rest · heart at the limit',
+      ['Pull-Up','Push-Up','Jump Squat','Jump Lunge']),
+
+    mk('🔥 Kettlebell Hell',
+      '4 rds for time: 15 Swings · 12 Cleans · 10 Snatches · 8 Turkish Get-Ups · max 1min rest',
+      ['Kettlebell Swing','Kettlebell Clean','Kettlebell Snatch','Turkish Get-Up','Farmer Walk']),
+
+    mk('🔥 Devil Circuit',
+      '6 rds: 10 Devil Press · 15 Slam Balls · 20 Mountain Climbers · 25 V-Ups · 90s rest between rounds',
+      ['Devil Press','Slam Ball','Mountain Climber','V-Up','Ab Wheel Rollout']),
+
+    mk('🔥 Leg Destroyer',
+      '5 rds: 10 Paused Squats (3s bottom) · 8 Pistol Squats · 12 Step-Ups · 15 Jump Lunges · no rest',
+      ['Paused Squat','Pistol Squat','Dumbbell Step-Up','Jump Lunge','Cossack Squat']),
+
+    mk('🔥 Upper Body Blitz',
+      'AMRAP 25min: 8 Weighted Pull-Ups · 10 Dips · 12 Renegade Rows · 15 Diamond Push-Ups',
+      ['Weighted Pull-Up','Dips','Renegade Row','Diamond Push-Up','Inverted Row']),
+
+    mk('🔥 Core Annihilation',
+      '6 rds: 45s Dead Hang · 45s Side Plank (each side) · 15 Toes-to-Bar · 10 Dragon Flags · 30s rest',
+      ['Dead Hang','Side Plank','Toes-to-Bar','Dragon Flag','L-Sit','Hollow Body Hold']),
+
+    mk('🔥 HYROX Sim — Lower Body',
+      '4 rds: 200m Skip · 20 KB Swings · 15 Wall Balls · 10 Goblet Squats · 20 Jump Lunges · full gas',
+      ['High Knees','Kettlebell Swing','Wall Ball','Goblet Squat','Jump Lunge']),
+
+    mk('🔥 HYROX Sim — Full Body',
+      '3 rds: 30 Battle Ropes · 20 Burpees · 15 Dumbbell Thrusters · 10 Sled Pulls · 10 Slam Balls',
+      ['Battle Ropes','Burpee','Dumbbell Thruster','Sled Pull','Slam Ball']),
+
+    // ── MOBILITAT / RECUPERACIÓ ACTIVA ─────────────────────────
+    mk('🧘 Mobility — Pre-Session',
+      '2 rds controlats: World Greatest Stretch · Cossack Squat · Hip Airplane · Inchworm · Bear Crawl',
+      ['World\'s Greatest Stretch','Cossack Squat','Hip Airplane','Inchworm','Bear Crawl']),
+
+    mk('🧘 Mobility — Posterior Chain',
+      '3×8 with full control · Unlock lower back and hamstrings · Jefferson Curl with light load',
+      ['Jefferson Curl','Romanian Deadlift','Nordic Curl','Crab Walk','Hollow Body Hold']),
+
+    // ── HIITS ORIGINALS ─────────────────────────────────────────
+    mk('⚡ HIIT — Lower Body A',
+      '4 × 30s all out / 15s rest · Rope, Sled, Box, Goblet',
+      ['Jump Rope','Sled Pull','Box Jump','Goblet Squat']),
+
+    mk('⚡ HIIT — Lower Body B',
+      '4 × 30s all out / 15s rest · Rope, High Knees, Jumps',
+      ['Jump Rope','High Knees','Jump Squat','Jump Lunge']),
+
+    mk('⚡ HIIT — Upper Body A',
+      '4 × 30s all out / 20s rest · Battle Ropes, Kettlebell, Sandbag, Wall Ball',
+      ['Battle Ropes','Kettlebell Swing','Sandbag Press','Wall Ball']),
+
+    mk('⚡ HIIT — Upper Body B',
+      '4 × 30s all out / 15s rest · Burpees, Plank, Climbers',
+      ['Burpee','Plank','Mountain Climber']),
+
+    mk('⚡ HIIT — Core',
+      '4 × 30s all out / 15s rest · Climbers, Russian Twist, Farmer Walk, Plank',
+      ['Mountain Climber','Russian Twist','Farmer Walk','Plank Shoulder Tap']),
   ];
 }
 
@@ -1934,7 +2125,7 @@ window.showPage = function(page) { nav(page); }
 
 function renderPerfilPage() {
   // Populem els camps amb les dades actuals
-  qs('bk-summary').innerHTML = `💪 ${exercises.length} exercicis<br>📋 ${routines.length} rutines<br>📅 ${workouts.length} entrenos`;
+  qs('bk-summary').innerHTML = `💪 ${exercises.length} exercises<br>📋 ${routines.length} routines<br>📅 ${workouts.length} workouts`;
   if(qs('backup-username')) qs('backup-username').textContent = currentUser?.name || '';
   if(physData) {
     qs('phys-weight').value   = physData.weight||'';
@@ -1975,8 +2166,11 @@ function getPR(exId) {
     ae.sets.forEach(s=>{
       if(ex.type==='bodyweight') {
         m = Math.max(m, parseFloat(s.reps)||0);
+      } else if(ex.type==='strength') {
+        // PR per pes màxim; si empat de pes, getPRReps desempata
+        m = Math.max(m, parseFloat(s.weight)||0);
       } else {
-        // fuerza, tiempo, cardio: el valor principal és weight
+        // tiempo, cardio: el valor principal és weight (s o min)
         m = Math.max(m, parseFloat(s.weight)||0);
       }
     });
@@ -1984,13 +2178,14 @@ function getPR(exId) {
   return m;
 }
 function getPRReps(exId) {
-  // Reps de la sèrie amb més pes (fuerza)
+  // Reps de la sèrie amb més pes; si el pes és igual, guanya la de més reps
   let maxW=0, reps=0;
   workouts.forEach(w=>w.exercises.forEach(ae=>{
     if(ae.exerciseId!==exId) return;
     ae.sets.forEach(s=>{
       const w2=parseFloat(s.weight)||0;
-      if(w2>maxW){maxW=w2; reps=parseFloat(s.reps)||0;}
+      const r2=parseFloat(s.reps)||0;
+      if(w2>maxW || (w2===maxW && r2>reps)){maxW=w2; reps=r2;}
     });
   }));
   return reps;
@@ -2009,12 +2204,12 @@ function getPRLabel(ex) {
   if(!ex) return '';
   const pr=getPR(ex.id);
   if(!pr) return '';
-  if(ex.type==='fuerza') {
+  if(ex.type==='strength') {
     const r=getPRReps(ex.id);
     return `PR: ${pr}kg${r?' × '+r+'r':''}`;
   }
   if(ex.type==='bodyweight') return `PR: ${pr} reps`;
-  if(ex.type==='tiempo')     return `PR: ${pr}s`;
+  if(ex.type==='time')     return `PR: ${pr}s`;
   if(ex.type==='cardio')     return `PR: ${pr}min`;
   return `PR: ${pr}`;
 }
@@ -2024,19 +2219,30 @@ function getPRSortValue(ex) {
   const pr=getPR(ex.id);
   if(!pr) return 0;
   // Normalitzem per tenir un ranking amb sentit entre tipus
-  if(ex.type==='fuerza')     return pr * 10;    // pes en kg, ×10
+  if(ex.type==='strength')     return pr * 10;    // pes en kg, ×10
   if(ex.type==='bodyweight') return pr * 5;     // reps, ×5
-  if(ex.type==='tiempo')     return pr;         // segons
+  if(ex.type==='time')     return pr;         // segons
   if(ex.type==='cardio')     return pr * 2;     // minuts
   return pr;
 }
 function getBestSets(exId) {
-  let bestSets=null, bestMaxW=-1;
+  const ex = exercises.find(e=>e.id===exId);
+  let bestSets=null, bestScore=-1;
   workouts.forEach(w=>{
     const ae=w.exercises.find(e=>e.exerciseId===exId);
     if(!ae||!ae.sets.length) return;
-    const maxW=Math.max(...ae.sets.map(s=>parseFloat(s.weight)||0));
-    if(maxW>bestMaxW){bestMaxW=maxW;bestSets=ae.sets;}
+    let score;
+    if(!ex || ex.type==='time' || ex.type==='cardio') {
+      // Per temps: el millor dia és el que té el màxim d'una sola sèrie
+      score = Math.max(...ae.sets.map(s=>parseFloat(s.weight)||0));
+    } else if(ex.type==='bodyweight') {
+      // Per bodyweight: màxim de reps
+      score = Math.max(...ae.sets.map(s=>parseFloat(s.reps)||0));
+    } else {
+      // Per fuerza: prioritza volum (kg×reps) si el pes és igual → PR per volum
+      score = Math.max(...ae.sets.map(s=>(parseFloat(s.weight)||0)*(parseFloat(s.reps)||1)));
+    }
+    if(score>bestScore){bestScore=score;bestSets=ae.sets;}
   });
   if(bestSets) return bestSets.map(s=>({weight:s.weight||'',reps:s.reps||''}));
   return [{weight:'',reps:''},{weight:'',reps:''},{weight:'',reps:''}];
@@ -2045,7 +2251,7 @@ function getLastSets(exId) { return getBestSets(exId); }
 
 // ── WORKOUT FLOW ──────────────────────────────────────────────
 window.startWorkout = function(routineId) {
-  if(activeWo && !confirm('Ja hi ha un entreno actiu. Descartar-lo?')) return;
+  if(activeWo && !confirm('Ja hi ha un workout actiu. Descartar-lo?')) return;
   clearInterval(timerIv);
   activeWo={id:uid(),date:new Date().toISOString(),startTime:Date.now(),exercises:[],routineId:routineId||null,energyStart:null,energyEnd:null,note:''};
   if(routineId){
@@ -2074,7 +2280,7 @@ function startTimer() {
 window.finishWorkout = function() {
   if(!activeWo) return;
   if(activeWo.exercises.length===0){
-    if(!confirm('Sense exercicis. Descartar?')) return;
+    if(!confirm('Without exercises. Descartar?')) return;
     activeWo=null; clearInterval(timerIv);
     qs('active-bar').classList.remove('on');
     nav('cal'); return;
@@ -2179,7 +2385,7 @@ function renderWorkout() {
         </div>
       </div>
       <div style="border-top:1px solid var(--border);padding:6px 10px;background:var(--s2);display:flex;justify-content:flex-end">
-        <button onclick="event.stopPropagation();removeExFromActive('${ae.id}')" style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--accent2);background:none;border:none;cursor:pointer;padding:4px 6px">✕ QUITAR EJERCICIO</button>
+        <button onclick="event.stopPropagation();removeExFromActive('${ae.id}')" style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--accent2);background:none;border:none;cursor:pointer;padding:4px 6px">✕ REMOVE EXERCISE</button>
       </div>
     </div>`;
   }).join('');
@@ -2253,13 +2459,13 @@ window.openLogSets = function(exId, aeId) {
   const ex=exercises.find(e=>e.id===exId);
   qs('sets-ex-name').textContent=ex.name;
   const prLbl=getPRLabel(ex);
-  qs('sets-ex-tags').innerHTML=`<span class="tag tag-g">${ex.muscle}</span><span class="tag tag-g">${ex.type}</span>${prLbl?`<span class="tag tag-y">${prLbl}</span>`:''}`;
-  if(ex.type==='tiempo'){
-    qs('sets-col-w').textContent='TIEMPO (s)'; qs('sets-col-r').textContent='PESO (kg)';
+  qs('sets-ex-tags').innerHTML=`<span class="tag tag-g">${ex.muscle}</span><span class="tag tag-g">${ex.type}</span>${prLbl?`<span class="tag tag-y">${prLbl}</span>`:''} ${EXERCISE_DB[ex.name]?`<button class="btn-guide" data-exname="${ex.name.replace(/"/g,'&quot;')}" style="background:color-mix(in srgb,var(--accent3) 15%,transparent);border:1px solid var(--accent3);color:var(--accent3);border-radius:20px;padding:2px 8px;font-size:8px;letter-spacing:1px;cursor:pointer">ℹ HOW TO</button>`:''}`;
+  if(ex.type==='time'){
+    qs('sets-col-w').textContent='TIME (s)'; qs('sets-col-r').textContent='WEIGHT (kg)';
   } else if(ex.type==='bodyweight'){
-    qs('sets-col-w').textContent='REPS'; qs('sets-col-r').textContent='KG LASTRE';
+    qs('sets-col-w').textContent='REPS'; qs('sets-col-r').textContent='KG ADDED';
   } else {
-    qs('sets-col-w').textContent='PESO (kg)'; qs('sets-col-r').textContent='REPS';
+    qs('sets-col-w').textContent='WEIGHT (kg)'; qs('sets-col-r').textContent='REPS';
   }
   const ae=activeWo?.exercises.find(e=>e.id===aeId)
           ||(editWoId?workouts.find(w=>w.id===editWoId)?.exercises.find(e=>e.id===aeId):null);
@@ -2275,7 +2481,7 @@ function renderSetsTable() {
     <tr>
       <td class="set-num">${i+1}</td>
       <td><input type="number" inputmode="decimal" placeholder="0" value="${s.weight||''}" onchange="updSet(${i},'weight',this.value)" oninput="updateORM()"></td>
-      <td><input type="number" inputmode="numeric" placeholder="0" value="${s.reps||''}" onchange="updSet(${i},'reps',this.value)" oninput="updateORM()" ${exType==='tiempo'||exType==='bodyweight'?'style="opacity:.55"':''}></td>
+      <td><input type="number" inputmode="numeric" placeholder="0" value="${s.reps||''}" onchange="updSet(${i},'reps',this.value)" oninput="updateORM()" ${exType==='time'||exType==='bodyweight'?'style="opacity:.55"':''}></td>
       <td style="display:flex;gap:3px;align-items:center">
         <button onclick="copySet(${i})" style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r);color:var(--muted);padding:4px 7px;font-size:11px;cursor:pointer">⧉</button>
         <button onclick="deleteSet(${i})" style="background:none;border:1px solid var(--border);border-radius:var(--r);color:var(--accent2);padding:4px 7px;font-size:11px;cursor:pointer">✕</button>
@@ -2290,8 +2496,8 @@ window.addSet    = ()  => { const last=curSets[curSets.length-1]; curSets.push({
 
 function updateORM() {
   const ex=exercises.find(e=>e.id===logExId);
-  if(!ex||ex.type!=='fuerza'){
-    if(ex&&ex.type==='tiempo'){
+  if(!ex||ex.type!=='strength'){
+    if(ex&&ex.type==='time'){
       const total=curSets.reduce((a,s)=>a+(parseFloat(s.weight)||0),0);
       const prSecs=getPR(logExId);
       const bestSet=Math.max(...curSets.map(s=>parseFloat(s.weight)||0));
@@ -2327,7 +2533,7 @@ window.saveSets = function() {
 }
 
 // ── EXERCISES PAGE ────────────────────────────────────────────
-const MUSCLES=['all','pecho','espalda','hombros','pierna','bicep','tricep','core','gluteo','gemelos','cardio','otro'];
+const MUSCLES=['all','chest','espalda','shoulders','legs','bicep','tricep','core','glutes','calves','cardio','other'];
 
 function renderExercises() {
   qs('muscle-chips').innerHTML=MUSCLES.map(m=>`
@@ -2341,8 +2547,9 @@ function renderExercises() {
   qs('ex-list').innerHTML=filtered.map(ex=>{
     const prLbl=getPRLabel(ex);
     const prBadge=prLbl?`<span class="ex-pr">${prLbl}</span>`:'';
+    const hasGuide = !!EXERCISE_DB[ex.name];
     return `<div class="ex-item" onclick="openExDetail('${ex.id}')">
-      <div>
+      <div style="flex:1;min-width:0">
         <div class="ex-name">${ex.name}</div>
         <div class="ex-meta row" style="gap:6px;margin-top:4px;flex-wrap:wrap">
           <span class="tag tag-g">${ex.muscle}</span>
@@ -2350,7 +2557,11 @@ function renderExercises() {
           ${prBadge}
         </div>
       </div>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+        ${hasGuide ? `<button class="btn-guide" data-exname="${ex.name.replace(/"/g,'&quot;')}"
+          style="width:26px;height:26px;border-radius:50%;border:1px solid var(--accent3);background:color-mix(in srgb,var(--accent3) 12%,transparent);color:var(--accent3);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Com es fa">ℹ</button>` : ''}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
     </div>`;
   }).join('');
 }
@@ -2360,49 +2571,180 @@ window.setMuscleFilter = function(m) { filterMuscle=m; renderExercises(); }
 window.deleteExFromDetail = function() {
   const ex = exercises.find(e=>e.id===exDetailId);
   if(!ex) return;
-  if(!confirm(`Eliminar "${ex.name}" de la biblioteca?\n\nL'historial d'entrenos es conserva.`)) return;
+  if(!confirm(`Eliminar "${ex.name}" de la biblioteca?\n\nL'historial d'workouts es conserva.`)) return;
   exercises = exercises.filter(e=>e.id!==exDetailId);
   save();
   closeModal('m-ex-detail');
   renderExercises();
 }
 
+// ── Mapa de fotos: free-exercise-db (GitHub, domini públic) ──
+const PHOTO_BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises';
+const PHOTO_MAP = {
+  'Pull-Up':'Assisted_Pull-up','Weighted Pull-Up':'Close-Grip_Pull-Down',
+  'Seated Cable Row':'Barbell_Bent_Over_Row','One-Arm Row':'Dumbbell_One_Arm_Row',
+  'Renegade Row':'Dumbbell_Bent_Over_Row','Inverted Row':'Bodyweight_Inverted_Row',
+  'Cable Pullover':'Dumbbell_Pullover','Barbell Curl':'Barbell_Curl',
+  'Hammer Curl':'Hammer_Curl','Concentration Curl':'Concentration_Curl',
+  'Barbell Squat':'Barbell_Squat','Deadlift':'Barbell_Deadlift',
+  'Romanian Deadlift':'Romanian_Deadlift','Bulgarian Split Squat':'Bulgarian_Split_Squat',
+  'Sumo Squat':'Sumo_Squat','Goblet Squat':'Goblet_Squat',
+  'Dumbbell Lunge':'Dumbbell_Lunge','Pistol Squat':'Pistol_Squat',
+  'Dumbbell Step-Up':'Dumbbell_Step_Up','Nordic Curl':'Lying_Leg_Curl',
+  'Paused Squat':'Barbell_Squat','Tempo Squat':'Barbell_Squat',
+  'Cossack Squat':'Side_Lunge_to_Curtsy',
+  'Machine Hip Thrust':'Barbell_Hip_Thrust','Barbell Hip Thrust':'Barbell_Hip_Thrust',
+  'Donkey Kick':'Donkey_Kick','Standing Calf Raise':'Standing_Calf_Raise',
+  'Dumbbell Shoulder Press':'Dumbbell_Shoulder_Press',
+  'Barbell Overhead Press':'Barbell_Overhead_Press','Arnold Press':'Arnold_Press',
+  'Cable Lateral Raise':'Cable_Lateral_Raise','Face Pull':'Face_Pull',
+  'Bench Press':'Barbell_Bench_Press','Incline Bench Press':'Barbell_Incline_Bench_Press',
+  'Dips':'Dips','Push-Up':'Push-Up','Diamond Push-Up':'Diamond_Push-Up',
+  'Archer Push-Up':'Push-Up','Cable Tricep Pushdown':'Cable_Pushdown',
+  'Skull Crusher':'Lying_Tricep_Extension','Tricep Kickback':'Dumbbell_Kickback',
+  'Dead Hang':'Dead_Hang','Plank':'Plank','Side Plank':'Side_Plank',
+  'Mountain Climber':'Mountain_Climber','Toes-to-Bar':'Toes-to-Bar',
+  'Dragon Flag':'Dragon_Flag','Hollow Body Hold':'Hollow_Body_Hold',
+  'L-Sit':'L-sit','Ab Wheel Rollout':'Ab_Wheel','V-Up':'V-Up',
+  'Russian Twist':'Russian_Twist','Plank Shoulder Tap':'Plank_Shoulder_Tap',
+  'Burpee':'Burpee','Burpee Box Jump':'Burpee_Box_Jump',
+  'Battle Ropes':'Battle_Ropes','Kettlebell Swing':'Kettlebell_Swing',
+  'Kettlebell Clean':'Kettlebell_Clean','Kettlebell Snatch':'Kettlebell_Snatch',
+  'Turkish Get-Up':'Turkish_Get-Up','Barbell Thruster':'Barbell_Thruster',
+  'Dumbbell Thruster':'Dumbbell_Thruster','Devil Press':'Dumbbell_Devil_Press',
+  'Slam Ball':'Ball_Slam','Farmer Walk':'Farmers_Walk',
+  'Suitcase Carry':'Suitcase_Carry','Sandbag Press':'Sandbag_Clean_to_Press',
+  'Wall Ball':'Wall_Ball','Jump Rope':'Jump_Rope',
+  'Box Jump':'Box_Jump','High Knees':'High_Knees',
+  'Jump Squat':'Jump_Squat','Jump Lunge':'Jump_Lunge',
+  'Inchworm':'Inchworm','Bear Crawl':'Bear_Crawl',
+  'World\'s Greatest Stretch':'Worlds_Greatest_Stretch',
+  'Jefferson Curl':'Stiff_Leg_Barbell_Deadlift',
+};
+
+function getPhotoUrl(exName) {
+  const id = PHOTO_MAP[exName];
+  return id ? `${PHOTO_BASE}/${id}/0.jpg` : null;
+}
+
 window.openExDetail = function(id) {
-  exDetailId=id;
-  const ex=exercises.find(e=>e.id===id); if(!ex) return;
-  qs('exd-name').textContent=ex.name;
-  const prLbl=getPRLabel(ex);
-  qs('exd-tags').innerHTML=`<span class="tag tag-g">${ex.muscle}</span><span class="tag tag-g">${ex.type}</span>${prLbl?`<span class="tag tag-y">${prLbl}</span>`:''}`;
-  const bestSets=getBestSets(id);
-  const totalWos=workouts.filter(w=>w.exercises.some(ae=>ae.exerciseId===id)).length;
-  let body='';
-  if(!totalWos){
-    body='<div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);text-align:center;padding:20px 0">Sin historial aún</div>';
+  exDetailId = id;
+  const ex = exercises.find(e=>e.id===id); if(!ex) return;
+  const data = EXERCISE_DB[ex.name];
+  const prLbl = getPRLabel(ex);
+
+  // — Stats del millor dia —
+  const bestSets = getBestSets(id);
+  const totalWos = workouts.filter(w=>w.exercises.some(ae=>ae.exerciseId===id)).length;
+
+  // Emoji per muscle
+  const mEmoji = {back:'🔙',bicep:'💪',legs:'🦵',glutes:'🍑',calves:'🦿',
+                  shoulders:'🏋️',chest:'🫁',tricep:'💪',core:'🎯',cardio:'🔥',other:'⚡'};
+  const emoji = mEmoji[ex.muscle] || '💪';
+
+  // — Foto —
+  const photoUrl = getPhotoUrl(ex.name);
+  const photoHtml = photoUrl
+    ? `<div style="border-radius:10px;overflow:hidden;margin-bottom:14px;background:var(--s2);border:1px solid var(--border)">
+         <img src="${photoUrl}" alt="${ex.name}"
+           style="width:100%;max-height:240px;object-fit:cover;display:block"
+           onerror="this.parentElement.style.display='none'">
+       </div>`
+    : '';
+
+  // — Best sets —
+  let setsHtml = '';
+  if(!totalWos) {
+    setsHtml = `<div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);text-align:center;padding:16px 0">No history yet</div>`;
   } else {
-    body+=`<div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">MEJOR DÍA — ${totalWos} entrenos</div>`;
-    body+='<div class="card" style="margin:0"><table class="sets-tbl"><thead><tr><th>#</th>';
-    if(ex.type==='fuerza') body+='<th>PESO (kg)</th><th>REPS</th><th>VOL.</th>';
-    else if(ex.type==='bodyweight') body+='<th>REPS</th><th>LASTRE</th><th></th>';
-    else body+='<th>TIEMPO (s)</th><th>LASTRE</th><th></th>';
-    body+='</tr></thead><tbody>';
-    bestSets.forEach((s,i)=>{
-      const w=parseFloat(s.weight)||0, r=parseFloat(s.reps)||0;
-      const vol=ex.type==='fuerza'&&w&&r?(w*r).toFixed(0)+' kg':'—';
-      body+=`<tr><td class="set-num">${i+1}</td><td style="font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--text)">${w||'—'}</td><td style="font-family:var(--font-mono);font-size:13px;color:var(--text)">${r||'—'}</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">${vol}</td></tr>`;
-    });
-    body+='</tbody></table></div>';
+    const colW = ex.type==='strength'?'PES (kg)': ex.type==='bodyweight'?'REPS':ex.type==='time'?'TEMPS (s)':'PES';
+    const colR = ex.type==='strength'?'REPS': ex.type==='bodyweight'?'LASTRE':'';
+    setsHtml = `
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">
+        BEST DAY — ${totalWos} workout${totalWos>1?'s':''}
+      </div>
+      <div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
+        <table class="sets-tbl">
+          <thead><tr><th>#</th><th>${colW}</th>${colR?`<th>${colR}</th>`:''}<th>VOL.</th></tr></thead>
+          <tbody>
+            ${bestSets.map((s,i)=>{
+              const w=parseFloat(s.weight)||0, r=parseFloat(s.reps)||0;
+              const vol = ex.type==='strength'&&w&&r ? w*r+'kg'
+                        : ex.type==='time'&&w     ? (w/60).toFixed(1)+'min'
+                        : ex.type==='bodyweight'&&r  ? r+' reps'
+                        : '—';
+              const mainVal = ex.type==='bodyweight' ? (r||'—') : (w||'—');
+              const secVal  = ex.type==='strength'     ? (r||'—')
+                            : ex.type==='bodyweight'  ? (w||'—')
+                            : '';
+              return `<tr>
+                <td class="set-num">${i+1}</td>
+                <td style="font-family:var(--font-mono);font-size:14px;font-weight:600;color:var(--text)">${mainVal}</td>
+                ${colR?`<td style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">${secVal}</td>`:''}
+                <td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">${vol}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>`;
   }
-  qs('exd-body').innerHTML=body;
+
+  // — Guia tècnica —
+  const guideHtml = data ? `
+    <div style="background:color-mix(in srgb,var(--accent) 7%,transparent);border:1px solid color-mix(in srgb,var(--accent) 20%,transparent);border-radius:10px;padding:14px;margin-bottom:10px">
+      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:10px">✅ HOW TO DO IT</div>
+      ${data.cues.map((c,i)=>`
+        <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px">
+          <div style="width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--bg);font-family:var(--font-mono);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${i+1}</div>
+          <div style="font-size:13px;line-height:1.6;padding-top:1px">${c}</div>
+        </div>`).join('')}
+    </div>
+    ${data.errors?.length?`
+    <div style="background:color-mix(in srgb,var(--accent2) 7%,transparent);border:1px solid color-mix(in srgb,var(--accent2) 20%,transparent);border-radius:10px;padding:14px;margin-bottom:10px">
+      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--accent2);text-transform:uppercase;margin-bottom:8px">⚠ COMMON MISTAKES</div>
+      ${data.errors.map(e=>`
+        <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:7px">
+          <span style="color:var(--accent2);flex-shrink:0;font-size:13px;margin-top:2px">✕</span>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">${e}</div>
+        </div>`).join('')}
+    </div>`:''}
+  ` : '';
+
+  qs('exd-body').innerHTML = `
+    <!-- Capçalera -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div style="width:46px;height:46px;border-radius:13px;background:color-mix(in srgb,var(--accent) 15%,transparent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${emoji}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:var(--font-display);font-size:21px;font-weight:900;letter-spacing:1px;text-transform:uppercase;line-height:1.1">${ex.name}</div>
+        <div style="margin-top:4px;display:flex;gap:5px;flex-wrap:wrap">
+          <span class="tag tag-g">${ex.muscle}</span>
+          <span class="tag tag-g">${ex.type}</span>
+          ${prLbl?`<span class="tag tag-y">${prLbl}</span>`:''}
+        </div>
+      </div>
+      <button onclick="openEditExercise('${ex.id}')" style="background:var(--s2);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:13px;flex-shrink:0">✏</button>
+    </div>
+
+    ${photoHtml}
+    ${setsHtml}
+    ${guideHtml}
+
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+      <button class="btn btn-g btn-w" onclick="closeModal('m-ex-detail')">← CLOSE</button>
+      <button class="btn btn-r btn-w" style="font-size:12px;padding:9px" onclick="deleteExFromDetail()">🗑 REMOVE FROM LIBRARY</button>
+    </div>
+  `;
+
   openModal('m-ex-detail');
 }
 
 window.openEditExercise = function(id) {
   editExId=id;
   const ex=id?exercises.find(e=>e.id===id):null;
-  qs('m-ex-title').textContent=id?'Editar ejercicio':'Nuevo ejercicio';
+  qs('m-ex-title').textContent=id?'Edit exercise':'New exercise';
   qs('ex-inp-name').value=ex?.name||'';
-  qs('ex-inp-muscle').value=ex?.muscle||'pecho';
-  qs('ex-inp-type').value=ex?.type||'fuerza';
+  qs('ex-inp-muscle').value=ex?.muscle||'chest';
+  qs('ex-inp-type').value=ex?.type||'strength';
   qs('ex-del-btn').style.display=id?'inline-flex':'none';
   openModal('m-exercise');
 }
@@ -2426,9 +2768,9 @@ window.deleteExercise = function() {
 
 // ── CALENDAR ──────────────────────────────────────────────────
 const DAY_TYPE_OPTS = [
-  { val:'rest',     emoji:'😴', label:'Descans actiu' },
-  { val:'vacation', emoji:'🏖', label:'Vacances / Viatge' },
-  { val:'sick',     emoji:'🤒', label:'Malalt/a' },
+  { val:'rest',     emoji:'😴', label:'Active rest' },
+  { val:'vacation', emoji:'🏖', label:'Vacation / Travel' },
+  { val:'sick',     emoji:'🤒', label:'Sick' },
   { val:'travel',   emoji:'✈️',  label:'Fora de casa' },
   { val:'other',    emoji:'📝', label:'Altre motiu' },
 ];
@@ -2517,7 +2859,7 @@ window.calSelectDay = function(ds, el) {
       </div>`;
     }).join('');
   } else if(!dn) {
-    html+=`<div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-bottom:10px">Sense entrenos</div>`;
+    html+=`<div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-bottom:10px">Without workouts</div>`;
   }
 
   html+=`<div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
@@ -2545,7 +2887,7 @@ window.openDayNoteModal = function(ds) {
     <textarea id="day-note-text" class="inp" placeholder="Nota opcional (Barcelona, dolor de genoll...)" style="width:100%;min-height:50px;resize:none;font-size:12px;margin-bottom:10px">${existing.note||''}</textarea>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
       <button class="btn btn-g btn-w" onclick="closeDayNoteForm()">CANCEL·LAR</button>
-      <button class="btn btn-y btn-w" onclick="saveDayNote('${ds}')">GUARDAR</button>
+      <button class="btn btn-y btn-w" onclick="saveDayNote('${ds}')">SAVE</button>
     </div>`;
   qs('cal-day-detail').appendChild(form);
 }
@@ -2585,7 +2927,7 @@ window.closeDayNoteForm = function() {
 
 
 window.startWorkoutOnDate = function(ds) {
-  if(activeWo&&!confirm('Hay un entreno activo. ¿Descartarlo?')) return;
+  if(activeWo&&!confirm('Hay un workout activo. ¿Descartarlo?')) return;
   clearInterval(timerIv);
   activeWo={id:uid(),date:new Date(ds+'T12:00:00').toISOString(),startTime:Date.now(),exercises:[],backdated:true};
   qs('active-bar').classList.add('on');
@@ -2600,10 +2942,10 @@ window.showWoEdit = function(wId) {
   let html=`
     <div class="row-between mb12">
       <div>
-        <div style="font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:1px;text-transform:uppercase">Editar entreno</div>
+        <div style="font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:1px;text-transform:uppercase">Edit workout</div>
         <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:2px">${d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}).toUpperCase()}</div>
       </div>
-      <button class="btn btn-r btn-sm" onclick="deleteWorkout('${wId}')">BORRAR</button>
+      <button class="btn btn-r btn-sm" onclick="deleteWorkout('${wId}')">DELETE</button>
     </div>
     <div class="tags mb12">
       <span class="tag tag-y">${calcVol(w)} kg vol.</span>
@@ -2623,7 +2965,7 @@ window.showWoEdit = function(wId) {
         <button class="btn btn-r btn-sm" style="padding:4px 8px;font-size:9px" onclick="removeExFromWo('${wId}','${ae.id}')">✕</button>
       </div>
       <table class="sets-tbl">
-        <thead><tr><th>#</th><th>PESO (kg)</th><th>REPS</th><th>⧉</th></tr></thead>
+        <thead><tr><th>#</th><th>WEIGHT (kg)</th><th>REPS</th><th>⧉</th></tr></thead>
         <tbody>${ae.sets.map((s,si)=>`<tr>
           <td class="set-num">${si+1}</td>
           <td><input type="number" inputmode="decimal" value="${s.weight||''}" onchange="updWoSet('${wId}','${ae.id}',${si},'weight',this.value)" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:6px 3px;color:var(--text);font-family:var(--font-mono);font-size:13px;text-align:center;outline:none"></td>
@@ -2631,7 +2973,7 @@ window.showWoEdit = function(wId) {
           <td><button onclick="copyWoSet('${wId}','${ae.id}',${si})" style="background:var(--s2);border:1px solid var(--border);border-radius:var(--r);color:var(--muted);padding:4px 7px;font-size:11px;cursor:pointer">⧉</button></td>
         </tr>`).join('')}</tbody>
       </table>
-      <button class="btn btn-g btn-w mt8" style="font-size:11px;padding:7px" onclick="addSetToWoEx('${wId}','${ae.id}')">+ SERIE</button>
+      <button class="btn btn-g btn-w mt8" style="font-size:11px;padding:7px" onclick="addSetToWoEx('${wId}','${ae.id}')">+ SET</button>
     </div>`;
   });
   qs('wo-detail-body').innerHTML=html;
@@ -2659,7 +3001,7 @@ window.removeExFromWo = function(wId,aeId) {
   w.exercises=w.exercises.filter(e=>e.id!==aeId); save(); showWoEdit(wId);
 }
 window.deleteWorkout = function(wId) {
-  if(!confirm('¿Eliminar este entreno?')) return;
+  if(!confirm('¿Eliminar este workout?')) return;
   workouts=workouts.filter(w=>w.id!==wId); save();
   closeModal('m-wo-detail'); renderCalendar();
 }
@@ -2668,7 +3010,7 @@ window.showWoDetail = function(wId) { showWoEdit(wId); }
 // ── ROUTINES ──────────────────────────────────────────────────
 function renderRoutines() {
   const c=qs('routines-list');
-  if(!routines.length){c.innerHTML='<div class="empty"><div class="empty-ico">📋</div><div class="empty-txt">Sin rutinas aún<br>Pulsa + Nueva</div></div>';return;}
+  if(!routines.length){c.innerHTML='<div class="empty"><div class="empty-ico">📋</div><div class="empty-txt">No routines yet<br>Tap + New</div></div>';return;}
   c.innerHTML=routines.map(r=>{
     const exNames=r.exerciseIds.map(id=>exercises.find(e=>e.id===id)?.name).filter(Boolean);
     return `<div class="routine-card">
@@ -2681,7 +3023,7 @@ function renderRoutines() {
       </div>
       <div class="routine-body">${exNames.map(n=>`<div class="routine-ex">${n}</div>`).join('')}</div>
       <div class="routine-foot">
-        <button class="btn btn-y btn-w" onclick="startWorkout('${r.id}')">▶ EMPEZAR ENTRENO</button>
+        <button class="btn btn-y btn-w" onclick="startWorkout('${r.id}')">▶ START WORKOUT</button>
       </div>
     </div>`;
   }).join('');
@@ -2691,7 +3033,7 @@ window.openEditRoutine = function(id) {
   editRtId=id;
   const rt=id?routines.find(r=>r.id===id):null;
   editRtExs=rt?[...rt.exerciseIds]:[];
-  qs('m-rt-title').textContent=id?'Editar rutina':'Nueva rutina';
+  qs('m-rt-title').textContent=id?'Edit routine':'New routine';
   qs('rt-inp-name').value=rt?.name||'';
   qs('rt-inp-desc').value=rt?.desc||'';
   qs('rt-del-btn').style.display=id?'inline-flex':'none';
@@ -2704,7 +3046,7 @@ window.openEditRoutine = function(id) {
 function renderRtExList() {
   const c=qs('rt-ex-list');
   if(!editRtExs.length){
-    c.innerHTML='<div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);padding:12px 0;text-align:center">Sin ejercicios — pulsa + Añadir</div>';
+    c.innerHTML='<div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);padding:12px 0;text-align:center">No exercises — tap + Add</div>';
     return;
   }
   c.innerHTML=editRtExs.map((exId,i)=>{
@@ -2780,7 +3122,7 @@ function renderStats() {
   renderChallenges();
   const sel=qs('stats-sel');
   const prev=sel.value;
-  sel.innerHTML='<option value="">— Selecciona ejercicio —</option>'+
+  sel.innerHTML='<option value="">— Select exercise —</option>'+
     exercises
       .slice()
       .sort((a,b)=>a.name.localeCompare(b.name))
@@ -2795,11 +3137,11 @@ function renderStats() {
 function renderStatsGlobal() {
   const c=qs('stats-global');
   if(!workouts.length){
-    c.innerHTML='<div class="empty"><div class="empty-ico">📊</div><div class="empty-txt">Sin entrenos aún</div></div>';
+    c.innerHTML='<div class="empty"><div class="empty-ico">📊</div><div class="empty-txt">No workouts aún</div></div>';
     return;
   }
 
-  // Dies únics (no comptar 3 entrenos com 3 dies)
+  // Dies únics (no comptar 3 workouts com 3 dies)
   const totalDays = new Set(workouts.map(w=>w.date.slice(0,10))).size;
   const totalKg   = Math.round(workouts.reduce((a,w)=>a+calcVol(w),0));
   const totalSets = workouts.reduce((a,w)=>a+w.exercises.reduce((b,ae)=>b+ae.sets.length,0),0);
@@ -2807,7 +3149,7 @@ function renderStatsGlobal() {
   // Kcal total
   const totalKcal = workouts.reduce((a,w)=>a+calcKcal(w),0);
 
-  // Ratio kg/min: per dia únic (suma tots els entrenos del dia)
+  // Ratio kg/min: per dia únic (suma tots els workouts del dia)
   const dayMap = {};
   workouts.forEach(w=>{
     const ds=w.date.slice(0,10);
@@ -2845,7 +3187,7 @@ function renderStatsGlobal() {
 
   // ── RACXA 66% ─────────────────────────────────────────────────
   // Objectiu: entrenar ≥ 2 de cada 3 dies (66%)
-  // Calculem per setmanes ISO: setmana OK si ≥ 4 dies d'entreno (66% de 7)
+  // Calculem per setmanes ISO: setmana OK si ≥ 4 dies d'workout (66% de 7)
   // Racxa = setmanes consecutives complertes fins avui
   const GOAL_DAYS_PER_WEEK = Math.ceil(7 * 0.66); // = 5 dies, però usem 4 per ser realista
   const GOAL = 4; // 4+ dies/setmana = objectiu complert
@@ -2908,7 +3250,7 @@ function renderStatsGlobal() {
   const thisWeekDays = weekTrainMap[todayKey] || 0;
   const streakColor  = currentStreak>=3?'var(--accent)':currentStreak>=1?'#facc15':'var(--muted)';
 
-  // Distribució de dies — compta des de l'1 de gener de l'any del primer entreno
+  // Distribució de dies — compta des de l'1 de gener de l'any del primer workout
   const firstWoDate = workouts.reduce((a,b)=>a.date<b.date?a:b).date.slice(0,10);
   const firstYear   = firstWoDate.slice(0,4);
   const yearStart   = `${firstYear}-01-01`;
@@ -2937,9 +3279,9 @@ function renderStatsGlobal() {
 
   c.innerHTML=`
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 16px 14px">
-      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalDays}</div><div class="stat-lbl" style="font-size:8px">dies gym</div></div>
-      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalKg>9999?(totalKg/1000).toFixed(1)+'t':totalKg+'k'}</div><div class="stat-lbl" style="font-size:8px">kg total</div></div>
-      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalSets}</div><div class="stat-lbl" style="font-size:8px">sèries</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalDays}</div><div class="stat-lbl" style="font-size:8px">gym days</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalKg>9999?(totalKg/1000).toFixed(1)+'t':totalKg+'k'}</div><div class="stat-lbl" style="font-size:8px">total kg</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${totalSets}</div><div class="stat-lbl" style="font-size:8px">sets</div></div>
     </div>
 
     <!-- RACXA -->
@@ -2984,7 +3326,7 @@ function renderStatsGlobal() {
         <div class="chart-title">Distribució de dies</div>
         <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);font-weight:600;padding-right:4px">${nTrain}<span style="color:var(--muted);font-weight:400"> / ${totalTracked} dies</span></div>
       </div>
-      <div class="chart-sub">ENTRENO · DESCANS · VACANCES · ALTRES</div>
+      <div class="chart-sub">ENTRENO · REST · VACANCES · ALTRES</div>
       <div style="display:flex;align-items:center;gap:20px;padding:4px 0">
         <canvas id="cg-pie" style="flex-shrink:0;width:160px;height:160px"></canvas>
         <div id="cg-pie-legend" style="font-family:var(--font-mono);font-size:10px;color:var(--muted);line-height:2.4;flex:1;min-width:0"></div>
@@ -2992,29 +3334,29 @@ function renderStatsGlobal() {
     </div>
 
     ${noPhys?`<div style="margin:0 16px 14px;padding:10px 12px;background:rgba(212,255,0,.07);border:1px solid rgba(212,255,0,.2);border-radius:var(--r);font-family:var(--font-mono);font-size:9px;color:var(--accent);letter-spacing:1px;line-height:1.8">
-      ⚠ Afegeix el teu pes i altura a Perfil per veure les kcal cremades
+      ⚠ Afegeix el teu pes i altura a Perfil per veure les calories burned
     </div>`:`<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:0 16px 14px">
-      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px;color:#ff4520">${totalKcal>9999?(totalKcal/1000).toFixed(1)+'k':totalKcal}</div><div class="stat-lbl" style="font-size:8px">kcal totals 🔥</div></div>
-      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px;color:#ff4520">${daysWithDur.length?Math.round(totalKcal/daysWithDur.length):'—'}</div><div class="stat-lbl" style="font-size:8px">kcal/dia 🔥</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px;color:#ff4520">${totalKcal>9999?(totalKcal/1000).toFixed(1)+'k':totalKcal}</div><div class="stat-lbl" style="font-size:8px">total kcal 🔥</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px;color:#ff4520">${daysWithDur.length?Math.round(totalKcal/daysWithDur.length):'—'}</div><div class="stat-lbl" style="font-size:8px">kcal/day 🔥</div></div>
     </div>`}
     <div class="chart-wrap">
-      <div class="chart-title">Volum setmanal <span style="color:var(--accent);font-size:10px">(kg)</span></div>
-      <div class="chart-sub">CÀRREGA TOTAL AIXECADA PER SETMANA</div>
+      <div class="chart-title">Weekly Volume <span style="color:var(--accent);font-size:10px">(kg)</span></div>
+      <div class="chart-sub">TOTAL WEIGHT LIFTED PER WEEK</div>
       <canvas id="cg-vol" height="130"></canvas>
     </div>
     ${!noPhys&&kcalData.some(v=>v>0)?`<div class="chart-wrap">
-      <div class="chart-title">Kcal cremades <span style="color:#ff4520;font-size:10px">(setmanal)</span></div>
-      <div class="chart-sub">ESTIMACIÓ PER MET × PES CORPORAL</div>
+      <div class="chart-title">Calories Burned <span style="color:#ff4520;font-size:10px">(setmanal)</span></div>
+      <div class="chart-sub">ESTIMATED BY MET × BODY WEIGHT</div>
       <canvas id="cg-kcal" height="130"></canvas>
     </div>`:''}
     <div class="chart-wrap">
-      <div class="chart-title">Freqüència setmanal <span style="color:var(--accent3);font-size:10px">(dies)</span></div>
-      <div class="chart-sub">DIES D'ENTRENO PER SETMANA</div>
+      <div class="chart-title">Weekly Frequency <span style="color:var(--accent3);font-size:10px">(dies)</span></div>
+      <div class="chart-sub">WORKOUT DAYS PER WEEK</div>
       <canvas id="cg-freq" height="110"></canvas>
     </div>
     ${prs.length?`
     <div style="padding:0 16px 4px">
-      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">🏆 ELS MEUS RÈCORDS</div>
+      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">🏆 MY RECORDS</div>
       ${prs.map((x,i)=>`
         <div onclick="qs('stats-sel').value='${x.e.id}';renderStatsDetail();qs('stats-detail').scrollIntoView({behavior:'smooth'})"
           style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin-bottom:4px;cursor:pointer">
@@ -3037,12 +3379,12 @@ function renderStatsGlobal() {
     if(!pieCanvas) return;
     const segments = [
       { n:nTrain,     color:getAccent(), label:'Entreno',         emoji:'💪' },
-      { n:nRest,      color:'#555',    label:'Descans actiu',   emoji:'😴' },
+      { n:nRest,      color:'#555',    label:'Active rest',   emoji:'😴' },
       { n:nVacation,  color:'#2563eb', label:'Vacances',        emoji:'🏖' },
-      { n:nSick,      color:'#dc2626', label:'Malalt/a',        emoji:'🤒' },
+      { n:nSick,      color:'#dc2626', label:'Sick',        emoji:'🤒' },
       { n:nTravel,    color:'#7c3aed', label:'Fora de casa',    emoji:'✈️'  },
       { n:nOther,     color:'#888',    label:'Altre',           emoji:'📝' },
-      { n:nUnlabeled, color:'#2a2a2a', label:'Sense etiquetar', emoji:'·' },
+      { n:nUnlabeled, color:'#2a2a2a', label:'Without etiquetar', emoji:'·' },
     ].filter(s=>s.n>0);
 
     const total = segments.reduce((a,s)=>a+s.n,0);
@@ -3114,7 +3456,7 @@ window.renderStatsDetail = function() {
   if(!exId){c.innerHTML='';return;}
   const ex=exercises.find(e=>e.id===exId);
   if(!ex) return;
-  const isTiempo = ex.type==='tiempo';
+  const isTiempo = ex.type==='time';
   const isBW     = ex.type==='bodyweight';
 
   const pts=[];
@@ -3163,13 +3505,13 @@ window.renderStatsDetail = function() {
       <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${nSess}</div><div class="stat-lbl" style="font-size:8px">sessions</div></div>`;
     charts=`
       <div class="chart-wrap">
-        <div class="chart-title">Millor sèrie per sessió</div>
-        <div class="chart-sub">TEMPS MÀXIM (S)</div>
+        <div class="chart-title">Best set per session</div>
+        <div class="chart-sub">MAX TIME (S)</div>
         <canvas id="cd-w" height="140"></canvas>
       </div>
       <div class="chart-wrap">
-        <div class="chart-title">Temps total per sessió</div>
-        <div class="chart-sub">SUMA DE TOTES LES SÈRIES (S)</div>
+        <div class="chart-title">Total time per session</div>
+        <div class="chart-sub">SUM OF ALL SETS (S)</div>
         <canvas id="cd-v" height="140"></canvas>
       </div>`;
   } else if(isBW) {
@@ -3178,17 +3520,17 @@ window.renderStatsDetail = function() {
     trendTxt = trend>0?`<span style="color:var(--accent)">↑ +${trend}r</span>`:trend<0?`<span style="color:var(--accent2)">↓ ${trend}r</span>`:'';
     statCards=`
       <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${prReps||'—'}</div><div class="stat-lbl" style="font-size:8px">PR reps</div></div>
-      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${Math.max(...pts.map(p=>p.vol))||'—'}</div><div class="stat-lbl" style="font-size:8px">Màx reps/ses</div></div>
+      <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${Math.max(...pts.map(p=>p.vol))||'—'}</div><div class="stat-lbl" style="font-size:8px">Max reps/session</div></div>
       <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${nSess}</div><div class="stat-lbl" style="font-size:8px">sessions</div></div>`;
     charts=`
       <div class="chart-wrap">
-        <div class="chart-title">Reps màximes per sessió</div>
-        <div class="chart-sub">MILLOR SÈRIE</div>
+        <div class="chart-title">Max reps per session</div>
+        <div class="chart-sub">BEST SET</div>
         <canvas id="cd-w" height="140"></canvas>
       </div>
       <div class="chart-wrap">
-        <div class="chart-title">Reps totals per sessió</div>
-        <div class="chart-sub">SUMA DE TOTES LES SÈRIES</div>
+        <div class="chart-title">Total reps per session</div>
+        <div class="chart-sub">SUM OF ALL SETS</div>
         <canvas id="cd-v" height="140"></canvas>
       </div>`;
   } else {
@@ -3202,18 +3544,18 @@ window.renderStatsDetail = function() {
       <div class="stat" style="padding:10px 6px"><div class="stat-val" style="font-size:20px">${nSess}</div><div class="stat-lbl" style="font-size:8px">sessions</div></div>`;
     charts=`
       <div class="chart-wrap">
-        <div class="chart-title">Peso màxim per sessió</div>
-        <div class="chart-sub">EVOLUCIÓ DEL PES (KG)</div>
+        <div class="chart-title">Max weight per session</div>
+        <div class="chart-sub">WEIGHT PROGRESSION (KG)</div>
         <canvas id="cd-w" height="140"></canvas>
       </div>
       <div class="chart-wrap">
-        <div class="chart-title">Volum per sessió</div>
-        <div class="chart-sub">SÈRIES × REPS × PES</div>
+        <div class="chart-title">Volume per session</div>
+        <div class="chart-sub">SETS × REPS × WEIGHT</div>
         <canvas id="cd-v" height="140"></canvas>
       </div>
       ${best1rm>0?`<div class="chart-wrap">
-        <div class="chart-title">1RM estimat</div>
-        <div class="chart-sub">FÓRMULA D'EPLEY</div>
+        <div class="chart-title">Estimated 1RM</div>
+        <div class="chart-sub">EPLEY FORMULA</div>
         <canvas id="cd-1rm" height="140"></canvas>
       </div>`:''}`;
   }
@@ -3226,10 +3568,10 @@ window.renderStatsDetail = function() {
     ${charts}`;
 
   setTimeout(()=>{
-    if(isTiempo||ex.type==='fuerza') {
+    if(isTiempo||ex.type==='strength') {
       drawLineChart('cd-w', lbls, pts.map(p=>p.maxW), getAccent());
       drawLineChart('cd-v', lbls, pts.map(p=>p.vol),  '#ff4520');
-      if(ex.type==='fuerza') {
+      if(ex.type==='strength') {
         const best1rm=Math.max(...pts.map(p=>p.orm));
         if(best1rm>0) drawLineChart('cd-1rm', lbls, pts.map(p=>p.orm), '#00cfff');
       }
@@ -3336,7 +3678,7 @@ function drawBarChart(cid, labels, data, color, isInt=false) {
 
 // ── RESET ─────────────────────────────────────────────────────
 window.resetExercisesAndRoutines = function() {
-  if(!confirm("Substituir tots els exercicis i rutines pel pla d'Arnau?\n\nEls entrenos registrats NO s'esborraran.")) return;
+  if(!confirm("Substituir tots els exercises i routines pel pla d'Arnau?\n\nEls workouts registrats NO s'esborraran.")) return;
   exercises=getDefaultExercises();
   routines=getDefaultRoutines(exercises);
   save();
@@ -3362,7 +3704,7 @@ window.importData = function(ev) {
     try{
       const d=JSON.parse(e.target.result);
       if(!d.exercises||!d.workouts) throw new Error();
-      if(!confirm(`¿Restaurar backup?\n${d.exercises.length} ejercicios · ${d.routines?.length||0} rutinas · ${d.workouts.length} entrenos\n\n⚠ Se reemplazarán los datos actuales.`)) return;
+      if(!confirm(`¿Restaurar backup?\n${d.exercises.length} ejercicios · ${d.routines?.length||0} rutinas · ${d.workouts.length} workouts\n\n⚠ Se reemplazarán los datos actuales.`)) return;
       exercises=d.exercises; workouts=d.workouts; routines=d.routines||[];
       save();
       st.innerHTML='<span style="color:var(--accent)">✓ Restaurado</span>';
@@ -3393,7 +3735,7 @@ window.saveUsername = async function() {
   const inp = qs('edit-username-inp');
   const newName = (inp.value||'').trim();
   const status = qs('edit-username-status');
-  if(!newName) { status.textContent = 'Escriu un nom!'; return; }
+  if(!newName) { status.textContent = 'Enter a name!'; return; }
 
   let users = [];
   try {
@@ -3402,7 +3744,7 @@ window.saveUsername = async function() {
   } catch(e) { users = JSON.parse(localStorage.getItem('ub_users')||'[]'); }
 
   if(users.find(u=>u.id!==currentUser.id && u.name.toLowerCase()===newName.toLowerCase())) {
-    status.textContent = 'Aquest nom ja existeix!'; return;
+    status.textContent = 'This name already exists!'; return;
   }
 
   users = users.map(u => u.id===currentUser.id ? {...u, name:newName} : u);
@@ -3415,7 +3757,7 @@ window.saveUsername = async function() {
   renderUserBadge();
   inp.value = '';
   status.style.color = 'var(--accent)';
-  status.textContent = '✓ Nom actualitzat!';
+  status.textContent = '✓ Name updated!';
   setTimeout(()=>{ status.textContent=''; status.style.color='var(--muted)'; }, 2000);
 }
 
@@ -3481,7 +3823,7 @@ window.hiitStart = function() {
 window.hiitPause = function() {
   if(!hiitState) return;
   hiitState.paused = !hiitState.paused;
-  qs('hiit-btn-pause').textContent = hiitState.paused ? '▶ REPRENDRE' : '⏸ PAUSA';
+  qs('hiit-btn-pause').textContent = hiitState.paused ? '▶ RESUME' : '⏸ PAUSE';
 }
 
 window.hiitReset = function() {
@@ -3490,7 +3832,7 @@ window.hiitReset = function() {
   qs('hiit-config').style.display  = 'block';
   qs('hiit-running').style.display = 'none';
   qs('hiit-done').style.display    = 'none';
-  qs('hiit-btn-pause').textContent = '⏸ PAUSA';
+  qs('hiit-btn-pause').textContent = '⏸ PAUSE';
 }
 
 function hiitTick() {
@@ -3526,7 +3868,7 @@ function hiitFinish() {
   hiitBeep('done');
   qs('hiit-running').style.display='none';
   qs('hiit-done').style.display='block';
-  qs('hiit-done-sub').textContent = hiitState.rounds+' rondes · '+hiitState.exs.length+' exercicis · '+Math.round((hiitState.rounds*(hiitState.exs.length*hiitState.work+(hiitState.exs.length-1)*hiitState.rest)+( hiitState.rounds-1)*hiitState.rround)/60)+' min aprox.';
+  qs('hiit-done-sub').textContent = hiitState.rounds+' rondes · '+hiitState.exs.length+' exercises · '+Math.round((hiitState.rounds*(hiitState.exs.length*hiitState.work+(hiitState.exs.length-1)*hiitState.rest)+( hiitState.rounds-1)*hiitState.rround)/60)+' min aprox.';
 }
 
 function hiitRender() {
@@ -3545,26 +3887,26 @@ function hiitRender() {
   const BLUE    = '#00cfff';
 
   if(s.phase==='work') {
-    qs('hiit-phase').textContent   = 'TREBALL';
+    qs('hiit-phase').textContent   = 'WORK';
     qs('hiit-exname').textContent  = s.exs[s.ex];
     qs('hiit-big').style.color     = ACCENT;
     qs('hiit-bar').style.background= ACCENT;
-    qs('hiit-round-lbl').textContent = 'Ronda '+(s.round+1)+' / '+s.rounds;
+    qs('hiit-round-lbl').textContent = 'Round '+(s.round+1)+' / '+s.rounds;
     const nx = s.ex<s.exs.length-1 ? s.exs[s.ex+1] : (s.round<s.rounds-1?'Descans de ronda':'Última sèrie!');
     qs('hiit-next').textContent = t<=5 ? '→ '+nx : '';
   } else if(s.phase==='rest') {
-    qs('hiit-phase').textContent   = 'DESCANS';
+    qs('hiit-phase').textContent   = 'REST';
     qs('hiit-exname').textContent  = s.exs[s.ex+1]||'';
     qs('hiit-big').style.color     = GREEN;
     qs('hiit-bar').style.background= GREEN;
-    qs('hiit-round-lbl').textContent = 'Ronda '+(s.round+1)+' / '+s.rounds;
+    qs('hiit-round-lbl').textContent = 'Round '+(s.round+1)+' / '+s.rounds;
     qs('hiit-next').textContent    = '';
   } else if(s.phase==='round_rest') {
-    qs('hiit-phase').textContent   = 'DESCANS DE RONDA';
-    qs('hiit-exname').textContent  = 'Ronda '+(s.round+2)+' comença aviat';
+    qs('hiit-phase').textContent   = 'REST DE RONDA';
+    qs('hiit-exname').textContent  = 'Round '+(s.round+2)+' starting soon';
     qs('hiit-big').style.color     = BLUE;
     qs('hiit-bar').style.background= BLUE;
-    qs('hiit-round-lbl').textContent = 'Ronda '+(s.round+1)+' completada';
+    qs('hiit-round-lbl').textContent = 'Round '+(s.round+1)+' completada';
     qs('hiit-next').textContent    = t<=5 ? '→ '+s.exs[0] : '';
   }
 
@@ -3585,7 +3927,7 @@ function hiitRender() {
   }
 }
 
-// ── TEMPORITZADOR DE DESCANS ──────────────────────────────────
+// ── TEMPORITZADOR DE REST ──────────────────────────────────
 let restTotal   = 60;
 let restLeft    = 60;
 let restIv      = null;
@@ -3615,7 +3957,7 @@ window.restToggle = function() {
   if(restLeft<=0) restLeft=restTotal;
   restRunning=true;
   restEndTime = Date.now() + restLeft*1000; // timestamp absolut
-  qs('rest-btn-start').textContent='⏸ PAUSA';
+  qs('rest-btn-start').textContent='⏸ PAUSE';
   const mins = Math.round(restLeft/60);
   const label = mins>=1 ? `Descans de ${mins}min acabat! Torna a entrenar 💪` : `Descans acabat! Torna a entrenar 💪`;
   scheduleNotification?.(label, restLeft);
@@ -3636,7 +3978,7 @@ window.restToggle = function() {
 function restStop() {
   clearInterval(restIv); restIv=null; restRunning=false;
   document.title = 'UNGABUNGA';
-  qs('rest-btn-start').textContent = restLeft>0&&restLeft<restTotal ? '▶ REPRENDRE' : '▶ INICIAR';
+  qs('rest-btn-start').textContent = restLeft>0&&restLeft<restTotal ? '▶ RESUME' : '▶ INICIAR';
 }
 window.restReset = function() {
   restStop(); restLeft=restTotal; restUpdateUI();
@@ -3701,7 +4043,7 @@ function getChallengeProgress(ch) {
     }));
     return max;
   }
-  if(ch.type==='tiempo') {
+  if(ch.type==='time') {
     // Millor temps (en s) en una sèrie
     let max=0;
     ws.forEach(w=>w.exercises.forEach(ae=>{
@@ -3776,7 +4118,7 @@ function getChallengeGuide(ch) {
     else                           { feasibility='ok';         lines.push('✅ Objectiu assolible'); }
   }
 
-  if(ch.type==='tiempo') {
+  if(ch.type==='time') {
     const ex=exercises.find(e=>e.id===ch.exId); if(!ex) return {lines:[],feasibility:'ok'};
     let curBest=0;
     workouts.forEach(w=>w.exercises.forEach(ae=>{
@@ -3814,9 +4156,9 @@ function getChallengeGuide(ch) {
     if(!physData?.weight) return {lines:['⚠️ Necessites el pes al Perfil'],feasibility:'hard'};
     const recentKcal=workouts.filter(w=>new Date(w.date)>new Date(Date.now()-30*24*60*60*1000)).reduce((a,w)=>a+calcKcal(w),0);
     const needed=ch.target/(weeks/4);
-    lines.push(`Objectiu: ${ch.target.toLocaleString()} kcal ≈ ${(ch.target/7700).toFixed(1)} kg greix*`);
+    lines.push(`Objectiu: ${ch.target.toLocaleString()} kcal ≈ ${(ch.target/7700).toFixed(1)} kg fat*`);
     lines.push(`Kcal mensuals recents: ~${recentKcal.toLocaleString()}`);
-    lines.push(`* Sense comptar dèficit de dieta`);
+    lines.push(`* Without comptar dèficit de dieta`);
     if(needed>recentKcal*2) { feasibility='impossible'; lines.push('⚠️ Caldria duplicar els entrenaments'); }
     else if(needed>recentKcal*1.3) { feasibility='hard'; lines.push('🔥 Hauràs d\'augmentar la freqüència'); }
     else { feasibility='ok'; lines.push('✅ Assolible al teu ritme actual'); }
@@ -3837,10 +4179,10 @@ function getChallengeGuide(ch) {
     const recent=workouts.filter(w=>new Date(w.date)>new Date(Date.now()-30*24*60*60*1000));
     const mSets=recent.reduce((a,w)=>a+w.exercises.reduce((b,ae)=>b+ae.sets.length,0),0);
     const needed=ch.target/(weeks/4);
-    lines.push(`Objectiu: ${ch.target} sèries`);
+    lines.push(`Objectiu: ${ch.target} sets`);
     lines.push(`Sèries mensuals recents: ~${mSets}`);
-    if(needed>mSets*2) { feasibility='impossible'; lines.push('⚠️ Caldria duplicar les sèries'); }
-    else if(needed>mSets*1.3) { feasibility='hard'; lines.push('🔥 Hauràs d\'afegir sèries'); }
+    if(needed>mSets*2) { feasibility='impossible'; lines.push('⚠️ Caldria duplicar les sets'); }
+    else if(needed>mSets*1.3) { feasibility='hard'; lines.push('🔥 Hauràs d\'afegir sets'); }
     else { feasibility='ok'; lines.push('✅ Assolible'); }
   }
 
@@ -3861,7 +4203,7 @@ function getChallengeGuide(ch) {
   }
   if(ch.type==='habit_kcal') {
     const tdee=physData?.bmr ? physData.bmr*(physData.activity||1.55) : 0;
-    lines.push(`Màxim ${ch.target.toLocaleString()} kcal/dia durant ${Math.round(weeks*7)} dies`);
+    lines.push(`Màxim ${ch.target.toLocaleString()} kcal/day durant ${Math.round(weeks*7)} dies`);
     if(tdee>0) {
       const deficit=tdee-ch.target;
       lines.push(`El teu TDEE estimat: ${Math.round(tdee).toLocaleString()} kcal`);
@@ -3883,7 +4225,7 @@ function getChallengeGuide(ch) {
 
 window.onChallengeTypeChange = function() {
   const type=qs('ch-type').value;
-  const allTypes=['pr_reps','tiempo','cardio_dist','volume','kcal','consistency','sets','weight','habit_water','habit_kcal','habit_custom'];
+  const allTypes=['pr_reps','time','cardio_dist','volume','kcal','consistency','sets','weight','habit_water','habit_kcal','habit_custom'];
   allTypes.forEach(t=>{ const el=qs('ch-'+t+'-fields'); if(el) el.style.display=t===type?'block':'none'; });
   updateChallengePreview();
 }
@@ -3895,7 +4237,7 @@ window.updateChallengePreview = function() {
   if(!fromDs||!toDs||fromDs>=toDs){prev.style.display='none';return;}
   const ch={type,fromDs,toDs};
   if(type==='pr_reps')    { ch.exId=qs('ch-exercise').value; ch.target=parseFloat(qs('ch-pr-target').value)||0; ch.reps=parseInt(qs('ch-pr-reps').value)||10; }
-  if(type==='tiempo')     { ch.exId=qs('ch-tiempo-exercise').value; ch.target=parseFloat(qs('ch-tiempo-target').value)||0; }
+  if(type==='time')     { ch.exId=qs('ch-tiempo-exercise').value; ch.target=parseFloat(qs('ch-tiempo-target').value)||0; }
   if(type==='cardio_dist'){ ch.exId=qs('ch-cardio-exercise').value; ch.target=parseFloat(qs('ch-cardio-dist').value)||0; ch.time=parseInt(qs('ch-cardio-time').value)||0; }
   if(type==='volume')     { ch.target=parseFloat(qs('ch-volume-target').value)||0; }
   if(type==='kcal')       { ch.target=parseInt(qs('ch-kcal-target').value)||0; }
@@ -3920,12 +4262,12 @@ window.openNewChallenge = function() {
   const d=new Date(); d.setMonth(d.getMonth()+1);
   qs('ch-to').value=d.toISOString().slice(0,10);
   // Exercicis de força/bodyweight per PR
-  const forceExs=exercises.filter(e=>e.type==='fuerza'||e.type==='bodyweight').sort((a,b)=>a.name.localeCompare(b.name));
-  const tiempoExs=exercises.filter(e=>e.type==='tiempo').sort((a,b)=>a.name.localeCompare(b.name));
+  const forceExs=exercises.filter(e=>e.type==='strength'||e.type==='bodyweight').sort((a,b)=>a.name.localeCompare(b.name));
+  const tiempoExs=exercises.filter(e=>e.type==='time').sort((a,b)=>a.name.localeCompare(b.name));
   const cardioExs=exercises.filter(e=>e.type==='cardio').sort((a,b)=>a.name.localeCompare(b.name));
   qs('ch-exercise').innerHTML=forceExs.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
-  qs('ch-tiempo-exercise').innerHTML=tiempoExs.map(e=>`<option value="${e.id}">${e.name}</option>`).join('')||'<option value="">Sense exercicis isomètrics</option>';
-  qs('ch-cardio-exercise').innerHTML=cardioExs.map(e=>`<option value="${e.id}">${e.name}</option>`).join('')||'<option value="">Sense exercicis cardio</option>';
+  qs('ch-tiempo-exercise').innerHTML=tiempoExs.map(e=>`<option value="${e.id}">${e.name}</option>`).join('')||'<option value="">Without exercises isomètrics</option>';
+  qs('ch-cardio-exercise').innerHTML=cardioExs.map(e=>`<option value="${e.id}">${e.name}</option>`).join('')||'<option value="">Without exercises cardio</option>';
   qs('ch-preview').style.display='none';
   onChallengeTypeChange();
   openModal('m-challenge');
@@ -3937,7 +4279,7 @@ window.saveChallenge = function() {
   if(!fromDs||!toDs||fromDs>=toDs){alert('Comprova les dates');return;}
   const ch={id:uid(),type,fromDs,toDs,createdAt:Date.now(),log:{}};
   if(type==='pr_reps')    { ch.exId=qs('ch-exercise').value; ch.target=parseFloat(qs('ch-pr-target').value)||0; ch.reps=parseInt(qs('ch-pr-reps').value)||10; }
-  if(type==='tiempo')     { ch.exId=qs('ch-tiempo-exercise').value; ch.target=parseFloat(qs('ch-tiempo-target').value)||0; }
+  if(type==='time')     { ch.exId=qs('ch-tiempo-exercise').value; ch.target=parseFloat(qs('ch-tiempo-target').value)||0; }
   if(type==='cardio_dist'){ ch.exId=qs('ch-cardio-exercise').value; ch.target=parseFloat(qs('ch-cardio-dist').value)||0; ch.time=parseInt(qs('ch-cardio-time').value)||0; }
   if(type==='volume')     { ch.target=parseFloat(qs('ch-volume-target').value)||0; }
   if(type==='kcal')       { ch.target=parseInt(qs('ch-kcal-target').value)||0; }
@@ -4001,12 +4343,12 @@ function renderChallenges() {
 
     let pct=0, current='', target='', title='';
     if(ch.type==='pr_reps')     { pct=ch.target>0?Math.min(progress/ch.target,1):0; current=(progress||'—')+'kg'; target=ch.target+'kg ×'+(ch.reps||10)+'r'; title=ex?.name||'?'; }
-    else if(ch.type==='tiempo') { pct=ch.target>0?Math.min(progress/ch.target,1):0; current=(progress||'—')+'s'; target=ch.target+'s'; title=ex?.name||'?'; }
+    else if(ch.type==='time') { pct=ch.target>0?Math.min(progress/ch.target,1):0; current=(progress||'—')+'s'; target=ch.target+'s'; title=ex?.name||'?'; }
     else if(ch.type==='cardio_dist') { pct=ch.target>0?Math.min(progress/ch.target,1):0; current=(progress||'—')+'km'; target=ch.target+'km'+(ch.time?` <${ch.time}min`:''); title=ex?.name||'?'; }
     else if(ch.type==='volume') { pct=ch.target>0?Math.min(progress/ch.target,1):0; current=progress>=1000?(progress/1000).toFixed(1)+'t':progress+'kg'; target=ch.target>=1000?(ch.target/1000).toFixed(0)+'t':ch.target+'kg'; title='Volum acumulat'; }
-    else if(ch.type==='kcal')   { pct=ch.target>0?Math.min(progress/ch.target,1):0; current=progress.toLocaleString()+' kcal'; target=ch.target.toLocaleString()+' kcal'; title='Kcal cremades'; }
+    else if(ch.type==='kcal')   { pct=ch.target>0?Math.min(progress/ch.target,1):0; current=progress.toLocaleString()+' kcal'; target=ch.target.toLocaleString()+' kcal'; title='Calories Burned'; }
     else if(ch.type==='consistency') { pct=Math.min(progress,1); current=Math.round(progress*100)+'%'; target=ch.target+' dies/setm.'; title='Consistència'; }
-    else if(ch.type==='sets')   { pct=ch.target>0?Math.min(progress/ch.target,1):0; current=progress+' sèries'; target=ch.target+' sèries'; title='Sèries totals'; }
+    else if(ch.type==='sets')   { pct=ch.target>0?Math.min(progress/ch.target,1):0; current=progress+' sets'; target=ch.target+' sets'; title='Sèries totals'; }
     else if(ch.type==='weight') {
       const start=physHistory.find(e=>e.date>=ch.fromDs)?.weight||physData?.weight||0;
       const gap=ch.target-start; pct=gap!==0?Math.min(Math.abs(progress-start)/Math.abs(gap),1):1;
@@ -4018,7 +4360,7 @@ function renderChallenges() {
       current+=` · avui: ${todayVal}L`;
     }
     else if(ch.type==='habit_kcal') {
-      pct=Math.min(progress,1); current=Math.round(progress*100)+'% dies'; target='≤'+ch.target.toLocaleString()+' kcal/dia'; title='Ingesta calòrica';
+      pct=Math.min(progress,1); current=Math.round(progress*100)+'% dies'; target='≤'+ch.target.toLocaleString()+' kcal/day'; title='Ingesta calòrica';
       const todayVal=(ch.log||{})[today()]||0;
       current+=todayVal?` · avui: ${todayVal.toLocaleString()} kcal`:'';
     }
@@ -4062,12 +4404,11 @@ function renderChallenges() {
 
 
 // ── TEMES VISUALS ─────────────────────────────────────────────
+// ── TEMES: cada tema té vars DARK (nit) i LIGHT (dia beix càlid) ──────────
 const THEMES = [
   {
-    id: 'neon',
-    name: 'NEON',
-    preview: ['#d4ff00','#00e5ff','#ff3d5a'],
-    vars: {
+    id:'neon', name:'NEON', preview:['#d4ff00','#00e5ff','#ff3d5a'],
+    dark:{
       '--bg':'#06060a','--s1':'#0e0e14','--s2':'#14141c','--s3':'#1c1c28',
       '--border':'#1e1e2e','--border2':'#2a2a3e',
       '--accent':'#d4ff00','--accent2':'#ff3d5a','--accent3':'#00e5ff','--accent4':'#bf5af2',
@@ -4075,13 +4416,20 @@ const THEMES = [
       '--glow-y':'0 0 20px rgba(212,255,0,.35), 0 0 60px rgba(212,255,0,.12)',
       '--glow-c':'0 0 20px rgba(0,229,255,.35), 0 0 60px rgba(0,229,255,.12)',
       '--glow-r':'0 0 20px rgba(255,61,90,.35), 0 0 60px rgba(255,61,90,.12)',
+    },
+    light:{
+      '--bg':'#f2eeea','--s1':'#ede8e3','--s2':'#e6e0da','--s3':'#ddd7d0',
+      '--border':'#ccc6be','--border2':'#b8b2aa',
+      '--accent':'#8aaa00','--accent2':'#d4001a','--accent3':'#0099bb','--accent4':'#7a3abf',
+      '--text':'#1a1a20','--muted':'#7a7870','--muted2':'#a8a49e',
+      '--glow-y':'0 0 12px rgba(138,170,0,.25), 0 0 30px rgba(138,170,0,.08)',
+      '--glow-c':'0 0 12px rgba(0,153,187,.2), 0 0 30px rgba(0,153,187,.07)',
+      '--glow-r':'0 0 12px rgba(212,0,26,.2), 0 0 30px rgba(212,0,26,.07)',
     }
   },
   {
-    id: 'cyber',
-    name: 'CYBER',
-    preview: ['#ff6b35','#ff3d5a','#ffd60a'],
-    vars: {
+    id:'cyber', name:'CYBER', preview:['#ff6b35','#ff3d5a','#ffd60a'],
+    dark:{
       '--bg':'#080506','--s1':'#110a08','--s2':'#180e0b','--s3':'#221410',
       '--border':'#2a1510','--border2':'#3a1e14',
       '--accent':'#ff6b35','--accent2':'#ffd60a','--accent3':'#ff3d5a','--accent4':'#ff9f1c',
@@ -4089,13 +4437,20 @@ const THEMES = [
       '--glow-y':'0 0 20px rgba(255,107,53,.4), 0 0 60px rgba(255,107,53,.15)',
       '--glow-c':'0 0 20px rgba(255,214,10,.3), 0 0 60px rgba(255,214,10,.1)',
       '--glow-r':'0 0 20px rgba(255,61,90,.35), 0 0 60px rgba(255,61,90,.12)',
+    },
+    light:{
+      '--bg':'#f2eeea','--s1':'#ede8e2','--s2':'#e5dfd8','--s3':'#dbd4cb',
+      '--border':'#c8bfb4','--border2':'#b5ab9e',
+      '--accent':'#cc4400','--accent2':'#bb8800','--accent3':'#cc1a2a','--accent4':'#cc6600',
+      '--text':'#1e1208','--muted':'#7a5a4a','--muted2':'#a8988a',
+      '--glow-y':'0 0 12px rgba(204,68,0,.25), 0 0 30px rgba(204,68,0,.08)',
+      '--glow-c':'0 0 12px rgba(187,136,0,.2), 0 0 30px rgba(187,136,0,.07)',
+      '--glow-r':'0 0 12px rgba(204,26,42,.2), 0 0 30px rgba(204,26,42,.07)',
     }
   },
   {
-    id: 'ice',
-    name: 'ICE',
-    preview: ['#00e5ff','#7b2fff','#00ffcc'],
-    vars: {
+    id:'ice', name:'ICE', preview:['#00e5ff','#7b2fff','#00ffcc'],
+    dark:{
       '--bg':'#04080f','--s1':'#080f1a','--s2':'#0c1525','--s3':'#111d30',
       '--border':'#152035','--border2':'#1e2e48',
       '--accent':'#00e5ff','--accent2':'#7b2fff','--accent3':'#00ffcc','--accent4':'#4fc3f7',
@@ -4103,13 +4458,20 @@ const THEMES = [
       '--glow-y':'0 0 20px rgba(0,229,255,.4), 0 0 60px rgba(0,229,255,.15)',
       '--glow-c':'0 0 20px rgba(0,255,204,.3), 0 0 60px rgba(0,255,204,.1)',
       '--glow-r':'0 0 20px rgba(123,47,255,.35), 0 0 60px rgba(123,47,255,.12)',
+    },
+    light:{
+      '--bg':'#f0f4f8','--s1':'#e8eef5','--s2':'#dde6f0','--s3':'#d0dcea',
+      '--border':'#bccbdc','--border2':'#a8bacf',
+      '--accent':'#0088bb','--accent2':'#5500cc','--accent3':'#008866','--accent4':'#2288cc',
+      '--text':'#08141e','--muted':'#4a6070','--muted2':'#8aa0b0',
+      '--glow-y':'0 0 12px rgba(0,136,187,.25), 0 0 30px rgba(0,136,187,.08)',
+      '--glow-c':'0 0 12px rgba(0,136,102,.2), 0 0 30px rgba(0,136,102,.07)',
+      '--glow-r':'0 0 12px rgba(85,0,204,.2), 0 0 30px rgba(85,0,204,.07)',
     }
   },
   {
-    id: 'matrix',
-    name: 'MATRIX',
-    preview: ['#00ff41','#008f11','#003b00'],
-    vars: {
+    id:'matrix', name:'MATRIX', preview:['#00ff41','#008f11','#003b00'],
+    dark:{
       '--bg':'#010a01','--s1':'#030f03','--s2':'#051505','--s3':'#081d08',
       '--border':'#0d2b0d','--border2':'#123a12',
       '--accent':'#00ff41','--accent2':'#ff3d5a','--accent3':'#39ff14','--accent4':'#69ff47',
@@ -4117,13 +4479,20 @@ const THEMES = [
       '--glow-y':'0 0 20px rgba(0,255,65,.4), 0 0 60px rgba(0,255,65,.15)',
       '--glow-c':'0 0 20px rgba(57,255,20,.3), 0 0 60px rgba(57,255,20,.1)',
       '--glow-r':'0 0 20px rgba(255,61,90,.35), 0 0 60px rgba(255,61,90,.12)',
+    },
+    light:{
+      '--bg':'#eef5ee','--s1':'#e4f0e4','--s2':'#d8e8d8','--s3':'#c8dcc8',
+      '--border':'#aacaaa','--border2':'#90b890',
+      '--accent':'#007722','--accent2':'#cc1a2a','--accent3':'#229900','--accent4':'#449922',
+      '--text':'#041004','--muted':'#4a704a','--muted2':'#88aa88',
+      '--glow-y':'0 0 12px rgba(0,119,34,.25), 0 0 30px rgba(0,119,34,.08)',
+      '--glow-c':'0 0 12px rgba(34,153,0,.2), 0 0 30px rgba(34,153,0,.07)',
+      '--glow-r':'0 0 12px rgba(204,26,42,.2), 0 0 30px rgba(204,26,42,.07)',
     }
   },
   {
-    id: 'rose',
-    name: 'ROSE',
-    preview: ['#ff2d78','#ff9de2','#bf5af2'],
-    vars: {
+    id:'rose', name:'ROSE', preview:['#ff2d78','#ff9de2','#bf5af2'],
+    dark:{
       '--bg':'#08040a','--s1':'#120810','--s2':'#180c18','--s3':'#201020',
       '--border':'#2a1228','--border2':'#3a1a38',
       '--accent':'#ff2d78','--accent2':'#bf5af2','--accent3':'#ff9de2','--accent4':'#ff6ec7',
@@ -4131,13 +4500,20 @@ const THEMES = [
       '--glow-y':'0 0 20px rgba(255,45,120,.4), 0 0 60px rgba(255,45,120,.15)',
       '--glow-c':'0 0 20px rgba(255,157,226,.3), 0 0 60px rgba(255,157,226,.1)',
       '--glow-r':'0 0 20px rgba(191,90,242,.35), 0 0 60px rgba(191,90,242,.12)',
+    },
+    light:{
+      '--bg':'#f5eef3','--s1':'#ede5eb','--s2':'#e3dae1','--s3':'#d8cdd5',
+      '--border':'#c4b4c0','--border2':'#b0a0ac',
+      '--accent':'#bb0044','--accent2':'#7700bb','--accent3':'#cc6699','--accent4':'#aa3388',
+      '--text':'#1e0814','--muted':'#7a4a62','--muted2':'#aa8898',
+      '--glow-y':'0 0 12px rgba(187,0,68,.25), 0 0 30px rgba(187,0,68,.08)',
+      '--glow-c':'0 0 12px rgba(204,102,153,.2), 0 0 30px rgba(204,102,153,.07)',
+      '--glow-r':'0 0 12px rgba(119,0,187,.2), 0 0 30px rgba(119,0,187,.07)',
     }
   },
   {
-    id: 'gold',
-    name: 'GOLD',
-    preview: ['#ffd700','#ff8c00','#b8860b'],
-    vars: {
+    id:'gold', name:'GOLD', preview:['#ffd700','#ff8c00','#b8860b'],
+    dark:{
       '--bg':'#080700','--s1':'#120f00','--s2':'#181300','--s3':'#201a00',
       '--border':'#2a2200','--border2':'#3a3000',
       '--accent':'#ffd700','--accent2':'#ff8c00','--accent3':'#ffe066','--accent4':'#ffb347',
@@ -4145,13 +4521,20 @@ const THEMES = [
       '--glow-y':'0 0 20px rgba(255,215,0,.4), 0 0 60px rgba(255,215,0,.15)',
       '--glow-c':'0 0 20px rgba(255,224,102,.3), 0 0 60px rgba(255,224,102,.1)',
       '--glow-r':'0 0 20px rgba(255,140,0,.35), 0 0 60px rgba(255,140,0,.12)',
+    },
+    light:{
+      '--bg':'#f5f0e0','--s1':'#eeeadb','--s2':'#e5e0d0','--s3':'#dad4c3',
+      '--border':'#c4bc9a','--border2':'#b0a882',
+      '--accent':'#aa8800','--accent2':'#cc5500','--accent3':'#bb9900','--accent4':'#cc7700',
+      '--text':'#1a1500','--muted':'#7a6a30','--muted2':'#aaa070',
+      '--glow-y':'0 0 12px rgba(170,136,0,.25), 0 0 30px rgba(170,136,0,.08)',
+      '--glow-c':'0 0 12px rgba(187,153,0,.2), 0 0 30px rgba(187,153,0,.07)',
+      '--glow-r':'0 0 12px rgba(204,85,0,.2), 0 0 30px rgba(204,85,0,.07)',
     }
   },
   {
-    id: 'mono',
-    name: 'MONO',
-    preview: ['#ffffff','#aaaaaa','#555555'],
-    vars: {
+    id:'mono', name:'MONO', preview:['#ffffff','#aaaaaa','#555555'],
+    dark:{
       '--bg':'#060606','--s1':'#0f0f0f','--s2':'#161616','--s3':'#1f1f1f',
       '--border':'#252525','--border2':'#333333',
       '--accent':'#ffffff','--accent2':'#ff3d5a','--accent3':'#aaaaaa','--accent4':'#888888',
@@ -4159,13 +4542,20 @@ const THEMES = [
       '--glow-y':'0 0 20px rgba(255,255,255,.2), 0 0 60px rgba(255,255,255,.06)',
       '--glow-c':'0 0 20px rgba(170,170,170,.2), 0 0 60px rgba(170,170,170,.06)',
       '--glow-r':'0 0 20px rgba(255,61,90,.35), 0 0 60px rgba(255,61,90,.12)',
+    },
+    light:{
+      '--bg':'#f2eeea','--s1':'#e8e4e0','--s2':'#dedad6','--s3':'#d0ccc8',
+      '--border':'#b8b4b0','--border2':'#a4a09c',
+      '--accent':'#222222','--accent2':'#cc1a2a','--accent3':'#666666','--accent4':'#444444',
+      '--text':'#111111','--muted':'#888888','--muted2':'#aaaaaa',
+      '--glow-y':'0 0 12px rgba(34,34,34,.15), 0 0 30px rgba(34,34,34,.05)',
+      '--glow-c':'0 0 12px rgba(102,102,102,.12), 0 0 30px rgba(102,102,102,.04)',
+      '--glow-r':'0 0 12px rgba(204,26,42,.2), 0 0 30px rgba(204,26,42,.07)',
     }
   },
   {
-    id: 'vapor',
-    name: 'VAPOR',
-    preview: ['#ff71ce','#01cdfe','#05ffa1'],
-    vars: {
+    id:'vapor', name:'VAPOR', preview:['#ff71ce','#01cdfe','#05ffa1'],
+    dark:{
       '--bg':'#06040f','--s1':'#0d0820','--s2':'#120c2c','--s3':'#181038',
       '--border':'#1e1442','--border2':'#281c55',
       '--accent':'#ff71ce','--accent2':'#05ffa1','--accent3':'#01cdfe','--accent4':'#b967ff',
@@ -4173,35 +4563,815 @@ const THEMES = [
       '--glow-y':'0 0 20px rgba(255,113,206,.4), 0 0 60px rgba(255,113,206,.15)',
       '--glow-c':'0 0 20px rgba(1,205,254,.3), 0 0 60px rgba(1,205,254,.1)',
       '--glow-r':'0 0 20px rgba(5,255,161,.3), 0 0 60px rgba(5,255,161,.1)',
+    },
+    light:{
+      '--bg':'#f2eef8','--s1':'#ebe5f5','--s2':'#e2daee','--s3':'#d8cee6',
+      '--border':'#c0b4d8','--border2':'#aaa0c8',
+      '--accent':'#aa1177','--accent2':'#008855','--accent3':'#0077aa','--accent4':'#7711bb',
+      '--text':'#18081e','--muted':'#6a5080','--muted2':'#9a88aa',
+      '--glow-y':'0 0 12px rgba(170,17,119,.25), 0 0 30px rgba(170,17,119,.08)',
+      '--glow-c':'0 0 12px rgba(0,119,170,.2), 0 0 30px rgba(0,119,170,.07)',
+      '--glow-r':'0 0 12px rgba(0,136,85,.2), 0 0 30px rgba(0,136,85,.07)',
     }
   },
 ];
 
-let currentThemeId = localStorage.getItem('ub_theme') || 'neon';
+// ── DIA / NIT automàtic ─────────────────────────────────────────
+function isDayTime() {
+  const h = new Date().getHours();
+  return h >= 8 && h < 20;
+}
 
-window.applyTheme = function(id) {
+let currentThemeId = localStorage.getItem('ub_theme') || 'neon';
+let dayNightTimer  = null;
+
+window.applyTheme = function(id, forcedMode) {
   const theme = THEMES.find(t=>t.id===id) || THEMES[0];
+  const mode  = forcedMode || (isDayTime() ? 'light' : 'dark');
+  const vars  = theme[mode] || theme.dark;
   const root  = document.documentElement;
-  Object.entries(theme.vars).forEach(([k,v]) => root.style.setProperty(k, v));
+  Object.entries(vars).forEach(([k,v]) => root.style.setProperty(k, v));
+  // Indicador de mode al body
+  root.dataset.mode = mode;
   currentThemeId = id;
   localStorage.setItem('ub_theme', id);
+  // Programa el proper canvi automàtic
+  scheduleDayNightSwitch();
+}
+
+function scheduleDayNightSwitch() {
+  if(dayNightTimer) clearTimeout(dayNightTimer);
+  const now  = new Date();
+  const h    = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+  let minsUntilSwitch;
+  if(isDayTime()) {
+    // Proper canvi: a les 20:00
+    minsUntilSwitch = (20*60) - (h*60+m) - s/60;
+  } else {
+    // Proper canvi: a les 08:00 (si h<8 és el mateix dia, si h>=20 és el dia següent)
+    if(h >= 20) minsUntilSwitch = (24*60 - h*60 - m) + 8*60 - s/60;
+    else        minsUntilSwitch = (8*60) - (h*60+m) - s/60;
+  }
+  const ms = Math.max(minsUntilSwitch * 60 * 1000, 1000);
+  dayNightTimer = setTimeout(() => window.applyTheme(currentThemeId), ms);
 }
 
 window.renderThemeGrid = function() {
   const grid = qs('theme-grid'); if(!grid) return;
-  grid.innerHTML = THEMES.map(t => {
-    const active = t.id === currentThemeId;
-    return `<button onclick="applyTheme('${t.id}');renderThemeGrid()" style="border:2px solid ${active?t.preview[0]:'var(--border)'};border-radius:10px;padding:10px 6px 8px;background:var(--s2);cursor:pointer;transition:all .2s;box-shadow:${active?`0 0 14px ${t.preview[0]}55`:'none'};display:flex;flex-direction:column;align-items:center;gap:6px;">
-      <div style="display:flex;gap:4px">${t.preview.map(c=>`<span style="width:12px;height:12px;border-radius:50%;background:${c};box-shadow:0 0 6px ${c}88;display:block"></span>`).join('')}</div>
-      <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;color:${active?t.preview[0]:'var(--muted)'}">${t.name}</div>
-    </button>`;
-  }).join('');
+  const mode = isDayTime() ? 'light' : 'dark';
+  const modeLabel = isDayTime() ? '☀️ dia' : '🌙 nit';
+  grid.innerHTML = `
+    <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--muted);margin-bottom:10px;text-align:center">
+      Mode actual: <span style="color:var(--accent)">${modeLabel}</span>
+      &nbsp;·&nbsp; Canvi automàtic a les ${isDayTime()?'20:00':'08:00'}
+    </div>` +
+    THEMES.map(t => {
+      const active = t.id === currentThemeId;
+      const previewVars = t[mode] || t.dark;
+      const bg   = previewVars['--bg'];
+      const acc  = previewVars['--accent'];
+      return `<button onclick="window.applyTheme('${t.id}');window.renderThemeGrid()" style="border:2px solid ${active?acc:'var(--border)'};border-radius:10px;padding:10px 6px 8px;background:${bg};cursor:pointer;transition:all .2s;box-shadow:${active?`0 0 14px ${acc}55`:'none'};display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <div style="display:flex;gap:4px">${t.preview.map(c=>`<span style="width:12px;height:12px;border-radius:50%;background:${c};box-shadow:0 0 6px ${c}88;display:block"></span>`).join('')}</div>
+        <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;color:${active?acc:'#888'}">${t.name}</div>
+      </button>`;
+    }).join('');
 }
 
 // Helper: llegeix el color d'accent actual del tema
 function getAccent()  { return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#d4ff00'; }
 function getAccent3() { return getComputedStyle(document.documentElement).getPropertyValue('--accent3').trim() || '#00e5ff'; }
 function getBg()      { return getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#06060a'; }
+
+// ══════════════════════════════════════════════════════════════
+// ── FORÇA — Strength Level standards ──────────────────────────
+// Font: Strength Level (strengthlevel.com) — +13M lifts
+// [debutant, principiant, intermedi, avançat, elit] per 75kg(H)/60kg(D)
+// ══════════════════════════════════════════════════════════════
+const STRENGTH_STANDARDS = {
+  'Incline Bench Press':     { m:[40,60,90,120,150],  f:[20,32,50,70,95],  bwRef:{m:75,f:60} },
+  'Seated Cable Row':              { m:[45,65,95,130,165],  f:[25,38,58,82,110], bwRef:{m:75,f:60} },
+  'Barbell Squat':      { m:[55,80,120,160,210], f:[28,45,70,100,135],bwRef:{m:75,f:60} },
+  'Deadlift':           { m:[70,100,145,195,250],f:[35,55,85,120,160],bwRef:{m:75,f:60} },
+  'Machine Hip Thrust':       { m:[60,90,135,185,240], f:[40,65,100,145,195],bwRef:{m:75,f:60} },
+  'Dumbbell Shoulder Press': { m:[20,30,46,62,80],    f:[10,16,25,36,50],  bwRef:{m:75,f:60} },
+  'Barbell Curl':           { m:[20,30,46,62,80],    f:[10,15,24,34,46],  bwRef:{m:75,f:60} },
+};
+
+function getStrengthScore(pr, exName, bw, sex) {
+  const std = STRENGTH_STANDARDS[exName];
+  if(!std || !pr || !bw) return null;
+  const levels = std[sex] || std.m;
+  const bwRef  = std.bwRef[sex] || std.bwRef.m;
+  const scale  = Math.pow(bw / bwRef, 0.67);
+  const s      = levels.map(v => v * scale);
+  if(pr < s[0]) return pr / s[0] * 0.25;
+  for(let i = 0; i < s.length-1; i++) {
+    if(pr <= s[i+1]) return 0.25 + (i + (pr-s[i])/(s[i+1]-s[i])) * 0.4375;
+  }
+  return Math.min(2.0, 1.75 + (pr-s[4])/s[4]*0.25);
+}
+
+// ══════════════════════════════════════════════════════════════
+// ── SISTEMA DE MEDALLES ────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+
+// Nivells Strength Level (escala 0-2): Debutant<0.25 | Principiant<0.625 | Intermedi<1.0 | Avançat<1.375 | Elit
+const MEDAL_LEVELS = [
+  { id:'bronze',  label:'Bronze',   emoji:'🥉', minScore:0.25,  color:'#cd7f32' },
+  { id:'silver',  label:'Silver',    emoji:'🥈', minScore:0.625, color:'#aaaaaa' },
+  { id:'gold',    label:'Gold',       emoji:'🥇', minScore:1.0,   color:'#ffd700' },
+  { id:'platinum',   label:'Platinum',    emoji:'💎', minScore:1.375, color:'#00e5ff' },
+  { id:'elite',    label:'Elite',     emoji:'👑', minScore:1.75,  color:'#bf5af2' },
+];
+
+// Targets fixos per a ejercicis de tiempo i bodyweight
+// Format: [bronze, silver, gold, platinum, elite]
+const MEDAL_FIXED = {
+  // TIEMPO — en segons
+  'Dead Hang':             { type:'time', unit:'s',    targets:[30,  60,  90,  120, 180] },
+  'Plank':              { type:'time', unit:'s',    targets:[30,  60,  90,  120, 180] },
+  'Plank Shoulder Tap':  { type:'time', unit:'s',    targets:[20,  40,  60,  90,  120] },
+  'Battle Ropes':         { type:'time', unit:'s',    targets:[20,  40,  60,  90,  120] },
+  'Mountain Climber':             { type:'time', unit:'s',    targets:[20,  40,  60,  90,  120] },
+  'Jump Rope':          { type:'time', unit:'s',    targets:[30,  60, 120, 180,  300] },
+  'Sled Pull':    { type:'time', unit:'s',    targets:[15,  30,  45,  60,   90] },
+  'Box Jump':            { type:'time', unit:'s',    targets:[15,  30,  45,  60,   90] },
+  'High Knees':            { type:'time', unit:'s',    targets:[20,  40,  60,  90,  120] },
+  'Jump Squat':          { type:'time', unit:'s',    targets:[15,  30,  45,  60,   90] },
+  'Jump Lunge':       { type:'time', unit:'s',    targets:[15,  30,  45,  60,   90] },
+  'Burpee':              { type:'time', unit:'s',    targets:[15,  30,  45,  60,   90] },
+  // BODYWEIGHT — en reps
+  'Pull-Up':            { type:'bodyweight', unit:'r', targets:[3,   6,  10,  15,   20] },
+  'Nordic Curl':          { type:'bodyweight', unit:'r', targets:[2,   4,   6,  10,   15] },
+  'Dips':                 { type:'bodyweight', unit:'r', targets:[5,  10,  15,  20,   30] },
+  'Push-Up':        { type:'bodyweight', unit:'r', targets:[10, 20,  30,  40,   50] },
+};
+
+// Camps de força que NO estan a STRENGTH_STANDARDS → targets relatius al pes corporal
+// [bronze, silver, gold, platinum, elite] as multiple of body weight
+const MEDAL_RELATIVE = {
+  'One-Arm Row':              [0.2, 0.3, 0.4, 0.5,  0.65],
+  'Cable Pullover':         [0.2, 0.3, 0.4, 0.55, 0.7 ],
+  'Sumo Squat':               [0.5, 0.8, 1.1, 1.4,  1.8 ],
+  'Bulgarian Split Squat':             [0.3, 0.5, 0.7, 0.9,  1.15],
+  'Goblet Squat':             [0.3, 0.5, 0.7, 0.9,  1.1 ],
+  'Cable Lateral Raise': [0.06,0.1,0.14,0.18,  0.24],
+  'Cable Tricep Pushdown': [0.15,0.25,0.35,0.45, 0.6 ],
+  'Hammer Curl':[0.12,0.2,0.3, 0.4,   0.5 ],
+  'Russian Twist':        [0.1, 0.2,0.3, 0.4,   0.5 ],
+  'Farmer Walk':   [0.3, 0.5,0.7, 0.9,   1.2 ],
+  'Kettlebell Swing':         [0.2, 0.3,0.45,0.6,   0.75],
+  'Sandbag Press':    [0.2, 0.3,0.45,0.6,   0.75],
+  'Wall Ball':      [0.1, 0.18,0.26,0.34, 0.45],
+  'Standing Calf Raise':    [0.4, 0.7,1.0, 1.3,   1.7 ],
+};
+
+// Calcula la medalla actual d'un exercici. Retorna null si no hi ha dades.
+function getMedalForExercise(ex) {
+  if(!ex) return null;
+  const pr  = getPR(ex.id);
+  if(!pr)   return null;
+
+  const bw  = physData?.weight || 0;
+  const sex = physData?.sex || 'm';
+
+  let levelIdx = -1; // índex dins MEDAL_LEVELS (0=bronze … 4=elit)
+
+  if(MEDAL_FIXED[ex.name]) {
+    const cfg = MEDAL_FIXED[ex.name];
+    const targets = cfg.targets;
+    for(let i = targets.length-1; i >= 0; i--) {
+      if(pr >= targets[i]) { levelIdx = i; break; }
+    }
+  } else if(ex.type === 'strength') {
+    // Primer intenta Strength Level standards
+    const slScore = bw > 0 ? getStrengthScore(pr, ex.name, bw, sex) : null;
+    if(slScore !== null) {
+      for(let i = MEDAL_LEVELS.length-1; i >= 0; i--) {
+        if(slScore >= MEDAL_LEVELS[i].minScore) { levelIdx = i; break; }
+      }
+    } else if(MEDAL_RELATIVE[ex.name] && bw > 0) {
+      // Targets relatius al pes corporal
+      const targets = MEDAL_RELATIVE[ex.name].map(m => Math.round(m * bw));
+      for(let i = targets.length-1; i >= 0; i--) {
+        if(pr >= targets[i]) { levelIdx = i; break; }
+      }
+    }
+  }
+
+  if(levelIdx < 0) return null;
+  return { ...MEDAL_LEVELS[levelIdx], ex, pr };
+}
+
+// Retorna totes les medalles guanyades
+function getAllMedals() {
+  return exercises
+    .map(ex => getMedalForExercise(ex))
+    .filter(Boolean)
+    .sort((a,b) => b.minScore - a.minScore || a.ex.name.localeCompare(b.ex.name));
+}
+
+// Detecta medalles noves comparant amb les guardades
+function checkNewMedals() {
+  const saved = JSON.parse(localStorage.getItem('ub_medals_' + currentUser?.id) || '{}');
+  const current = {};
+  const newOnes = [];
+  exercises.forEach(ex => {
+    const m = getMedalForExercise(ex);
+    if(!m) return;
+    current[ex.id] = m.id;
+    const prev = saved[ex.id];
+    const prevIdx = MEDAL_LEVELS.findIndex(l => l.id === prev);
+    const curIdx  = MEDAL_LEVELS.findIndex(l => l.id === m.id);
+    if(curIdx > prevIdx) newOnes.push(m);
+  });
+  localStorage.setItem('ub_medals_' + currentUser?.id, JSON.stringify(current));
+  return newOnes;
+}
+
+// Renderitza la graella de medalles al perfil
+window.renderMedals = function() {
+  const c = qs('medals-grid'); if(!c) return;
+  const allEx   = exercises;
+  const medals  = getAllMedals();
+  const total   = allEx.length;
+
+  // ── Summary counts ──
+  const counts = {};
+  MEDAL_LEVELS.forEach(l => counts[l.id] = medals.filter(m => m.id === l.id).length);
+
+  // ── All exercises with their medal status (for progress view) ──
+  const allProgress = allEx.map(ex => {
+    const m   = getMedalForExercise(ex);
+    const pr  = getPR(ex.id);
+    const bw  = physData?.weight || 0;
+    const sex = physData?.sex || 'm';
+
+    // Compute all 5 level targets
+    const targets = MEDAL_LEVELS.map((lvl, i) => {
+      if(MEDAL_FIXED[ex.name])          return { val: MEDAL_FIXED[ex.name].targets[i], unit: MEDAL_FIXED[ex.name].unit };
+      if(ex.type === 'strength') {
+        const std = STRENGTH_STANDARDS[ex.name];
+        if(std && bw > 0) {
+          const sc = Math.pow(bw/(std.bwRef[sex]||std.bwRef.m), 0.67);
+          return { val: Math.round((std[sex]||std.m)[i]*sc), unit:'kg' };
+        }
+        if(MEDAL_RELATIVE[ex.name] && bw > 0) return { val: Math.round(MEDAL_RELATIVE[ex.name][i]*bw), unit:'kg' };
+      }
+      return null;
+    });
+
+    const hasMedal   = !!m;
+    const hasTargets = targets.some(t=>t);
+    const curIdx     = m ? MEDAL_LEVELS.findIndex(l=>l.id===m.id) : -1;
+    const nextLvl    = MEDAL_LEVELS[curIdx+1];
+
+    // Progress bar: current score 0-1 towards next level
+    let pct = 0;
+    if(pr && targets[0]) {
+      const maxTarget = targets[4]?.val || targets.findLast(t=>t)?.val || 1;
+      pct = Math.min(pr / maxTarget, 1);
+    }
+
+    return { ex, m, pr, targets, hasMedal, hasTargets, curIdx, nextLvl, pct };
+  }).filter(p => p.hasTargets || p.hasMedal);
+
+  const summaryHtml = medals.length ? `
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+      ${MEDAL_LEVELS.map(l => counts[l.id] ? `
+        <div style="display:flex;align-items:center;gap:4px;background:color-mix(in srgb,${l.color} 12%,transparent);border:1px solid ${l.color}44;border-radius:20px;padding:4px 10px">
+          <span style="font-size:13px">${l.emoji}</span>
+          <span style="font-family:var(--font-mono);font-size:10px;color:${l.color};font-weight:700">${counts[l.id]}</span>
+          <span style="font-family:var(--font-mono);font-size:7px;color:var(--muted);letter-spacing:.5px">${l.label.toUpperCase()}</span>
+        </div>` : '').join('')}
+      <div style="margin-left:auto;font-family:var(--font-mono);font-size:9px;color:var(--muted)">${medals.length}/${total}</div>
+    </div>` : '';
+
+  c.innerHTML = summaryHtml + `
+    <div style="display:flex;flex-direction:column;gap:6px">
+      ${allProgress.map(p => {
+        const { ex, m, pr, targets, curIdx, nextLvl, pct } = p;
+        const prLabel = pr
+          ? (MEDAL_FIXED[ex.name] ? `${pr}${MEDAL_FIXED[ex.name].unit}` : `${pr}kg`)
+          : '—';
+        const nextTarget = targets[curIdx+1] || targets.find(t=>t);
+        const nextLabel  = nextTarget ? `${nextTarget.val}${nextTarget.unit}` : null;
+        const barColor   = m ? m.color : 'var(--border2)';
+        return `<div onclick="window.showMedalDetail('${ex.id}')"
+          style="background:var(--s2);border:1px solid ${m ? m.color+'44':'var(--border)'};border-radius:10px;padding:11px 13px;cursor:pointer;transition:border-color .15s"
+          onmouseenter="this.style.borderColor='${m?.color||'var(--accent)'}'" onmouseleave="this.style.borderColor='${m ? m.color+'44':'var(--border)'}'">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:20px;width:26px;text-align:center;flex-shrink:0;filter:drop-shadow(0 0 5px ${m?.color||'transparent'})">${m?.emoji||'○'}</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+                <div style="font-family:var(--font-display);font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ex.name}</div>
+                <div style="font-family:var(--font-mono);font-size:10px;color:${m?m.color:'var(--muted)'};font-weight:700;flex-shrink:0;margin-left:8px">${prLabel}</div>
+              </div>
+              <div style="height:4px;background:var(--s3);border-radius:2px;overflow:hidden;margin-bottom:4px">
+                <div style="height:100%;background:${m?m.color:'var(--border2)'};border-radius:2px;width:${Math.round(pct*100)}%;transition:width .4s"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px">
+                ${MEDAL_LEVELS.map((lvl,i) => {
+                  const done = curIdx >= i;
+                  return `<div title="${lvl.label}" style="width:14px;height:14px;border-radius:50%;border:1.5px solid ${done?lvl.color:'var(--border2)'};background:${done?lvl.color+'22':'transparent'};display:flex;align-items:center;justify-content:center;font-size:8px">${done?lvl.emoji:''}</div>`;
+                }).join('')}
+                ${nextLabel ? `<div style="margin-left:auto;font-family:var(--font-mono);font-size:7px;color:var(--muted)">NEXT: ${nextLabel}</div>` : `<div style="margin-left:auto;font-family:var(--font-mono);font-size:7px;color:var(--accent)">MAX ✓</div>`}
+              </div>
+            </div>
+            <div style="font-size:10px;color:var(--muted);flex-shrink:0">›</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${!allProgress.length ? `<div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);padding:20px 0;text-align:center;letter-spacing:1px">
+      NO TRACKABLE EXERCISES YET — ADD WEIGHT IN PROFILE TO UNLOCK
+    </div>` : ''}
+  `;
+};
+
+window.showMedalDetail = function(exId) {
+  const ex = exercises.find(e => e.id === exId); if(!ex) return;
+  const pr  = getPR(exId);
+  const bw  = physData?.weight || 0;
+  const sex = physData?.sex || 'm';
+  const mc  = getMedalForExercise(ex);
+  const curIdx = mc ? MEDAL_LEVELS.findIndex(l=>l.id===mc.id) : -1;
+
+  const rows = MEDAL_LEVELS.map((lvl, i) => {
+    let val = null, unit = '';
+    if(MEDAL_FIXED[ex.name]) {
+      val = MEDAL_FIXED[ex.name].targets[i]; unit = MEDAL_FIXED[ex.name].unit;
+    } else if(ex.type === 'strength') {
+      const std = STRENGTH_STANDARDS[ex.name];
+      if(std && bw > 0) {
+        const sc = Math.pow(bw/(std.bwRef[sex]||std.bwRef.m), 0.67);
+        val = Math.round((std[sex]||std.m)[i]*sc); unit = 'kg';
+      } else if(MEDAL_RELATIVE[ex.name] && bw > 0) {
+        val = Math.round(MEDAL_RELATIVE[ex.name][i]*bw); unit = 'kg';
+      }
+    }
+    const achieved = curIdx >= i;
+    const isCurrent = curIdx === i;
+    return { lvl, val, unit, achieved, isCurrent };
+  });
+
+  const prLabel = MEDAL_FIXED[ex.name]
+    ? `${pr}${MEDAL_FIXED[ex.name].unit}`
+    : pr ? `${pr}kg` : 'No PR yet';
+
+  let modal = qs('m-medal-detail');
+  if(!modal) {
+    modal = document.createElement('div');
+    modal.id = 'm-medal-detail';
+    modal.className = 'overlay';
+    modal.innerHTML = `<div class="modal" style="max-height:90vh;overflow-y:auto"><div class="drag-handle"></div><div id="medal-detail-body"></div></div>`;
+    modal.addEventListener('click', e => { if(e.target===modal) modal.classList.remove('on'); });
+    document.body.appendChild(modal);
+  }
+
+  qs('medal-detail-body').innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+      <div style="font-size:42px;line-height:1;filter:drop-shadow(0 0 12px ${mc?.color||'#555'})">${mc?.emoji||'○'}</div>
+      <div>
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:900;letter-spacing:1px;text-transform:uppercase">${ex.name}</div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <span class="tag tag-g">${ex.muscle}</span>
+          <span class="tag tag-g">${ex.type}</span>
+          ${mc ? `<span class="tag" style="background:${mc.color}22;color:${mc.color};border:1px solid ${mc.color}44">${mc.emoji} ${mc.label}</span>` : ''}
+        </div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-top:6px">
+          YOUR PR: <span style="color:var(--accent);font-weight:700">${prLabel}</span>
+          ${!bw?'&nbsp;·&nbsp;<span style="color:var(--accent2)">Add weight in Profile</span>':''}
+        </div>
+      </div>
+    </div>
+
+    <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px">MEDAL TARGETS</div>
+    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:18px">
+      ${rows.map(r => `
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:9px;
+          background:${r.isCurrent ? r.lvl.color+'22' : r.achieved ? r.lvl.color+'12' : 'var(--s2)'};
+          border:${r.isCurrent ? `2px solid ${r.lvl.color}` : `1px solid ${r.achieved ? r.lvl.color+'33':'var(--border)'}`}">
+          <span style="font-size:20px;flex-shrink:0">${r.achieved ? r.lvl.emoji : '○'}</span>
+          <div style="flex:1">
+            <div style="font-family:var(--font-mono);font-size:9px;font-weight:700;
+              color:${r.achieved ? r.lvl.color : 'var(--muted)'};letter-spacing:1px">${r.lvl.label.toUpperCase()}${r.isCurrent?' ← CURRENT':''}</div>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:14px;font-weight:700;
+            color:${r.achieved ? r.lvl.color : 'var(--muted2)'}">
+            ${r.val !== null ? `${r.val}${r.unit}` : (bw ? '—' : 'Set weight')}
+          </div>
+          ${r.achieved ? `<div style="width:8px;height:8px;border-radius:50%;background:${r.lvl.color};flex-shrink:0"></div>`
+                       : `<div style="width:8px;height:8px;flex-shrink:0"></div>`}
+        </div>`).join('')}
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-g" style="flex:1" onclick="qs('m-medal-detail').classList.remove('on')">← BACK</button>
+      <button class="btn btn-g" style="flex:1" onclick="qs('m-medal-detail').classList.remove('on');openExDetail('${ex.id}')">📊 STATS</button>
+    </div>
+  `;
+  modal.classList.add('on');
+};
+
+function checkAndShowNewMedals() {
+  if(!currentUser) return;
+  const newOnes = checkNewMedals();
+  if(!newOnes.length) return;
+  const names = newOnes.map(m => `${m.emoji} ${m.label} — ${m.ex.name}`).join('\n');
+  setTimeout(() => {
+    if(confirm(`🎉 New medal earned!\n\n${names}\n\nView all medals?`)) {
+      nav('perfil');
+    }
+  }, 800);
+}
+
+
+
+// ── BASE DE DADES D'EXERCICIS: GIFs + Consells tècnics ──────
+const EXERCISE_DB = {
+  'Pull-Up': {
+    gif: 'https://wger.de/static/images/exercises/main/pull-up.gif',
+    cues: ['Agafa la barra una mica més ampla que les espatlles', 'Penja completament a baix (dead hang)', 'Tira els colzes cap al terra, no cap enrere', 'Puja fins que el mentó passi la barra', 'Baixa controlat — no et deixis caure'],
+    errors: ['No fer el rang complet de moviment', 'Balancejar el cos per ajudar-se', 'No activar els escàpules a l\'inici'],
+  },
+  'Weighted Pull-Up': {
+    gif: 'https://wger.de/static/images/exercises/main/pull-up.gif',
+    cues: ['Mateixa tècnica que les dominades normals', 'Fixa el pes amb un cinturó o entre les cames', 'Progressió lenta: +2.5kg quan fas 3×5 net', 'Prioritza tècnica perfecta sobre càrrega'],
+    errors: ['Afegir pes massa aviat', 'Perdre el rang de moviment complet', 'Balanceig excessiu'],
+  },
+  'Seated Cable Row': {
+    gif: 'https://wger.de/static/images/exercises/main/seated-cable-rows.gif',
+    cues: ['Pit enganxat al suport, esquena recta', 'Tira fins que els colzes passin el tronc', 'Apreta els escàpules al final del moviment', 'Torna controlat — no et deixis anar'],
+    errors: ['Arquear l\'esquena per agafar més pes', 'No completar el recorregut posterior', 'Usar el cos per fer palanca'],
+  },
+  'One-Arm Row': {
+    gif: 'https://wger.de/static/images/exercises/main/one-arm-row.gif',
+    cues: ['Recolza el genoll i la mà lliure al banc', 'Esquena paral·lela al terra', 'Tira el colze cap amunt i cap enrere, no cap al costat', 'Gira lleugerament el tronc a dalt (rotació natural)', 'Full stretch a baix — estira bé'],
+    errors: ['Rotar massa el tronc (es converteix en esquena, no braç)', 'No baixar del tot la mancuerna', 'Tirar amb la mà en lloc del colze'],
+  },
+  'Renegade Row': {
+    gif: 'https://wger.de/static/images/exercises/main/renegade-row.gif',
+    cues: ['Posició de flexió, mans sobre mancuernes', 'Peu a l\'amplada de malucs o més (més estabilitat)', 'Cos completament rígid — no rotar els malucs', 'Tira una mancuerna sense moure la resta del cos', 'Alterna costat a costat'],
+    errors: ['Rotar els malucs (trampeta)', 'No mantenir el core tensat', 'Malucs amunt o avall'],
+  },
+  'Inverted Row': {
+    gif: 'https://wger.de/static/images/exercises/main/inverted-row.gif',
+    cues: ['Cos recte com una taula, de cap a peus', 'Tira el pit cap a la barra', 'Colzes cap enrere, no cap als costats', 'Com més horitzontal, més difícil', 'Premi els peus a terra per estabilitat'],
+    errors: ['Doblegar els malucs (fa trampa)', 'No arribar fins amunt', 'Colzes sortint massa als costats'],
+  },
+  'Cable Pullover': {
+    gif: 'https://wger.de/static/images/exercises/main/cable-pullover.gif',
+    cues: ['Agafar la corda o barra per sobre del cap', 'Braços lleugerament doblegats (no rigids)', 'Porta els braços cap avall mantenint l\'arc', 'Nota l\'estirament al pit i l\'back', 'Torna suaument — el camí de baixada és igual d\'important'],
+    errors: ['Doblegar massa els colzes (es converteix en rem)', 'Moure el tronc en lloc dels braços', 'Fer el moviment massa ràpid'],
+  },
+  'Barbell Curl': {
+    gif: 'https://wger.de/static/images/exercises/main/barbell-curl.gif',
+    cues: ['Colzes fixos als costats del tronc', 'Puja fins a la màxima contracció', 'Baixa controlat comptant 3 segons', 'No balancejar — zero trampa', 'Supina el canell al final (per a bícep llarg)'],
+    errors: ['Balancejar el cos per ajudar a pujar', 'Colzes que es mouen cap endavant', 'No baixar del tot (rang parcial)'],
+  },
+  'Hammer Curl': {
+    gif: 'https://wger.de/static/images/exercises/main/hammer-curl.gif',
+    cues: ['Polze cap amunt durant tot el moviment', 'Treballa braquial i braquioradial (avantbraç)', 'Alterna braços o fes-los junts', 'No rotar el canell a dalt'],
+    errors: ['Rotar a posició supina (es torna curl normal)', 'Balancejar', 'Colzes que avancen'],
+  },
+  'Concentration Curl': {
+    gif: 'https://wger.de/static/images/exercises/main/concentration-curl.gif',
+    cues: ['Colze recolzat a l\'interior del cuixa, assegut', 'Puja lentament fins al final', 'Aguanta 1 segon a dalt', 'Baixa molt controlat (excèntric 3s)'],
+    errors: ['Moure el colze del cuixa', 'Usar el tronc per ajudar', 'Fer-ho massa ràpid'],
+  },
+  'Barbell Squat': {
+    gif: 'https://wger.de/static/images/exercises/main/squats.gif',
+    cues: ['Peus a l\'amplada de malucs, puntes lleugerament obertes', 'Pit alt, lumbar en neutre durant tot el moviment', 'Genolls seguint la direcció dels dits del peu', 'Baixa fins que els cuixes estiguin paral·lels o més avall', 'Impulsa des dels talons pujant'],
+    errors: ['Genolls cap a dins (valgus)', 'Talons que s\'alcen', 'Esquena que s\'arrodoneix a baix (butt wink excessiu)', 'No arribar a la profunditat paral·lela'],
+  },
+  'Deadlift': {
+    gif: 'https://wger.de/static/images/exercises/main/deadlift.gif',
+    cues: ['Barra sobre l\'empeine, molt a prop de les cames', 'Malucs a l\'alçada entre espatlles i genolls', 'Escàpules endarrere i avall abans de tirar', 'Impulsa terra cap avall, no tira la barra cap amunt', 'Tanca els malucs en vertical'],
+    errors: ['Esquena arrodonida (risc lumbar alt)', 'Barra separada del cos (moment de força)', 'Malucs que pugen primer (es torna un good morning)', 'Bloquejar els genolls massa aviat'],
+  },
+  'Romanian Deadlift': {
+    gif: 'https://wger.de/static/images/exercises/main/romanian-deadlift.gif',
+    cues: ['Genolls lleugerament doblegats, rígids', 'Empeny els malucs cap enrere mentre baixes', 'Barra molt a prop de les cames tot el camí', 'Para quan notes l\'estirament als isquiotibials', 'Lumbar sempre en neutre'],
+    errors: ['Doblegar massa els genolls (es torna squat)', 'Arrodonir l\'esquena per arribar més avall', 'Barra que s\'allunya del cos'],
+  },
+  'Bulgarian Split Squat': {
+    gif: 'https://wger.de/static/images/exercises/main/bulgarian-split-squat.gif',
+    cues: ['Peu del darrere al banc, genoll baix apuntant al terra', 'Peu davanter prou endavant per no inclinar massa el tronc', 'Baixa el genoll del darrere cap al terra (sense tocar)', 'Mantén el pes al peu davanter, no al del darrere'],
+    errors: ['Peu davanter massa a prop (tronc cau cap endavant)', 'Genoll davanter que entra cap a dins', 'Recolzar-se massa al peu del darrere'],
+  },
+  'Sumo Squat': {
+    gif: 'https://wger.de/static/images/exercises/main/sumo-squat.gif',
+    cues: ['Peus molt oberts, puntes apuntant als costats (45-60°)', 'Genolls seguint exactament la direcció de les puntes', 'Pit alt, lumbar en neutre', 'Baixa fins al fons — rang màxim'],
+    errors: ['Genolls cap a dins (molt comú en sumo)', 'Talons que s\'aixequen', 'Inclinar massa el tronc cap endavant'],
+  },
+  'Goblet Squat': {
+    gif: 'https://wger.de/static/images/exercises/main/goblet-squat.gif',
+    cues: ['Agafa la mancuerna o kettlebell al pit, colzes avall', 'Peus a l\'amplada de malucs o lleugerament obertes', 'Contra-pes davant ajuda a arribar més fondo', 'Colzes dins dels genolls a baix per obrir-los'],
+    errors: ['Deixar caure la mancuerna cap endavant (perd l\'equilibri)', 'No aprofitar la profunditat que permet', 'Lumbar arrodonida a baix'],
+  },
+  'Dumbbell Lunge': {
+    gif: 'https://wger.de/static/images/exercises/main/dumbbell-lunges.gif',
+    cues: ['Pas llarg endavant, genoll del darrere quasi al terra', 'Tronc vertical, no inclinat endavant', 'Genoll davanter no passa el peu', 'Torna al punt de partida empenyent amb el taló'],
+    errors: ['Pas massa curt (genoll davanter passa el peu)', 'Tronc inclinat cap endavant', 'Perdre l\'equilibri lateral'],
+  },
+  'Pistol Squat': {
+    gif: 'https://wger.de/static/images/exercises/main/pistol-squat.gif',
+    cues: ['Comença amb progressió: a una caixa o amb TRX', 'Una cama estirada davant durant tot el moviment', 'Baixa molt lentament controlant el descens', 'Taló plantat a terra tot el temps', 'Braços davant per contra-pes'],
+    errors: ['Caure cap enrere (manca de força o mobilitat)', 'Taló que s\'aixeca', 'Genoll que entra cap a dins'],
+  },
+  'Dumbbell Step-Up': {
+    gif: 'https://wger.de/static/images/exercises/main/step-up.gif',
+    cues: ['Puja empenyent amb el taló del peu que ja és al graó', 'No t\'impulsis amb el peu del terra', 'Porta el genoll del darrere cap amunt a dalt', 'Baixa controlat, no te caiguis'],
+    errors: ['Impulsar-se amb el peu baix (trampa)', 'Caixa massa alta per la mobilitat actual', 'Baixar massa ràpid'],
+  },
+  'Nordic Curl': {
+    gif: 'https://wger.de/static/images/exercises/main/nordic-hamstring-curl.gif',
+    cues: ['Genolls ancorats al terra, turmells subjectats', 'Cau cap endavant MOLT lentament (4-6 seg)', 'Fes servir les mans per aterrar i torna ajudant-te', 'Progressió: comença fent la meitat del rang'],
+    errors: ['Caure massa ràpid (perd el benefici excèntric)', 'Malucs doblegats (trampa)', 'Turmells no ben ancorats'],
+  },
+  'Paused Squat': {
+    gif: 'https://wger.de/static/images/exercises/main/squats.gif',
+    cues: ['Igual que la sentadilla normal però para 2-3 seg a baix', 'Aguanta la tensió — no relaxis res a baix', 'Lumbar en neutre durant la pausa', 'Esclata cap amunt des de la pausa sense rebut'],
+    errors: ['Relaxar la tensió durant la pausa (es perd el benefici)', 'Rebut per sortir (fa trampa)', 'Lumbar que s\'arrodoneix a baix'],
+  },
+  'Tempo Squat': {
+    gif: 'https://wger.de/static/images/exercises/main/squats.gif',
+    cues: ['3-4 seg baixant · 1 seg pausa · 1 seg pujant', 'Usa menys pes del normal — el tempo fa que pesi molt més', 'Control total en cada fase', 'Ideal per millorar la tècnica i la força funcional'],
+    errors: ['Accelerar durant el descens', 'No respectar el temps de pausa', 'Perdre la tècnica per la fatiga acumulada'],
+  },
+  'Cossack Squat': {
+    gif: 'https://wger.de/static/images/exercises/main/cossack-squat.gif',
+    cues: ['Peus molt oberts (1.5x amplada espatlles)', 'Baixa cap a un costat mentre l\'altre cama queda estirada', 'Taló de la cama que baixa plantat al terra', 'Pit alt durant tot el moviment'],
+    errors: ['Taló que s\'aixeca', 'Tronc inclinat cap endavant', 'No arribar a la profunditat completa'],
+  },
+  'Machine Hip Thrust': {
+    gif: 'https://wger.de/static/images/exercises/main/hip-thrust.gif',
+    cues: ['Esquena recolzada al seient, peu pla al terra', 'Impulsa els malucs cap amunt fins a extensió completa', 'Apreta el gluti fort a dalt — aguanta 1 segon', 'No hiperextendeixis la lumbar a dalt'],
+    errors: ['Malucs no arriben a l\'extensió completa', 'Arquear la lumbar en lloc d\'activar el gluti', 'Baixar massa ràpid'],
+  },
+  'Barbell Hip Thrust': {
+    gif: 'https://wger.de/static/images/exercises/main/hip-thrust.gif',
+    cues: ['Escàpules recolzades a un banc, barra sobre els malucs (amb coixí!)', 'Peus separats a l\'amplada de malucs, genolls a 90° a dalt', 'Impulsa tallons — no puntes — cap al terra', 'Mentó tancat (no miris cap amunt), mantén columna neutre'],
+    errors: ['Without coixí — la barra fa mal i treu concentració', 'Peus massa a prop dels glutis (quadriceps dominen)', 'Hiperextensió lumbar a dalt'],
+  },
+  'Donkey Kick': {
+    gif: 'https://wger.de/static/images/exercises/main/donkey-kick.gif',
+    cues: ['Quadrupèdia: mans sota espatlles, genolls sota malucs', 'Puja el genoll doblat cap al sostre (no cap enrere)', 'No rotar els malucs — malucs paral·lels al terra', 'Apreta el gluti al punt més alt'],
+    errors: ['Rotar els malucs per pujar més amunt', 'Moure la lumbar en lloc del maluc', 'Perdre el core tensat'],
+  },
+  'Standing Calf Raise': {
+    gif: 'https://wger.de/static/images/exercises/main/standing-calf-raise.gif',
+    cues: ['Punt de suport a la meitat del peu, taló suspès a baix', 'Baixa fins al màxim estirament', 'Puja fins a les puntes amb pausa 1-2 seg', 'Fes-ho lent: bessons responen al temps sota tensió'],
+    errors: ['No arribar al rang complet (ni amunt ni avall)', 'Fer-ho massa ràpid (rebotant)', 'Doblegar genolls (es torna gluti, no bessons)'],
+  },
+  'Dumbbell Shoulder Press': {
+    gif: 'https://wger.de/static/images/exercises/main/dumbbell-shoulder-press.gif',
+    cues: ['Punt de partida a l\'alçada de les orelles, colzes a 90°', 'Puja recte cap amunt sense arquear la lumbar', 'No bloquejar completament els colzes a dalt', 'Omòplats estabilitzats durant tot el moviment'],
+    errors: ['Arquear excessivament la lumbar (lumbar sota pressió)', 'Inclinar el tronc cap enrere per ajudar (és press inclinat, no militar)', 'Baixar massa poc (rang parcial)'],
+  },
+  'Barbell Overhead Press': {
+    gif: 'https://wger.de/static/images/exercises/main/barbell-shoulder-press.gif',
+    cues: ['Barra a l\'alçada de la clavícula davant', 'Puja la barra en vertical — cap lleugerament enrere per deixar passar', 'Core i gluti tensats per protegir la lumbar', 'Baixa fins al mentó o clavícula — rang complet'],
+    errors: ['Press davant vs. press darrere (evita el darrere — risc d\'espatlles)', 'No activar el core (pressió lumbar)', 'Barra massa davant (pèrdua d\'eficiència)'],
+  },
+  'Arnold Press': {
+    gif: 'https://wger.de/static/images/exercises/main/arnold-press.gif',
+    cues: ['Comença amb palmell cap a tu, colzes al davant', 'Obre i gira mentre puges (pronació progressiva)', 'La rotació activa les tres porció del deltoide', 'Fa-ho lent per aprofitar el rang de moviment'],
+    errors: ['Fer-ho massa ràpid (es perd el benefici de la rotació)', 'No arribar a la posició inicial correcta', 'Arquear la lumbar'],
+  },
+  'Cable Lateral Raise': {
+    gif: 'https://wger.de/static/images/exercises/main/lateral-raise.gif',
+    cues: ['Cables a l\'alçada dels malucs, un a cada banda o un darrere l\'altre', 'Puja els braços fins a l\'alçada de les espatlles', 'Lleuger inclinació cap endavant activa millor el deltoide mig', 'Costat polze lleugerament cap avall a dalt (com abocar un got)'],
+    errors: ['Pujar per sobre de les espatlles (trapezes dominen)', 'Colzes doblegats (perd l\'activació del deltoide)', 'Usar el tronc per impulsar-se (trapezi prén el protagonisme)'],
+  },
+  'Face Pull': {
+    gif: 'https://wger.de/static/images/exercises/main/face-pull.gif',
+    cues: ['Cable a l\'alçada del cap o lleugerament per sobre', 'Tira cap a la cara separant les mans al final', 'Colzes amunt — com un "double bicep" pose', 'Millor exercici per a la salut de les espatlles — fes-lo sovint'],
+    errors: ['Colzes cap avall (es torna un rem, no espatlles posteriors)', 'No separar les mans al final', 'Pes massa alt — perd la tècnica'],
+  },
+  'Bench Press': {
+    gif: 'https://wger.de/static/images/exercises/main/bench-press.gif',
+    cues: ['Agafada lleugerament més ampla que les espatlles', 'Escàpules retirades i enfonsades al banc', 'Bajada a la part baixa del pit (no al coll)', 'Impuls en arc: baix i endavant alhora', 'Peus plans al terra, lleuger arc lumbar natural'],
+    errors: ['Escàpules no estabilitzades (risc d\'espatlles)', 'Tocar massa amunt (pit alt → risc deltoides)', 'Canells doblats (risc de canell)', 'Aixecar els talons'],
+  },
+  'Incline Bench Press': {
+    gif: 'https://wger.de/static/images/exercises/main/incline-bench-press.gif',
+    cues: ['Banc a 30-45° — més inclinació = més espatlles, menys pit', 'Mateixa tècnica que el press pla però baixa a la clavícula', 'Activa millor la porció clavicular del pit (part alta)'],
+    errors: ['Inclinació massa alta (45°+) — es torna press militar', 'No estabilitzar les escàpules', 'Canells doblats'],
+  },
+  'Dips': {
+    gif: 'https://wger.de/static/images/exercises/main/dips.gif',
+    cues: ['Per pit: inclina el tronc cap endavant, colzes oberts', 'Per tríceps: tronc vertical, colzes tancats', 'Baixa fins que els braços estiguin paral·lels al terra o més', 'Puja sense bloquejar completament els colzes'],
+    errors: ['Rang de moviment insuficient (no baixar prou)', 'Balanceig del cos', 'Espatlles que pugen cap a les orelles (trapezes actius)'],
+  },
+  'Push-Up': {
+    gif: 'https://wger.de/static/images/exercises/main/push-ups.gif',
+    cues: ['Mans lleugerament més amples que les espatlles', 'Cos recte — core i gluti tensats', 'Baixa fins que el pit quasi toqui el terra', 'A dalt: empeny i llança les escàpules endavant ("plus" = protracció escàpular)'],
+    errors: ['Malucs que pugen o baixen (asserró)', 'Cap que cau endavant', 'No fer la protracció final (perd l\'activació del serratus)'],
+  },
+  'Diamond Push-Up': {
+    gif: 'https://wger.de/static/images/exercises/main/diamond-push-ups.gif',
+    cues: ['Mans juntes formant un triangle (polzes i índexs)', 'Colzes que baixen quasi paral·lels al tronc', 'Exercici molt difícil — comença amb els genolls si cal', 'Màxima activació de trícep i pit intern'],
+    errors: ['Mans massa obertes (perd l\'activació de trícep)', 'Malucs que cauen', 'Colzes que s\'obren excessivament'],
+  },
+  'Archer Push-Up': {
+    gif: 'https://wger.de/static/images/exercises/main/push-ups.gif',
+    cues: ['Mans molt obertes (3x amplada espatlles)', 'Baixa cap a un costat mentre l\'altre braç queda quasi estès', 'Alterna esquerra-dreta o fes un costat sencer', 'Transició cap al one-arm push-up'],
+    errors: ['Rotar els malucs durant el moviment', 'Braç de suport que doblega massa (perd la tensió)'],
+  },
+  'Cable Tricep Pushdown': {
+    gif: 'https://wger.de/static/images/exercises/main/cable-tricep-pushdown.gif',
+    cues: ['Colzes fixos als costats, no es mouen mai', 'Estén fins al final — bloqueja 1 segon', 'Usa la corda per separar les mans al final (més rang)', 'Lleuger inclinació cap endavant per aïllar millor'],
+    errors: ['Colzes que es mouen cap endavant (es torna rem)', 'Pes massa alt — sacrifica el rang', 'No arribar a l\'extensió completa'],
+  },
+  'Skull Crusher': {
+    gif: 'https://wger.de/static/images/exercises/main/skull-crusher.gif',
+    cues: ['Ajagut, barra Z o mancuernes, baixa cap al front (no al front)', 'Colzes fixos apuntant al sostre durant tot el moviment', 'Baixa fins quasi al front, puja estenent completament', 'Exercici molt eficaç per al cap llarg del trícep'],
+    errors: ['Colzes que s\'obren cap als costats', 'No arribar al rang complet', 'Pes excessiu que força la postura'],
+  },
+  'Tricep Kickback': {
+    gif: 'https://wger.de/static/images/exercises/main/tricep-kickback.gif',
+    cues: ['Tronc paral·lel al terra, recolzat al banc', 'Colze a 90° a l\'inici, estén cap enrere fins al final', 'Mantén l\'estensió 1 seg apretant el trícep', 'Exercici d\'aïllament — usa pes moderat'],
+    errors: ['Tronc no prou inclinat (braç no pot fer el rang complet)', 'Colze que baixa durant el moviment', 'Girar el canell'],
+  },
+  'Dead Hang': {
+    gif: 'https://wger.de/static/images/exercises/main/pull-up.gif',
+    cues: ['Agafa la barra, penja i activa el core', 'Escàpules endarrere i avall (dead hang actiu)', 'Respira amb el diafragma, no aguantis la respiració', 'Progressió: 30s → 60s → 90s → 2min'],
+    errors: ['Esquena arrodonida (perd la activació)', 'Aguantar la respiració', 'Deixar les espatlles plenament relaxades (passiu, risc d\'espatlles)'],
+  },
+  'Plank': {
+    gif: 'https://wger.de/static/images/exercises/main/plank.gif',
+    cues: ['Avantbraços al terra, colzes sota les espatlles', 'Cos recte de cap a peus — taula perfecta', 'Apreta els gluti, core, quads alhora', 'Respira constantment — no aguantis la respiració'],
+    errors: ['Malucs que pugen (tipiç)', 'Malucs que cauen (lumbar sota pressió)', 'Cap mirant amunt (cervical en tensió)'],
+  },
+  'Side Plank': {
+    gif: 'https://wger.de/static/images/exercises/main/side-plank.gif',
+    cues: ['Un avantbraç, cos lateral completament recte', 'Maluc cap amunt — no el deixis caure', 'Braç lliure amunt o a la cintura', 'Progressió: genolls → peus complets → amb elevació de cama'],
+    errors: ['Maluc que cau avall (falta de força obliqua)', 'Rotació del cos cap endavant', 'Coll en tensió'],
+  },
+  'Mountain Climber': {
+    gif: 'https://wger.de/static/images/exercises/main/mountain-climber.gif',
+    cues: ['Posició de flexió, mans sota espatlles', 'Porta un genoll al pit alternant ràpidament', 'Malucs baixos i estables — no pugen ni baixen', 'Pot ser lent (core) o ràpid (cardio)'],
+    errors: ['Malucs que pugen cada cop que mous les cames', 'Mans massa endavant (pèrdua d\'estabilitat)', 'Aturar la respiració'],
+  },
+  'Toes-to-Bar': {
+    gif: 'https://wger.de/static/images/exercises/main/toes-to-bar.gif',
+    cues: ['Penja de la barra en dead hang actiu', 'Usa el balanceig de malucs per crear impuls controlat', 'Porta els peus fins a la barra (o els genolls si és difícil)', 'Torna controlat — no et deixis balancejar en excés'],
+    errors: ['Balanceig excessiu (s\'usen les espatles, no el core)', 'No arribar a tocar la barra (fa knees to chest)', 'Retornar massa ràpid sense control'],
+  },
+  'Dragon Flag': {
+    gif: 'https://wger.de/static/images/exercises/main/dragon-flag.gif',
+    cues: ['Ajagut al banc, agafa\'l darrere del cap', 'Aixeca el cos recte com una taula fins a la vertical', 'Baixa molt lentament mantenint el cos recte', 'Exercici avançat — progressa des de planxa inclinada'],
+    errors: ['Doblegar els malucs (es perd tot el benefici)', 'Baixar massa ràpid', 'No mantenir el cos rígid tot el temps'],
+  },
+  'Hollow Body Hold': {
+    gif: 'https://wger.de/static/images/exercises/main/hollow-body.gif',
+    cues: ['Ajagut, lumbar enganxada al terra (no arxiu)', 'Braços estirats darrere el cap, cames elevades', 'Comprimir les costelles cap avall', 'Base gimnàstica de molts moviments avançats'],
+    errors: ['Lumbar que s\'arqueja i deixa d\'estar en contacte amb el terra', 'Cames massa altes (fàcil) — baixa-les per fer-ho difícil', 'Aguantar la respiració'],
+  },
+  'L-Sit': {
+    gif: 'https://wger.de/static/images/exercises/main/l-sit.gif',
+    cues: ['En paral·les o terra amb suports: comprimeix les costelles', 'Cames horitzontals, paral·leles al terra', 'Empeny cap avall activa el trícep i el core alhora', 'Progressió: un genoll doblegat → dos → cames esteses'],
+    errors: ['Malucs que s\'alcen en lloc de comprimir-se cap avall', 'No activar les escàpules', 'Cames que cauen per sota de la horitzontal'],
+  },
+  'Ab Wheel Rollout': {
+    gif: 'https://wger.de/static/images/exercises/main/ab-wheel-rollout.gif',
+    cues: ['Comença des dels genolls (progressió)', 'Lumbar en neutre — evita l\'extensió excessiva', 'Estén tot el que puguis sense que la lumbar s\'arquegi', 'Torna activant el core, no tirant amb els braços'],
+    errors: ['Lumbar que s\'arqueja (risc lumbar molt alt)', 'Tornar massa ràpid', 'No arribar a l\'extensió completa quan ja hi ha prou força'],
+  },
+  'V-Up': {
+    gif: 'https://wger.de/static/images/exercises/main/v-ups.gif',
+    cues: ['Des d\'ajagut: puja braços i cames alhora cap al centre', 'Toca els peus amb les mans al pic del moviment', 'Baixa controlat — no te relaxis a baix'],
+    errors: ['Fer servir el moment (rebota)', 'No arribar a tocar els peus', 'Coll en tensió (intenta no usar el coll per pujar)'],
+  },
+  'Russian Twist': {
+    gif: 'https://wger.de/static/images/exercises/main/russian-twist.gif',
+    cues: ['Assegut, malucs a 45° del terra, peus aixecats', 'Gira el tronc d\'un costat a l\'altre (no sols els braços)', 'Amb pes o disc afegit per progressar'],
+    errors: ['Rotar sols els braços (no els oblics)', 'Cames que toquen el terra', 'Moviment massa ràpid sense control'],
+  },
+  'Plank Shoulder Tap': {
+    gif: 'https://wger.de/static/images/exercises/main/plank.gif',
+    cues: ['Posició de flexió (braços estirats, no avantbraços)', 'Toca l\'espatlla contrària alternant', 'Clau: minimitzar la rotació dels malucs', 'Peus més oberts = més fàcil'],
+    errors: ['Malucs que roten cada cop (es perd l\'estabilitat anti-rotació)', 'Massa ràpid — sense control de malucs', 'Malucs amunt o avall'],
+  },
+  'Burpee': {
+    gif: 'https://wger.de/static/images/exercises/main/burpees.gif',
+    cues: ['Baixa amb control, no et llences al terra', 'Salta les mans cap endavant a la posició de flexió', 'Flexió completa (opcional si és HIIT)', 'Salta verticalment amb els braços amunt'],
+    errors: ['Aterratge amb els genolls en valg', 'Ometre la flexió (fa trampa en el compte)', 'Columna arrodonida en la posició baixa'],
+  },
+  'Burpee Box Jump': {
+    gif: 'https://wger.de/static/images/exercises/main/burpees.gif',
+    cues: ['Burpee complet + salta a la caixa en lloc de saltar vertical', 'Aterratge tou a la caixa (genolls lleugerament doblegats)', 'Baixa de la caixa retrocedint (no saltant)', 'Ritme consistent — és millor lent i net que ràpid i brut'],
+    errors: ['Aterratge dur a la caixa (risc genolls)', 'Saltar de la caixa cap avall (risc turmells)', 'Deixar de fer la flexió per anar més ràpid'],
+  },
+  'Battle Ropes': {
+    gif: 'https://wger.de/static/images/exercises/main/battle-ropes.gif',
+    cues: ['Genolls lleugerament doblegats, malucs darrere', 'Alterna els braços creant ones contínues', 'Manté la tensió de la corda tot el temps', 'Varia: ones, cercles, salts simultanis, slams'],
+    errors: ['Estar completament recte (perd potència)', 'Deixar la corda tornar a la posició sense control', 'Córrer el braç en lloc d\'ondular'],
+  },
+  'Kettlebell Swing': {
+    gif: 'https://wger.de/static/images/exercises/main/kettlebell-swing.gif',
+    cues: ['Moviment de malucs (hip hinge), no de squats', 'La KB va entre les cames cap enrere, empeny els malucs endavant', 'Gluti apreta fort quan la KB arriba a la horitzontal', 'Braços passius — el poder ve dels malucs'],
+    errors: ['Fer-ho com un squat (genolls doblats, cames que pugen)', 'Tirar la KB amb els braços', 'Esquena arrodonida quan la KB va enrere'],
+  },
+  'Kettlebell Clean': {
+    gif: 'https://wger.de/static/images/exercises/main/kettlebell-clean.gif',
+    cues: ['Comença com un swing, però porta la KB al muscle en "rack position"', 'La KB descansa al avantbraç, no al poig', 'Colze pegat al cos en rack', 'Moviment fluït: terra → rack en un sol moviment explosiu'],
+    errors: ['Colpejar-se l\'avantbraç (KB mal guiada)', 'No arribar a la posició de rack correcta', 'Usar el braç en lloc de la potència dels malucs'],
+  },
+  'Kettlebell Snatch': {
+    gif: 'https://wger.de/static/images/exercises/main/kettlebell-snatch.gif',
+    cues: ['Swing + clean + press en un sol moviment fluït', 'La KB passa per damunt del poig (no el colpeja) a dalt', 'A dalt: braç completament estès, KB sobre el cap', 'Exercici tècnic — aprèn clean i swing primer'],
+    errors: ['Colpejar-se el canell a dalt (el més comú)', 'Braç doblat a dalt', 'Usar el braç en lloc de la potència de cames'],
+  },
+  'Turkish Get-Up': {
+    gif: 'https://wger.de/static/images/exercises/main/turkish-get-up.gif',
+    cues: ['7 passos: des d\'ajagut fins dret amb la KB sempre sobre el cap', 'Ull sempre a la KB durant tot el moviment', 'Lentament — és un exercici de qualitat, no velocitat', 'Molt complet: mobilitat, estabilitat, força'],
+    errors: ['Perdre l\'ull de la KB', 'Precipitar-se en algun dels 7 passos', 'Pes excessiu per la tècnica actual'],
+  },
+  'Dumbbell Thruster': {
+    gif: 'https://wger.de/static/images/exercises/main/thruster.gif',
+    cues: ['Squat + press dalt en un moviment continu', 'Usa l\'impuls de les cames per ajudar al press', 'Mancuernes als muscles a l\'inici', 'L\'eficiència ve de la fluïdesa entre les dues parts'],
+    errors: ['Aturar-se entre el squat i el press (perd l\'eficiència)', 'No arribar a la profunditat del squat', 'Press sols amb braços (no usa les cames)'],
+  },
+  'Barbell Thruster': {
+    gif: 'https://wger.de/static/images/exercises/main/thruster.gif',
+    cues: ['Barra al front rack (davant dels muscles)', 'Squat profund + explota cap amunt + press sobre el cap', 'L\'exercici que "odia tothom" en CrossFit — per una raó', 'Usa pes on puguis mantenir la tècnica durant moltes reps'],
+    errors: ['Front rack incorrecte (canells doblats sota la barra)', 'Barra que cau cap endavant durant el squat', 'No completar el press (cames i braços no sincronitzats)'],
+  },
+  'Devil Press': {
+    gif: 'https://wger.de/static/images/exercises/main/devil-press.gif',
+    cues: ['Burpee amb mancuernes a les mans + snatch (o swing) cap amunt', 'A baix: flexió amb les mancuernes al terra', 'De llevat: swing agressiu cap amunt fins sobre el cap', 'Un dels exercises més brutals del CrossFit'],
+    errors: ['No completar la flexió a baix', 'No estendre completament els braços a dalt', 'Usar els braços en lloc de les cames per portar les mancuernes amunt'],
+  },
+  'Slam Ball': {
+    gif: 'https://wger.de/static/images/exercises/main/slam-ball.gif',
+    cues: ['Agafa la pilota sobre el cap amb braços estirats', 'Slam cap avall usant tot el cos (extensió-flexió)', 'Recull la pilota sense doblegar la lumbar', 'Descarrega agressivitat — és terapèutic 😅'],
+    errors: ['Colpejar amb els braços sols (perd potència)', 'Lumbar arrodonida en agafar la pilota del terra', 'Pilota que rebota cap a la cara (usa slam ball, no medicine ball)'],
+  },
+  'Farmer Walk': {
+    gif: 'https://wger.de/static/images/exercises/main/farmer-walk.gif',
+    cues: ['Agafada ferma, espatlles endarrere i avall', 'Passos curts i controlats', 'Core tensat per estabilitzar la columna', 'Unilateral (un costat) = més core anti-lateral'],
+    errors: ['Espatlles que es relaxen i cauen', 'Passos massa llargs (perd estabilitat)', 'Inclinació lateral del tronc (suitcase carry)'],
+  },
+  'Suitcase Carry': {
+    gif: 'https://wger.de/static/images/exercises/main/farmer-walk.gif',
+    cues: ['Un sol costat (com portar una maleta)', 'Resisteix la inclinació lateral — mantén el tronc vertical', 'Excel·lent per a la força anti-lateral del core', 'Canvia de mà cada 20-30m'],
+    errors: ['Inclinar el tronc cap al costat del pes (trampa)', 'No activar el core contralateral', 'Pes massa baix (no rep l\'estímul anti-lateral)'],
+  },
+  'Sandbag Press': {
+    gif: 'https://wger.de/static/images/exercises/main/sandbag-press.gif',
+    cues: ['Sandbag a l\'espatlla o "bear hug" davant del pit', 'Impuls des de les cames per ajudar al press', 'Inestabilitat del pes treballa més els estabilitzadors'],
+    errors: ['Lumbar arquejada per excés de pes', 'No usar les cames per generar potència'],
+  },
+  'Wall Ball': {
+    gif: 'https://wger.de/static/images/exercises/main/wall-ball.gif',
+    cues: ['Squat profund + explota cap amunt + llança la pilota a la paret', 'Agafa la pilota quan torna i baixa directament en squat', 'Moviment continu sense parada entre rep i rep', 'Marca a la paret a ~3m d\'alçada'],
+    errors: ['Llançar amb els braços sols (no usa les cames)', 'No arribar a la profunditat del squat', 'Aturada entre la baixada i la pujada (perd el "touch and go")'],
+  },
+  'Inchworm': {
+    gif: 'https://wger.de/static/images/exercises/main/inchworm.gif',
+    cues: ['De dret: baixa les mans al terra (genolls rectes si pots)', 'Camina amb les mans fins a posició de flexió', 'Fes una flexió (opcional)', 'Camina amb les mans de tornada i dret'],
+    errors: ['Genolls doblegats massa (perd l\'estirament d\'isquios)', 'Core relaxat en posició allargada', 'Moure massa ràpid (és mobilitat, no cardio)'],
+  },
+  'Bear Crawl': {
+    gif: 'https://wger.de/static/images/exercises/main/bear-crawl.gif',
+    cues: ['Mans i puntes dels peus, genolls quasi al terra (2cm)', 'Mou braç i cama contraris alhora', 'Malucs baixos — no els aixequis', 'Endavant, enrere, lateral'],
+    errors: ['Malucs massa amunt', 'Moure braç i cama del mateix costat', 'Core no activat (malucs que cauen i pugen)'],
+  },
+  'Crab Walk': {
+    gif: 'https://wger.de/static/images/exercises/main/crab-walk.gif',
+    cues: ['Mans i peus al terra, pit cap amunt, malucs elevats', 'Mou en qualsevol direcció', 'Activa tríceps, glutis i core posterior', 'Malucs no tocan el terra durant el moviment'],
+    errors: ['Malucs que toquen el terra entre passos', 'Colzes que es doblegen excessivament', 'Passar per sobre de les mans (perd l\'activació)'],
+  },
+  'World\'s Greatest Stretch': {
+    gif: 'https://wger.de/static/images/exercises/main/worlds-greatest-stretch.gif',
+    cues: ['Des de la postura del lluitador (lunge)', 'Mà interior porta el colze al terra (estirament flexor maluc)', 'Gira i porta el braç al sostre (rotació toràcica)', 'Repeteix 3-5 vegades cada costat — el millor warm-up del món'],
+    errors: ['Fer-ho massa ràpid (és mobilitat, no cardio)', 'No arribar a la rotació toràcica completa', 'Peu davanter no plantat'],
+  },
+  'Hip Airplane': {
+    gif: 'https://wger.de/static/images/exercises/main/hip-airplane.gif',
+    cues: ['De peu en una cama, inclina el tronc endavant (T shape)', 'Rota el maluc obrint la cama del darrere cap al sostre', 'Control complet — sense balanceig', 'Excel·lent per a gluti, mobilitat de maluc, estabilitat'],
+    errors: ['Doblegar el genoll de suport', 'Rotació insuficient', 'Perdre l\'equilibri (comença amb suport si cal)'],
+  },
+  'Jefferson Curl': {
+    gif: 'https://wger.de/static/images/exercises/main/jefferson-curl.gif',
+    cues: ['De peu a un step, pes a les mans (lleuger!)', 'Deixa que la columna s\'arrodoneixi vèrtebra a vèrtebra cap avall', 'Moviment de mobilitat, NO de força — pes molt lleuger', 'Torna vèrtebra a vèrtebra enrotllant-te cap amunt', 'Millora la mobilitat de la cadena posterior'],
+    errors: ['Usar pes excessiu (RISC! — mobilitat activa, no força)', 'Fer-ho ràpid', 'No deixar que la columna s\'arrodoneixi (perd el benefici)'],
+  },
+};
+
+// ── GUIA D'EXERCICIS ─────────────────────────────────────────
+// ── Event delegation per als botons de guia (llegat, redirigeix al modal unificat) ──
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.btn-guide');
+  if(!btn) return;
+  e.stopPropagation();
+  const name = btn.dataset.exname;
+  const ex = exercises.find(e=>e.name===name);
+  if(ex) { closeModal('m-sets'); openExDetail(ex.id); }
+}, true);
 
 // ── BOOT ──────────────────────────────────────────────────────
 applyTheme(currentThemeId);
