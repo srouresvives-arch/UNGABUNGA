@@ -1318,6 +1318,10 @@ function physDoc() {
 // Carrega la llista d'usuaris i mostra la pantalla de login
 async function initLogin() {
   let users = [];
+
+  // Primer llegim el cache local com a font ràpida/fallback
+  const cachedUsers = JSON.parse(localStorage.getItem('ub_users') || '[]');
+
   try {
     const snap = await Promise.race([
       getDoc(USERS_DOC),
@@ -1325,14 +1329,16 @@ async function initLogin() {
     ]);
     if(snap.exists()) {
       users = snap.data().list || [];
+      // Actualitzem sempre el cache local amb les dades de Firebase
+      localStorage.setItem('ub_users', JSON.stringify(users));
     } else {
-      // Primera vegada: crea l'usuari Sergi per defecte
-      users = [{ id: 'sergi_roures', name: 'Sergi Roures' }];
+      users = cachedUsers.length ? cachedUsers : [{ id: 'sergi_roures', name: 'Sergi Roures' }];
       await setDoc(USERS_DOC, { list: users });
+      localStorage.setItem('ub_users', JSON.stringify(users));
     }
   } catch(e) {
-    users = JSON.parse(localStorage.getItem('ub_users') || '[]');
-    if(!users.length) users = [{ id: 'sergi_roures', name: 'Sergi Roures' }];
+    console.warn('Firebase no disponible, usant cache local:', e.message);
+    users = cachedUsers.length ? cachedUsers : [{ id: 'sergi_roures', name: 'Sergi Roures' }];
   }
 
   // Comprova si hi ha sessió guardada
@@ -1340,11 +1346,12 @@ async function initLogin() {
   if(savedId) {
     const found = users.find(u=>u.id===savedId);
     if(found) { currentUser=found; startApp(users); return; }
+    // Si l'ID guardat no existeix, esborrem la sessió trencada
+    localStorage.removeItem('ub_current_user');
   }
 
   renderLoginUsers(users);
 }
-
 function renderLoginUsers(users) {
   const wrap = qs('login-users');
   if(!users.length) { wrap.innerHTML=''; return; }
