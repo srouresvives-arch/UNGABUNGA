@@ -561,6 +561,18 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 
     <!-- ══ WORKOUT (active) ══ -->
     <div class="page" id="page-workout">
+      <!-- Banner de descans flotant (s'amaga quan no corre) -->
+      <div id="wo-rest-banner" style="display:none;position:sticky;top:0;z-index:50;
+        background:var(--s1);border-bottom:2px solid var(--accent);
+        padding:10px 16px;cursor:pointer" onclick="restToggle()">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="flex:1;height:4px;background:var(--s3);border-radius:2px;overflow:hidden">
+            <div id="wo-rest-bar-inline" style="height:100%;background:var(--accent);border-radius:2px;transition:width .25s linear,background .3s;width:100%"></div>
+          </div>
+          <div id="wo-rest-display-inline" style="font-family:var(--font-display);font-size:28px;font-weight:900;color:var(--accent);line-height:1;min-width:60px;text-align:right;transition:color .3s">1:30</div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:1px">TAP PAUSA</div>
+        </div>
+      </div>
       <div class="ph">
         <div>
           <div class="ph-title">ENTRENO<br><em>ACTIVO</em></div>
@@ -569,9 +581,23 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <button class="btn btn-y" onclick="finishWorkout()">✓ TERMINAR</button>
       </div>
       <div id="wo-exercises"></div>
-      <div class="px16 mt8" style="display:flex;flex-direction:column;gap:8px">
+      <!-- Selector de temps de descans -->
+      <div class="px16 mt8" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);margin:0 16px 10px;padding:12px 14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase">⏱ Temps de descans</div>
+          <div id="wo-rest-active" style="font-family:var(--font-mono);font-size:9px;color:var(--muted)"></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-g btn-sm" style="flex:1;font-size:11px" onclick="setWorkoutRestTime(45)">45s</button>
+          <button class="btn btn-g btn-sm" style="flex:1;font-size:11px" onclick="setWorkoutRestTime(60)">1min</button>
+          <button class="btn btn-g btn-sm" style="flex:1;font-size:11px" onclick="setWorkoutRestTime(90)">1:30</button>
+          <button class="btn btn-g btn-sm" style="flex:1;font-size:11px" onclick="setWorkoutRestTime(120)">2min</button>
+          <button class="btn btn-g btn-sm" style="flex:1;font-size:11px" onclick="setWorkoutRestTime(180)">3min</button>
+        </div>
+      </div>
+      <div class="px16" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px">
         <button class="btn btn-y btn-w" onclick="openImportRoutine()">⬇ IMPORTAR RUTINA</button>
-        <button class="btn btn-g btn-w" onclick="openPickExercise('workout')">+ EJERCICIO SUELTO</button>
+        <button class="btn btn-g btn-w" onclick="openPickExercise('workout')">+ EXERCICI SOLT</button>
       </div>
     </div>
 
@@ -615,6 +641,17 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 
       <!-- Exercicis panel -->
       <div id="exrt-panel-ex">
+        <div style="padding:0 16px 10px;display:flex;gap:8px;align-items:center">
+          <input class="inp" id="ex-search" placeholder="🔍 Cerca exercici..." oninput="renderExercises()"
+            style="flex:1;padding:9px 12px;font-size:13px">
+          <select class="inp" id="ex-sort" onchange="renderExercises()"
+            style="width:auto;padding:9px 10px;font-size:11px;flex-shrink:0">
+            <option value="name">A–Z</option>
+            <option value="muscle">Múscul</option>
+            <option value="pr">PR ↓</option>
+            <option value="freq">+ Usat</option>
+          </select>
+        </div>
         <div class="chips" id="muscle-chips"></div>
         <div id="ex-list"></div>
       </div>
@@ -1589,6 +1626,30 @@ async function loadData() {
     } catch(e) {}
     hideLoader();
     renderCalendar();
+
+    // Restaura entreno actiu si n'hi havia un en curs
+    try {
+      const saved = localStorage.getItem('ub_active_' + currentUser.id);
+      if(saved) {
+        const parsed = JSON.parse(saved);
+        // Només restaura si té menys de 12h d'antiguitat
+        if(parsed && parsed.startTime && Date.now() - parsed.startTime < 12 * 3600 * 1000) {
+          activeWo = parsed;
+          qs('active-bar').classList.add('on');
+          startTimer();
+          nav('workout');
+          renderWorkout();
+          // Banner de restauració
+          const banner = document.createElement('div');
+          banner.style.cssText = 'position:fixed;top:60px;left:16px;right:16px;z-index:9000;background:color-mix(in srgb,var(--accent) 15%,var(--s1));border:1px solid var(--accent);border-radius:10px;padding:10px 14px;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--accent);text-align:center;animation:pageIn .3s both';
+          banner.textContent = '⚡ ENTRENO RESTAURAT — CONTINUA ON HO VAS DEIXAR';
+          document.body.appendChild(banner);
+          setTimeout(() => banner.remove(), 3500);
+        } else {
+          localStorage.removeItem('ub_active_' + currentUser.id);
+        }
+      }
+    } catch(e) {}
   }
 }
 
@@ -1602,6 +1663,16 @@ function save() {
   });
   localStorage.setItem('ub_exdb_' + currentUser.id, JSON.stringify(customDB));
   saveRemote();
+}
+
+// Persisteix l'entreno actiu a localStorage en temps real
+function saveActiveWo() {
+  if(!currentUser) return;
+  if(activeWo) {
+    localStorage.setItem('ub_active_' + currentUser.id, JSON.stringify(activeWo));
+  } else {
+    localStorage.removeItem('ub_active_' + currentUser.id);
+  }
 }
 
 // ── DADES FÍSIQUES ────────────────────────────────────────────
@@ -2366,6 +2437,8 @@ window.confirmEnergy = function() {
     nav('workout');
     startTimer();
     renderWorkout();
+    updateWoRestIndicator();
+    saveActiveWo();
   } else {
     activeWo.energyEnd = energyVal || null;
     activeWo.noteEnd   = note;
@@ -2380,6 +2453,7 @@ window.skipEnergy = function() {
     nav('workout');
     startTimer();
     renderWorkout();
+    saveActiveWo();
   } else {
     closeModal('m-energy');
     _saveFinishedWorkout();
@@ -2391,6 +2465,7 @@ function _saveFinishedWorkout() {
   activeWo = null;
   clearInterval(timerIv);
   qs('active-bar').classList.remove('on');
+  saveActiveWo(); // neteja la persistència
   save();
   nav('cal');
   renderCalendar();
@@ -2399,39 +2474,120 @@ function _saveFinishedWorkout() {
 function renderWorkout() {
   const c=qs('wo-exercises');
   if(!activeWo||activeWo.exercises.length===0){
-    c.innerHTML='<div class="empty"><div class="empty-ico">🏋️</div><div class="empty-txt">Añade ejercicios</div></div>';
+    c.innerHTML='<div class="empty"><div class="empty-ico">🏋️</div><div class="empty-txt">Afegeix exercicis per començar</div></div>';
     return;
   }
   c.innerHTML=activeWo.exercises.map(ae=>{
-    const maxW=Math.max(...ae.sets.filter(s=>s.weight).map(s=>parseFloat(s.weight)||0),0);
+    const ex=exercises.find(e=>e.id===ae.exerciseId);
+    const exType=ex?.type||'fuerza';
+    const isBW=exType==='bodyweight';
+    const isTime=exType==='tiempo';
     const pr=getPR(ae.exerciseId);
     const prReps=getPRReps(ae.exerciseId);
-    const isPR=maxW>0&&maxW>pr;
-    return `<div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin:0 16px 8px;overflow:hidden">
-      <div class="ex-item" style="margin:0;border:none;border-radius:0" onclick="openLogSets('${ae.exerciseId}','${ae.id}')">
+
+    // Sèries inline
+    const setsRows = ae.sets.map((s,i)=>{
+      const w=parseFloat(s.weight)||0, r=parseFloat(s.reps)||0;
+      const done=!!s.done;
+      let label='';
+      if(isBW)       label=r?`${r} reps${w?' +'+w+'kg':''}`: '—';
+      else if(isTime) label=w?`${w}s`:'—';
+      else            label=w||r?`${w||'—'}kg × ${r||'—'}r`:'—';
+      const vol = !isBW&&!isTime&&w&&r ? `${(w*r).toFixed(0)}kg` : '';
+      return `<div style="display:flex;align-items:center;gap:8px;padding:5px 12px;
+        background:${done?'color-mix(in srgb,var(--accent) 6%,transparent)':'transparent'};
+        border-bottom:1px solid var(--border);transition:background .2s">
+        <button onclick="event.stopPropagation();toggleSetDone('${ae.id}',${i})"
+          style="width:24px;height:24px;border-radius:50%;flex-shrink:0;cursor:pointer;
+          border:2px solid ${done?'var(--accent)':'var(--border2)'};
+          background:${done?'var(--accent)':'none'};
+          display:flex;align-items:center;justify-content:center;transition:all .2s">
+          ${done?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>':''}
+        </button>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);width:16px;flex-shrink:0">${i+1}</div>
+        <div style="flex:1;font-family:var(--font-mono);font-size:13px;font-weight:600;
+          color:${done?'var(--accent)':'var(--text)'};">${label}</div>
+        ${vol?`<div style="font-family:var(--font-mono);font-size:9px;color:var(--muted)">${vol}</div>`:''}
+        <button onclick="event.stopPropagation();openLogSets('${ae.exerciseId}','${ae.id}')"
+          style="background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;font-size:12px">✏</button>
+      </div>`;
+    }).join('');
+
+    const doneSets=ae.sets.filter(s=>s.done).length;
+    const totalSets=ae.sets.length;
+    const allDone=doneSets===totalSets&&totalSets>0;
+    const maxW=Math.max(...ae.sets.map(s=>parseFloat(s.weight)||0),0);
+    const isPRAlert=!isBW&&!isTime&&maxW>0&&maxW>pr;
+
+    return `<div style="background:var(--s1);border:1px solid ${allDone?'var(--accent)44':'var(--border)'};
+      border-radius:var(--r2);margin:0 16px 10px;overflow:hidden;transition:border-color .3s">
+      <!-- Capçalera exercici -->
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 12px 10px;cursor:pointer"
+        onclick="openLogSets('${ae.exerciseId}','${ae.id}')">
         <div style="flex:1;min-width:0">
-          <div class="ex-name">${ae.name}</div>
-          <div class="ex-meta" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:3px">
-            <span>${ae.sets.length} series</span>
-            ${maxW?`<span>· ${maxW}kg</span>`:''}
-            ${pr?`<span style="color:var(--accent)">PR: ${pr}kg × ${prReps}r</span>`:''}
+          <div style="font-weight:700;font-size:15px;font-family:var(--font-body);
+            color:${allDone?'var(--accent)':'var(--text)'}">${ae.name}</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-top:3px;display:flex;gap:8px;align-items:center">
+            <span>${doneSets}/${totalSets} sèries</span>
+            ${pr&&!isBW&&!isTime?`<span style="color:var(--accent)">PR: ${pr}kg × ${prReps}r</span>`:''}
+            ${isPRAlert?'<span class="tag tag-y" style="padding:1px 5px">🏆 PR!</span>':''}
           </div>
         </div>
-        <div class="row" style="gap:6px">
-          ${isPR?'<span class="tag tag-y">🏆 PR</span>':''}
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <!-- Barra de progrés sèries -->
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+          <div style="font-family:var(--font-mono);font-size:9px;color:${allDone?'var(--accent)':'var(--muted)'}">
+            ${allDone?'✓ FET':'EDITAR ›'}
+          </div>
+          <div style="display:flex;gap:3px">
+            ${ae.sets.map(s=>`<div style="width:10px;height:4px;border-radius:2px;
+              background:${s.done?'var(--accent)':'var(--border2)'}"></div>`).join('')}
+          </div>
         </div>
       </div>
-      <div style="border-top:1px solid var(--border);padding:6px 10px;background:var(--s2);display:flex;justify-content:flex-end">
-        <button onclick="event.stopPropagation();removeExFromActive('${ae.id}')" style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--accent2);background:none;border:none;cursor:pointer;padding:4px 6px">✕ QUITAR EJERCICIO</button>
+      <!-- Sèries inline -->
+      <div style="border-top:1px solid var(--border)">
+        ${setsRows}
+        <!-- Afegir sèrie ràpida -->
+        <div style="display:flex;gap:0;border-top:1px solid var(--border)">
+          <button onclick="event.stopPropagation();quickAddSet('${ae.id}')"
+            style="flex:1;padding:8px;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;
+            color:var(--muted);background:var(--s2);border:none;cursor:pointer;
+            border-right:1px solid var(--border);transition:all .15s"
+            onmouseenter="this.style.color='var(--accent)'" onmouseleave="this.style.color='var(--muted)'">
+            + SÈRIE
+          </button>
+          <button onclick="event.stopPropagation();removeExFromActive('${ae.id}')"
+            style="padding:8px 14px;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;
+            color:var(--accent2);background:var(--s2);border:none;cursor:pointer;transition:all .15s">
+            ✕
+          </button>
+        </div>
       </div>
     </div>`;
   }).join('');
 }
 
-window.removeExFromActive = function(aeId) {
+// Marca/desmarca una sèrie com a feta
+window.toggleSetDone = function(aeId, setIdx) {
   if(!activeWo) return;
-  activeWo.exercises=activeWo.exercises.filter(e=>e.id!==aeId);
+  const ae = activeWo.exercises.find(e=>e.id===aeId);
+  if(!ae||!ae.sets[setIdx]) return;
+  const wasDone = ae.sets[setIdx].done;
+  ae.sets[setIdx].done = !wasDone;
+  saveActiveWo();
+  renderWorkout();
+  // Arrenca el descans automàticament quan es marca (no quan es desmarca)
+  if(!wasDone) startRestFromTick();
+}
+
+// Afegeix una còpia de l'última sèrie sense obrir el modal
+window.quickAddSet = function(aeId) {
+  if(!activeWo) return;
+  const ae = activeWo.exercises.find(e=>e.id===aeId);
+  if(!ae) return;
+  const last = ae.sets[ae.sets.length-1] || {weight:'',reps:''};
+  ae.sets.push({weight:last.weight||'', reps:last.reps||'', done:false});
+  saveActiveWo();
   renderWorkout();
 }
 
@@ -2577,6 +2733,7 @@ window.saveSets = function() {
   if(activeWo){
     const ae=activeWo.exercises.find(e=>e.id===logAeId);
     if(ae) ae.sets=[...curSets];
+    saveActiveWo(); // persiste l'entreno actiu
     closeModal('m-sets'); renderWorkout();
   } else if(editWoId){
     const w=workouts.find(x=>x.id===editWoId);
@@ -2589,30 +2746,59 @@ window.saveSets = function() {
 const MUSCLES=['all','pecho','espalda','hombros','pierna','bicep','tricep','core','gluteo','gemelos','cardio','otro'];
 
 function renderExercises() {
+  // Chips de múscul
   qs('muscle-chips').innerHTML=MUSCLES.map(m=>`
-    <div class="chip ${filterMuscle===m?'on':''}" onclick="setMuscleFilter('${m}')">${m==='all'?'TODOS':m.toUpperCase()}</div>
+    <div class="chip ${filterMuscle===m?'on':''}" onclick="setMuscleFilter('${m}')">${m==='all'?'TOTS':m.toUpperCase()}</div>
   `).join('');
-  const filtered=filterMuscle==='all'?exercises:exercises.filter(e=>e.muscle===filterMuscle);
+
+  // Cerca i filtre
+  const query = (qs('ex-search')?.value || '').toLowerCase().trim();
+  const sort  = qs('ex-sort')?.value || 'name';
+
+  let filtered = filterMuscle==='all' ? exercises : exercises.filter(e=>e.muscle===filterMuscle);
+  if(query) filtered = filtered.filter(e=>e.name.toLowerCase().includes(query));
+
+  // Ordre
+  const woCount = (exId) => workouts.filter(w=>w.exercises.some(ae=>ae.exerciseId===exId)).length;
+  filtered = [...filtered].sort((a,b)=>{
+    if(sort==='name')   return a.name.localeCompare(b.name);
+    if(sort==='muscle') return a.muscle.localeCompare(b.muscle) || a.name.localeCompare(b.name);
+    if(sort==='pr')     return getPRSortValue(b) - getPRSortValue(a);
+    if(sort==='freq')   return woCount(b.id) - woCount(a.id);
+    return 0;
+  });
+
   if(!filtered.length){
-    qs('ex-list').innerHTML='<div class="empty"><div class="empty-ico">🏋️</div><div class="empty-txt">Sin ejercicios</div></div>';
+    qs('ex-list').innerHTML=`<div class="empty"><div class="empty-ico">🔍</div><div class="empty-txt">${query?'CAP RESULTAT PER "'+query.toUpperCase()+'"':'SENSE EXERCICIS'}</div></div>`;
     return;
   }
+
+  // Capçalera de grup si s'ordena per múscul
+  let lastMuscle = null;
   qs('ex-list').innerHTML=filtered.map(ex=>{
     const prLbl=getPRLabel(ex);
-    const prBadge=prLbl?`<span class="ex-pr">${prLbl}</span>`:'';
+    const medal=getMedalForExercise(ex);
+    const freq=woCount(ex.id);
+    let groupHeader='';
+    if(sort==='muscle' && ex.muscle!==lastMuscle) {
+      lastMuscle=ex.muscle;
+      groupHeader=`<div style="font-family:var(--font-mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 16px 4px;background:var(--bg)">${ex.muscle.toUpperCase()}</div>`;
+    }
     const hasGuide = !!EXERCISE_DB[ex.name];
-    return `<div class="ex-item" onclick="openExDetail('${ex.id}')">
+    return groupHeader+`<div class="ex-item" onclick="openExDetail('${ex.id}')">
       <div style="flex:1;min-width:0">
         <div class="ex-name">${ex.name}</div>
         <div class="ex-meta row" style="gap:6px;margin-top:4px;flex-wrap:wrap">
           <span class="tag tag-g">${ex.muscle}</span>
           <span class="tag tag-g">${ex.type}</span>
-          ${prBadge}
+          ${prLbl?`<span class="ex-pr">${prLbl}</span>`:''}
+          ${medal?`<span style="font-size:11px" title="${medal.label}">${medal.emoji}</span>`:''}
+          ${freq>0&&sort==='freq'?`<span style="font-family:var(--font-mono);font-size:8px;color:var(--muted)">${freq}x</span>`:''}
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
         ${hasGuide ? `<button class="btn-guide" data-exname="${ex.name.replace(/"/g,'&quot;')}"
-          style="width:26px;height:26px;border-radius:50%;border:1px solid var(--accent3);background:color-mix(in srgb,var(--accent3) 12%,transparent);color:var(--accent3);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0" title="Com es fa">ℹ</button>` : ''}
+          style="width:26px;height:26px;border-radius:50%;border:1px solid var(--accent3);background:color-mix(in srgb,var(--accent3) 12%,transparent);color:var(--accent3);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">ℹ</button>` : ''}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>`;
@@ -4119,8 +4305,8 @@ function hiitRender() {
 }
 
 // ── TEMPORITZADOR DE DESCANS ──────────────────────────────────
-let restTotal   = 60;
-let restLeft    = 60;
+let restTotal   = parseInt(localStorage.getItem('ub_rest_secs')||'90');
+let restLeft    = restTotal;
 let restIv      = null;
 let restRunning = false;
 let restEndTime = null; // timestamp absolut de quan acaba
@@ -4131,17 +4317,71 @@ function restFmt(s) {
 }
 function restUpdateUI() {
   const pct = restTotal>0 ? (restLeft/restTotal)*100 : 0;
-  qs('rest-display').textContent = restFmt(restLeft);
-  qs('rest-bar').style.width = pct+'%';
   const color = pct>50 ? 'var(--accent)' : pct>20 ? '#ffaa00' : 'var(--accent2)';
-  qs('rest-display').style.color = color;
-  qs('rest-bar').style.background = color;
-  // Mostra el temps al títol de la app (visible al multitasking)
-  document.title = restLeft > 0 ? `⏱ ${restFmt(restLeft)} — UNGABUNGA` : 'UNGABUNGA';
+  const fmt = restFmt(restLeft);
+
+  // Timer principal (pàgina Cronos)
+  if(qs('rest-display')) {
+    qs('rest-display').textContent = fmt;
+    qs('rest-display').style.color = color;
+    qs('rest-bar').style.width = pct+'%';
+    qs('rest-bar').style.background = color;
+  }
+  // Banner inline a la pàgina d'entreno actiu
+  const banner = qs('wo-rest-banner');
+  const barInline = qs('wo-rest-bar-inline');
+  const dispInline = qs('wo-rest-display-inline');
+  if(banner) {
+    if(restRunning && restLeft > 0) {
+      banner.style.display = 'block';
+      if(barInline) { barInline.style.width = pct+'%'; barInline.style.background = color; }
+      if(dispInline) { dispInline.textContent = fmt; dispInline.style.color = color; }
+      // Vibra el border quan queden ≤5s
+      banner.style.borderBottomColor = pct<=20 ? color : 'var(--accent)';
+    } else {
+      banner.style.display = 'none';
+    }
+  }
+  // Títol de la app (visible al multitasking)
+  document.title = restLeft > 0 && restRunning ? `⏱ ${fmt} — UNGABUNGA` : 'UNGABUNGA';
 }
 window.restSetTime = function(secs) {
   restStop(); restTotal=secs; restLeft=secs; restEndTime=null;
+  localStorage.setItem('ub_rest_secs', secs); // desa preferència
   restUpdateUI(); qs('rest-btn-start').textContent='▶ INICIAR';
+}
+
+// Estableix el temps de descans des de la pàgina d'entreno actiu
+window.setWorkoutRestTime = function(secs) {
+  restSetTime(secs); // ja desa a localStorage i actualitza el timer
+  updateWoRestIndicator();
+}
+
+function updateWoRestIndicator() {
+  const el = qs('wo-rest-active');
+  if(!el) return;
+  el.textContent = restFmt(restTotal);
+  el.style.color = 'var(--accent)';
+  // Ressalta el botó actiu
+  document.querySelectorAll('#page-workout .btn').forEach(btn => {
+    const match = btn.onclick?.toString().includes(`setWorkoutRestTime(${restTotal})`);
+    btn.style.borderColor = match ? 'var(--accent)' : '';
+    btn.style.color = match ? 'var(--accent)' : '';
+  });
+}
+// Si el timer ja està en marxa, el reinicia des del principi
+function startRestFromTick() {
+  restStop();
+  restLeft = restTotal;
+  restUpdateUI();
+  restToggle(); // arrenca
+  // Toast flotant sobre l'entreno actiu
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:110px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--s2);border:1px solid var(--accent);border-radius:20px;padding:7px 16px;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--accent);white-space:nowrap;pointer-events:none;animation:pageIn .2s both';
+  toast.textContent = `⏱ DESCANS ${restFmt(restTotal)} INICIAT`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.style.opacity='0', 1800);
+  setTimeout(() => toast.remove(), 2100);
 }
 window.restToggle = function() {
   if(restRunning) { restStop(); return; }
@@ -4163,12 +4403,23 @@ window.restToggle = function() {
       qs('rest-display').style.color='var(--accent)';
       qs('rest-bar').style.width='0%';
       qs('rest-btn-start').textContent='▶ INICIAR';
+      // Flash al banner i amaga
+      const banner = qs('wo-rest-banner');
+      const disp = qs('wo-rest-display-inline');
+      if(banner && banner.style.display !== 'none') {
+        if(disp) disp.textContent = '✓ TOCA!';
+        banner.style.borderBottomColor = 'var(--accent)';
+        banner.style.background = 'color-mix(in srgb,var(--accent) 12%,var(--s1))';
+        setTimeout(() => { if(banner) banner.style.display='none'; banner.style.background=''; }, 2000);
+      }
     }
   },250); // 250ms per més precisió
 }
 function restStop() {
   clearInterval(restIv); restIv=null; restRunning=false;
   document.title = 'UNGABUNGA';
+  const banner = qs('wo-rest-banner');
+  if(banner) banner.style.display = 'none';
   qs('rest-btn-start').textContent = restLeft>0&&restLeft<restTotal ? '▶ REPRENDRE' : '▶ INICIAR';
 }
 window.restReset = function() {
@@ -4986,28 +5237,52 @@ window.renderMedals = function() {
   const medals = getAllMedals();
   const total  = exercises.length;
 
-  if(!medals.length) {
-    c.innerHTML = `<div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);padding:10px 0;text-align:center;letter-spacing:1px">
-      ENTRENA I GUANYA LES TEVES PRIMERES MEDALLES
-    </div>`;
-    return;
-  }
+  // Medalles per nivell: per cada nivell, conta quants exercicis han assolit ALMENYS aquell nivell
+  // (un exercici amb Or compta també per Bronze i Plata)
+  const atLeast = {};
+  MEDAL_LEVELS.forEach((l, li) => {
+    atLeast[l.id] = medals.filter(m => {
+      const mIdx = MEDAL_LEVELS.findIndex(x => x.id === m.id);
+      return mIdx >= li;
+    }).length;
+  });
 
-  // Resum per nivell
-  const counts = {};
-  MEDAL_LEVELS.forEach(l => counts[l.id] = medals.filter(m => m.id === l.id).length);
+  const progressBars = MEDAL_LEVELS.map(l => {
+    const count = atLeast[l.id];
+    const pct   = total > 0 ? Math.round((count / total) * 100) : 0;
+    const exact = medals.filter(m => m.id === l.id).length; // exactament aquest nivell
+    return `
+    <div style="margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:16px;filter:drop-shadow(0 0 4px ${l.color}88)">${l.emoji}</span>
+          <span style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:${count>0?l.color:'var(--muted)'};letter-spacing:.5px">${l.label.toUpperCase()}</span>
+          ${exact>0?`<span style="font-family:var(--font-mono);font-size:7px;color:var(--muted);letter-spacing:.5px">(${exact} exacte${exact>1?'s':''})</span>`:''}
+        </div>
+        <div style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:${count>0?l.color:'var(--muted2)'}">
+          ${count}<span style="font-size:8px;color:var(--muted);font-weight:400"> / ${total}</span>
+        </div>
+      </div>
+      <div style="height:5px;background:var(--s3);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${l.color};border-radius:3px;
+          box-shadow:${count>0?`0 0 8px ${l.color}66`:''};
+          transition:width .6s cubic-bezier(.22,1,.36,1)"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const noMedals = medals.length === 0;
 
   c.innerHTML = `
-    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      ${MEDAL_LEVELS.map(l => counts[l.id] ? `
-        <div style="display:flex;align-items:center;gap:4px;background:var(--s2);border:1px solid ${l.color}44;border-radius:20px;padding:4px 10px">
-          <span style="font-size:14px">${l.emoji}</span>
-          <span style="font-family:var(--font-mono);font-size:10px;color:${l.color};font-weight:700">${counts[l.id]}</span>
-          <span style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:.5px">${l.label.toUpperCase()}</span>
-        </div>` : '').join('')}
-      <div style="margin-left:auto;font-family:var(--font-mono);font-size:9px;color:var(--muted);align-self:center">
-        ${medals.length}/${total} exercicis
-      </div>
+    <!-- Comptadors per nivell -->
+    <div style="margin-bottom:${noMedals?'0':'16px'}">${progressBars}</div>
+    ${noMedals ? `
+    <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);padding:4px 0 8px;text-align:center;letter-spacing:1px">
+      ENTRENA I GUANYA LES TEVES PRIMERES MEDALLES
+    </div>` : `
+    <!-- Graella de medalles guanyades -->
+    <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">
+      ${medals.length} medalla${medals.length>1?'es':''} guanyada${medals.length>1?'es':''}
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px">
       ${medals.map(m => {
@@ -5026,7 +5301,8 @@ window.renderMedals = function() {
           ${nextLvl ? `<div style="position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:${nextLvl.color};opacity:.4"></div>` : '<div style="position:absolute;top:4px;right:4px;font-size:8px">✓</div>'}
         </div>`;
       }).join('')}
-    </div>`;
+    </div>`}`;
+};
 };
 
 // Popup de detall d'una medalla
