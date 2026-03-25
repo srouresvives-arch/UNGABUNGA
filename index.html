@@ -2243,6 +2243,7 @@ function renderPerfilPage() {
   renderPhysHistory();
   setPhysMode(physData?.mode || 'basic');
   renderThemeGrid();
+  renderMedals();
 }
 
 // ── WORKOUT HELPERS ───────────────────────────────────────────
@@ -3596,14 +3597,22 @@ function renderStatsGlobal() {
     bestStreak = Math.max(bestStreak, tempStreak);
     prevKey = wk;
   }
-  // Racxa actual: setmanes consecutives complertes des de la més recent cap enrere
+  // Ratxa actual: setmanes consecutives complertes des de la més recent cap enrere.
+  // La setmana actual (todayKey) NO compta fins que no hagi complert l'objectiu —
+  // si no ha complert, simplement la saltem i comencem des de l'anterior.
   const sortedDesc = Object.keys(weekTrainMap).sort().reverse();
   let currentStreak = 0;
   for(let i=0; i<sortedDesc.length; i++) {
     const wk = sortedDesc[i];
+    // Salta la setmana actual si no ha complert encara
+    if(wk === todayKey && (weekTrainMap[wk]||0) < GOAL) continue;
     const ok = (weekTrainMap[wk]||0) >= GOAL;
     if(!ok) break;
-    if(i>0 && !isConsecutiveWeek(sortedDesc[i], sortedDesc[i-1])) break;
+    // Ha de ser consecutiva amb l'anterior comptada (no necessàriament sortedDesc[i-1] si hem saltat)
+    if(currentStreak > 0) {
+      const prevCounted = sortedDesc.slice(0, i).find(w => w !== todayKey || (weekTrainMap[w]||0) >= GOAL);
+      if(prevCounted && !isConsecutiveWeek(wk, prevCounted)) break;
+    }
     currentStreak++;
   }
   bestStreak = Math.max(...Object.keys(weekTrainMap).reduce((acc, wk, i, arr)=>{
@@ -5302,7 +5311,6 @@ window.renderMedals = function() {
         </div>`;
       }).join('')}
     </div>`}`;
-};
 };
 
 // Popup de detall d'una medalla
