@@ -1493,11 +1493,26 @@ const today = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.ge
 // ── FIRESTORE SYNC ────────────────────────────────────────────
 async function saveRemote() {
   try {
-    await setDoc(userDoc(), { exercises, workouts, routines, dayNotes, updated: Date.now() });
+    // Recull descripcions custom per desar-les a Firestore
+    const customExDB = {};
+    Object.entries(EXERCISE_DB).forEach(([name, val]) => {
+      if(val._custom) customExDB[name] = { cues: val.cues || [], errors: val.errors || [] };
+    });
+    await setDoc(userDoc(), { exercises, workouts, routines, dayNotes, customExDB, updated: Date.now() });
   } catch(e) { console.error('saveRemote failed:', e); }
 }
 
 function setSyncStatus(s) { console.log('sync:', s); }
+
+// Aplica un mapa de descripcions custom {nom: {cues, errors}} a EXERCISE_DB
+function applyCustomExDB(map) {
+  Object.entries(map).forEach(([name, val]) => {
+    if(!EXERCISE_DB[name]) EXERCISE_DB[name] = {};
+    if(val.cues?.length)   EXERCISE_DB[name].cues   = val.cues;
+    if(val.errors?.length) EXERCISE_DB[name].errors = val.errors;
+    EXERCISE_DB[name]._custom = true;
+  });
+}
 
 async function loadData() {
   qs('loader-txt').textContent = 'Carregant...';
@@ -1513,6 +1528,8 @@ async function loadData() {
       workouts  = d.workouts  || [];
       routines  = d.routines  || [];
       dayNotes  = d.dayNotes  || {};
+      // Carrega descripcions custom des de Firestore
+      if(d.customExDB) applyCustomExDB(d.customExDB);
     } else {
       exercises = getDefaultExercises();
       workouts  = getSeedWorkouts(exercises);
@@ -1527,6 +1544,11 @@ async function loadData() {
     workouts  = cached?.workouts  || [];
     routines  = cached?.routines  || [];
     dayNotes  = cached?.dayNotes  || {};
+    // Fallback: carrega descripcions custom des de localStorage
+    try {
+      const localCustom = JSON.parse(localStorage.getItem('ub_exdb_' + currentUser.id) || '{}');
+      if(Object.keys(localCustom).length) applyCustomExDB(localCustom);
+    } catch(e2) {}
   } finally {
     // Migració silenciosa: corregeix tipus d'exercicis mal etiquetats
     let migrated = false;
@@ -1615,14 +1637,14 @@ async function loadData() {
     if(migrated) saveRemote();
     loadChallenges();
     // Carrega descripcions custom de l'usuari (cues/errors editats)
+    // Ja s'han aplicat des de Firestore o localStorage al bloc try/catch.
+    // Aquí només sincronitzem el localStorage per tenir-lo actualitzat.
     try {
-      const customDB = JSON.parse(localStorage.getItem('ub_exdb_' + currentUser.id) || '{}');
-      Object.entries(customDB).forEach(([name, val]) => {
-        if(!EXERCISE_DB[name]) EXERCISE_DB[name] = {};
-        if(val.cues)   EXERCISE_DB[name].cues   = val.cues;
-        if(val.errors) EXERCISE_DB[name].errors = val.errors;
-        EXERCISE_DB[name]._custom = true;
+      const customDB = {};
+      Object.entries(EXERCISE_DB).forEach(([name, val]) => {
+        if(val._custom) customDB[name] = { cues: val.cues, errors: val.errors };
       });
+      localStorage.setItem('ub_exdb_' + currentUser.id, JSON.stringify(customDB));
     } catch(e) {}
     hideLoader();
     renderCalendar();
@@ -2904,6 +2926,58 @@ window.openExDetail = function(id) {
     </div>`;
   }
 
+  // — Gràfic de progressió —
+  let chartHtml = '';
+  if(totalWos >= 2) {
+    const pts = workouts
+      .filter(w => w.exercises.some(ae => ae.exerciseId === id))
+      .sort((a,b) => new Date(a.date) - new Date(b.date))
+      .map(w => {
+        const ae = w.exercises.find(ae => ae.exerciseId === id);
+        const valid = (ae?.sets || []).filter(s => parseFloat(s.weight||0)>0 || parseFloat(s.reps||0)>0);
+        if(!valid.length) return null;
+        let val;
+        if(ex.type === 'bodyweight') {
+          // Bodyweight: reps totals de la sessió
+          val = valid.reduce((a,s) => a + (parseFloat(s.reps)||0), 0);
+        } else if(ex.type === 'tiempo') {
+          // Temps: temps total acumulat de la sessió (s)
+          val = valid.reduce((a,s) => a + (parseFloat(s.weight)||0), 0);
+        } else {
+          // Fuerza: volum total (kg × reps) — captura millores en pes I en reps
+          val = valid.reduce((a,s) => a + (parseFloat(s.weight)||0) * (parseFloat(s.reps)||0), 0);
+        }
+        return { date: w.date, val: Math.round(val * 10) / 10 };
+      })
+      .filter(p => p && p.val > 0);
+
+    if(pts.length >= 2) {
+      const fmt = d => new Date(d).toLocaleDateString('ca-ES',{day:'numeric',month:'short'});
+      const labels = pts.map(p => fmt(p.date));
+      const vals   = pts.map(p => p.val);
+      const first  = vals[0], last = vals[vals.length-1];
+      const diff   = Math.round((last - first) * 10) / 10;
+      const trendColor = diff > 0 ? 'var(--accent)' : diff < 0 ? 'var(--accent2)' : 'var(--muted)';
+      const unitVol = ex.type==='bodyweight' ? 'r' : ex.type==='tiempo' ? 's' : 'kg';
+      const trendTxt = diff > 0 ? `↑ +${diff}${unitVol}` : diff < 0 ? `↓ ${diff}${unitVol}` : '→ estable';
+      const volLabel = ex.type==='bodyweight' ? 'REPS TOTALS/SESSIÓ' : ex.type==='tiempo' ? 'TEMPS TOTAL/SESSIÓ (s)' : 'VOLUM TOTAL/SESSIÓ (kg)';
+
+      chartHtml = `
+      <div style="background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--accent);text-transform:uppercase">📈 PROGRESSIÓ</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:${trendColor};font-weight:700">${trendTxt}</div>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);margin-bottom:10px">${volLabel} · ${pts.length} SESSIONS</div>
+        <canvas id="exd-chart" height="110" style="width:100%"></canvas>
+      </div>`;
+
+      requestAnimationFrame(() => {
+        drawLineChart('exd-chart', labels, vals, getAccent());
+      });
+    }
+  }
+
   // — Millors sèries —
   let setsHtml = '';
   if(!totalWos) {
@@ -3025,6 +3099,7 @@ window.openExDetail = function(id) {
     </div>
 
     ${medalHtml}
+    ${chartHtml}
     ${setsHtml}
     ${guideHtml}
 
