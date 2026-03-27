@@ -680,16 +680,6 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 
       <div id="stats-global"></div>
 
-      <!-- Gràfic de polígon de stats musculars -->
-      <div class="chart-wrap" style="margin:0 16px 10px">
-        <div class="chart-title">💪 STATS MUSCULARS</div>
-        <div class="chart-sub">NIVELL PER GRUP MUSCULAR — BASAT EN ELS TEUS PRs</div>
-        <div id="radar-bw-warn" style="display:none;font-family:var(--font-mono);font-size:8px;color:#ffaa00;letter-spacing:.5px;margin-bottom:8px">
-          ⚠ Afegeix el teu pes al perfil per tenir resultats precisos
-        </div>
-        <canvas id="radar-chart" height="260" style="width:100%;display:block"></canvas>
-        <div id="radar-legend" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;justify-content:center"></div>
-      </div>
 
       <div style="padding:0 16px 6px;display:flex;align-items:center;gap:8px">
         <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;flex:1">DETALLE POR EJERCICIO</div>
@@ -925,6 +915,17 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
         <div class="card" style="margin:0 0 10px">
         <div class="card-title">🏅 Medalles</div>
         <div id="medals-grid" style="min-height:40px"></div>
+        </div>
+
+        <!-- Stats musculars -->
+        <div class="card" style="margin:0 0 10px">
+          <div class="card-title">💪 Stats musculars</div>
+          <div class="chart-sub" style="margin-bottom:10px">% cap a l'Èlit per grup muscular</div>
+          <div id="radar-bw-warn" style="display:none;font-family:var(--font-mono);font-size:8px;color:#ffaa00;letter-spacing:.5px;margin-bottom:8px">
+            ⚠ Afegeix el teu pes al perfil per tenir resultats precisos
+          </div>
+          <canvas id="radar-chart" height="260" style="width:100%;display:block"></canvas>
+          <div id="radar-legend" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;justify-content:center"></div>
         </div>
 
         <!-- Backup -->
@@ -2280,6 +2281,7 @@ function renderPerfilPage() {
   setPhysMode(physData?.mode || 'basic');
   renderThemeGrid();
   renderMedals();
+  requestAnimationFrame(() => drawMuscleRadar());
 }
 
 // ── WORKOUT HELPERS ───────────────────────────────────────────
@@ -3612,7 +3614,6 @@ function isConsecutiveWeek(wk1, wk2) {
 function renderStats() {
   renderStatsGlobal();
   renderChallenges();
-  requestAnimationFrame(() => drawMuscleRadar());
   const sel=qs('stats-sel');
   const prev=sel.value;
   sel.innerHTML='<option value="">— Selecciona ejercicio —</option>'+
