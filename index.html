@@ -680,6 +680,17 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 
       <div id="stats-global"></div>
 
+      <!-- Gràfic de polígon de stats musculars -->
+      <div class="chart-wrap" style="margin:0 16px 10px">
+        <div class="chart-title">💪 STATS MUSCULARS</div>
+        <div class="chart-sub">NIVELL PER GRUP MUSCULAR — BASAT EN ELS TEUS PRs</div>
+        <div id="radar-bw-warn" style="display:none;font-family:var(--font-mono);font-size:8px;color:#ffaa00;letter-spacing:.5px;margin-bottom:8px">
+          ⚠ Afegeix el teu pes al perfil per tenir resultats precisos
+        </div>
+        <canvas id="radar-chart" height="260" style="width:100%;display:block"></canvas>
+        <div id="radar-legend" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;justify-content:center"></div>
+      </div>
+
       <div style="padding:0 16px 6px;display:flex;align-items:center;gap:8px">
         <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;flex:1">DETALLE POR EJERCICIO</div>
       </div>
@@ -1263,7 +1274,8 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0}
 <div class="overlay" id="m-pick-ex">
   <div class="modal">
     <div class="drag-handle"></div>
-    <div class="modal-title">Añadir ejercicio</div>
+    <div class="modal-title">Afegir exercici</div>
+    <input class="inp mb8" id="pick-ex-search" placeholder="🔍 Cerca..." oninput="renderPickExList()">
     <div id="pick-ex-list"></div>
     <button class="btn btn-g btn-w mt12" onclick="closeModal('m-pick-ex')">CANCELAR</button>
   </div>
@@ -1609,6 +1621,8 @@ async function loadData() {
       ['Jefferson Curl','esquena','fuerza'],
       ['Paused Squat','pierna','fuerza'],
       ['Tempo Sentadilla','pierna','fuerza'],
+      ['Activitat 16sual','cardio','tiempo'],
+      ['Snowboard','cardio','tiempo'],
     ];
     const existingNames = new Set(exercises.map(e => e.name.toLowerCase()));
     NEW_EXERCISES.forEach(([name, muscle, type]) => {
@@ -2648,13 +2662,30 @@ window.importRoutineIntoWorkout = function(routineId) {
 // ── PICK EXERCISE ─────────────────────────────────────────────
 window.openPickExercise = function(target) {
   pickTarget=target;
-  qs('pick-ex-list').innerHTML=exercises.map(ex=>`
-    <div class="ex-item" onclick="pickEx('${ex.id}')">
-      <div><div class="ex-name">${ex.name}</div><div class="ex-meta">${ex.muscle.toUpperCase()} · ${ex.type.toUpperCase()}</div></div>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    </div>`).join('');
+  qs('pick-ex-search').value = '';
+  renderPickExList();
   openModal('m-pick-ex');
 }
+
+function renderPickExList() {
+  const q = (qs('pick-ex-search')?.value || '').toLowerCase().trim();
+  const filtered = exercises
+    .filter(ex => !q || ex.name.toLowerCase().includes(q))
+    .sort((a,b) => a.name.localeCompare(b.name));
+  if(!filtered.length) {
+    qs('pick-ex-list').innerHTML = `<div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);text-align:center;padding:20px 0;letter-spacing:1px">CAP RESULTAT</div>`;
+    return;
+  }
+  qs('pick-ex-list').innerHTML = filtered.map(ex=>`
+    <div class="ex-item" onclick="pickEx('${ex.id}')">
+      <div>
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-meta">${ex.muscle.toUpperCase()} · ${ex.type.toUpperCase()}</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>`).join('');
+}
+window.renderPickExList = renderPickExList;
 
 window.pickEx = function(exId) {
   closeModal('m-pick-ex');
@@ -2663,11 +2694,19 @@ window.pickEx = function(exId) {
     const ex=exercises.find(e=>e.id===exId);
     const ae={id:uid(),exerciseId:exId,name:ex.name,sets:[{weight:'',reps:'',done:false}]};
     activeWo.exercises.push(ae);
+    saveActiveWo();
     openLogSets(exId,ae.id);
   } else {
     if(!editRtExs.includes(exId)) editRtExs.push(exId);
     renderRtExList();
   }
+}
+
+window.removeExFromActive = function(aeId) {
+  if(!activeWo) return;
+  activeWo.exercises = activeWo.exercises.filter(e=>e.id!==aeId);
+  saveActiveWo();
+  renderWorkout();
 }
 
 // ── LOG SETS ──────────────────────────────────────────────────
@@ -3573,6 +3612,7 @@ function isConsecutiveWeek(wk1, wk2) {
 function renderStats() {
   renderStatsGlobal();
   renderChallenges();
+  requestAnimationFrame(() => drawMuscleRadar());
   const sel=qs('stats-sel');
   const prev=sel.value;
   sel.innerHTML='<option value="">— Selecciona ejercicio —</option>'+
@@ -3585,6 +3625,169 @@ function renderStats() {
       }).join('');
   if(prev) sel.value=prev;
   if(sel.value) renderStatsDetail(); else qs('stats-detail').innerHTML='';
+}
+
+// ── GRÀFIC DE POLÍGON (RADAR) DE STATS MUSCULARS ─────────────
+function drawMuscleRadar() {
+  const canvas = qs('radar-chart');
+  const legend = qs('radar-legend');
+  if(!canvas || !legend) return;
+
+  const GROUPS = [
+    { key:'esquena',  label:'Esquena',   emoji:'🔙', color:'#00e5ff' },
+    { key:'pecho',    label:'Pit',       emoji:'🫁', color:'#ff3d5a' },
+    { key:'pierna',   label:'Cames',     emoji:'🦵', color:'#d4ff00' },
+    { key:'gluteo',   label:'Gluti',     emoji:'🍑', color:'#ff9f1c' },
+    { key:'hombros',  label:'Espatlles', emoji:'🏋️', color:'#bf5af2' },
+    { key:'bicep',    label:'Bíceps',    emoji:'💪', color:'#00cfff' },
+    { key:'tricep',   label:'Tríceps',   emoji:'🔱', color:'#f97316' },
+    { key:'core',     label:'Core',      emoji:'🎯', color:'#4ade80' },
+  ];
+
+  const bw  = physData?.weight || 0;
+  const sex = physData?.sex    || 'm';
+  const bwForCalc = bw || 75; // fallback 75kg si no té pes
+
+  // Avís de pes corporal
+  const warn = qs('radar-bw-warn');
+  if(warn) warn.style.display = bw ? 'none' : 'block';
+
+  const scores = GROUPS.map(g => {
+    const groupExs = exercises.filter(ex => ex.muscle === g.key);
+    let bestScore = 0, bestExName = '', bestMedalEmoji = '';
+    groupExs.forEach(ex => {
+      const pr = getPR(ex.id);
+      if(!pr) return;
+      let score = 0;
+      if(MEDAL_FIXED[ex.name]) {
+        const elit = MEDAL_FIXED[ex.name].targets[4];
+        score = Math.min(1, pr / elit);
+      } else if(STRENGTH_STANDARDS[ex.name]) {
+        const raw = getStrengthScore(pr, ex.name, bwForCalc, sex);
+        if(raw !== null) score = Math.min(1, raw / 1.75);
+      } else if(MEDAL_RELATIVE[ex.name]) {
+        const elitTarget = MEDAL_RELATIVE[ex.name][4] * bwForCalc;
+        score = Math.min(1, pr / elitTarget);
+      }
+      if(score > bestScore) {
+        bestScore = score;
+        bestExName = ex.name;
+        // Medalla corresponent
+        const medal = getMedalForExercise(ex);
+        bestMedalEmoji = medal ? medal.emoji : '';
+      }
+    });
+    return { ...g, score: bestScore, bestEx: bestExName, medalEmoji: bestMedalEmoji };
+  });
+
+  const dpr = window.devicePixelRatio || 1;
+  const W   = canvas.offsetWidth || 300;
+  const H   = +canvas.getAttribute('height') || 260;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  const cx = W / 2, cy = H / 2 + 4;
+  const R  = Math.min(cx, cy) - 40;
+  const N  = GROUPS.length;
+  const accent = getAccent();
+
+  const pt = (i, r) => {
+    const a = (i / N) * Math.PI * 2 - Math.PI / 2;
+    return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+  };
+
+  // Graella de fons — anells per nivell amb colors de medalla
+  const ringColors = ['#cd7f32','#aaaaaa','#ffd700','#00e5ff'];
+  const ringLabels = ['Bronze','Plata','Or','Èlit'];
+  [0.25, 0.5, 0.75, 1.0].forEach((pct, li) => {
+    ctx.beginPath();
+    for(let i = 0; i < N; i++) {
+      const p = pt(i, R * pct);
+      i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = ringColors[li] + (li === 3 ? '44' : '22');
+    ctx.lineWidth = li === 3 ? 1.5 : 1;
+    ctx.stroke();
+    // Etiqueta de l'anell (al costat esquerre del polígon)
+    const pLabel = pt(Math.floor(N * 0.875), R * pct);
+    ctx.fillStyle = ringColors[li] + '88';
+    ctx.font = '7px JetBrains Mono, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText(ringLabels[li], pLabel.x - 4, pLabel.y + 3);
+  });
+
+  // Línies radials
+  for(let i = 0; i < N; i++) {
+    const p = pt(i, R);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = 'rgba(255,255,255,.06)'; ctx.lineWidth = 1; ctx.stroke();
+  }
+
+  // Polígon de l'usuari — amb gradient per colors
+  ctx.beginPath();
+  scores.forEach((s, i) => {
+    const p = pt(i, R * Math.max(0.03, s.score));
+    i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = accent + '1a';
+  ctx.fill();
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = 2;
+  ctx.shadowColor = accent;
+  ctx.shadowBlur = 10;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Punts i etiquetes
+  scores.forEach((s, i) => {
+    const pDot = pt(i, R * Math.max(0.03, s.score));
+    const pLbl = pt(i, R + 28);
+
+    // Punt
+    ctx.beginPath();
+    ctx.arc(pDot.x, pDot.y, s.score > 0 ? 4 : 2, 0, Math.PI * 2);
+    ctx.fillStyle = s.score > 0 ? s.color : 'rgba(255,255,255,.15)';
+    ctx.shadowColor = s.score > 0 ? s.color : 'transparent';
+    ctx.shadowBlur = s.score > 0 ? 10 : 0;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Emoji + label + %
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(255,255,255,.9)';
+    ctx.fillText(s.emoji, pLbl.x, pLbl.y - 9);
+    ctx.font = 'bold 8px JetBrains Mono, monospace';
+    ctx.fillStyle = s.score > 0 ? s.color : 'rgba(255,255,255,.25)';
+    ctx.fillText(s.label.toUpperCase(), pLbl.x, pLbl.y + 3);
+    const pct = Math.round(s.score * 100);
+    ctx.font = '8px JetBrains Mono, monospace';
+    ctx.fillStyle = s.score > 0 ? 'rgba(255,255,255,.55)' : 'rgba(255,255,255,.18)';
+    ctx.fillText(pct + '%', pLbl.x, pLbl.y + 13);
+  });
+
+  // Llegenda ordenada per nivell
+  legend.innerHTML = scores
+    .slice().sort((a,b) => b.score - a.score)
+    .map(s => {
+      const pct = Math.round(s.score * 100);
+      const lvl = pct >= 100 ? '👑 Èlit' : pct >= 75 ? '💎 Platí' : pct >= 50 ? '🥇 Or' : pct >= 25 ? '🥈 Plata' : pct >= 14 ? '🥉 Bronze' : pct > 0 ? 'Debutant' : '—';
+      return `<div style="display:flex;align-items:center;gap:5px;background:var(--s2);border:1px solid ${pct>0?s.color+'33':'var(--border)'};border-radius:6px;padding:4px 8px">
+        <span style="font-size:10px">${s.emoji}</span>
+        <span style="font-family:var(--font-mono);font-size:8px;color:${pct>0?s.color:'var(--muted)'};font-weight:700">${s.label}</span>
+        <span style="font-family:var(--font-mono);font-size:8px;color:var(--muted)">${lvl}</span>
+        ${s.medalEmoji ? `<span style="font-size:10px">${s.medalEmoji}</span>` : ''}
+        ${s.bestEx?`<span style="font-family:var(--font-mono);font-size:7px;color:var(--muted2)">· ${s.bestEx}</span>`:''}
+      </div>`;
+    }).join('');
 }
 
 function renderStatsGlobal() {
@@ -5172,15 +5375,63 @@ function getBg()      { return getComputedStyle(document.documentElement).getPro
 // ── FORÇA — Strength Level standards ──────────────────────────
 // Font: Strength Level (strengthlevel.com) — +13M lifts
 // [debutant, principiant, intermedi, avançat, elit] per 75kg(H)/60kg(D)
+// Escala al pes corporal real amb potència 0.67 (fórmula allomètrica estàndard)
 // ══════════════════════════════════════════════════════════════
 const STRENGTH_STANDARDS = {
-  'Press Banca Inclinat':     { m:[40,60,90,120,150],  f:[20,32,50,70,95],  bwRef:{m:75,f:60} },
-  'Rem Màquina':              { m:[45,65,95,130,165],  f:[25,38,58,82,110], bwRef:{m:75,f:60} },
-  'Sentadilles Lliures':      { m:[55,80,120,160,210], f:[28,45,70,100,135],bwRef:{m:75,f:60} },
-  'Pes Mort Barra':           { m:[70,100,145,195,250],f:[35,55,85,120,160],bwRef:{m:75,f:60} },
-  'Hip Thrust Màquina':       { m:[60,90,135,185,240], f:[40,65,100,145,195],bwRef:{m:75,f:60} },
-  'Press Militar Mancuernes': { m:[20,30,46,62,80],    f:[10,16,25,36,50],  bwRef:{m:75,f:60} },
-  'Bíceps Barra Z':           { m:[20,30,46,62,80],    f:[10,15,24,34,46],  bwRef:{m:75,f:60} },
+  // ── ESQUENA ──
+  'Sentadilles Lliures':      { m:[55, 80, 120,160,210], f:[28, 45,  70,100,135], bwRef:{m:75,f:60} },
+  'Pes Mort Barra':           { m:[70,100, 145,195,250], f:[35, 55,  85,120,160], bwRef:{m:75,f:60} },
+  'Pes Mort Romanès':         { m:[55, 80, 115,155,200], f:[30, 48,  72,102,135], bwRef:{m:75,f:60} },
+  'Rem Màquina':              { m:[45, 65,  95,130,165], f:[25, 38,  58, 82,110], bwRef:{m:75,f:60} },
+  'One Arm Row':              { m:[30, 45,  65, 88,115], f:[15, 24,  36, 52, 70], bwRef:{m:75,f:60} },
+  'Renegade Row':             { m:[20, 30,  44, 60, 78], f:[10, 16,  24, 34, 46], bwRef:{m:75,f:60} },
+  'Pullover Politja':         { m:[25, 38,  55, 75, 98], f:[13, 20,  30, 42, 56], bwRef:{m:75,f:60} },
+  // ── BÍCEPS ──
+  'Bíceps Barra Z':           { m:[20, 30,  46, 62, 80], f:[10, 15,  24, 34, 46], bwRef:{m:75,f:60} },
+  'Bíceps Mancuernes Martell':{ m:[14, 20,  30, 40, 52], f:[ 7, 11,  17, 24, 32], bwRef:{m:75,f:60} },
+  'Curl Concentrat':          { m:[12, 18,  26, 36, 48], f:[ 6,  9,  14, 20, 28], bwRef:{m:75,f:60} },
+  // ── CAMES ──
+  'Squat Búlgar':             { m:[30, 46,  66, 90,118], f:[15, 24,  36, 50, 66], bwRef:{m:75,f:60} },
+  'Sumo Squat':               { m:[50, 75, 108,145,188], f:[28, 44,  65, 90,118], bwRef:{m:75,f:60} },
+  'Goblet Squat':             { m:[28, 42,  60, 80,104], f:[14, 22,  32, 44, 58], bwRef:{m:75,f:60} },
+  'Lunges Mancuernes':        { m:[20, 30,  44, 60, 78], f:[10, 16,  24, 34, 46], bwRef:{m:75,f:60} },
+  'Step-Up Mancuernes':       { m:[18, 26,  38, 52, 68], f:[ 9, 14,  20, 28, 38], bwRef:{m:75,f:60} },
+  'Paused Squat':             { m:[45, 65,  96,130,168], f:[22, 35,  55, 78,102], bwRef:{m:75,f:60} },
+  'Tempo Sentadilla':         { m:[40, 58,  86,116,150], f:[20, 32,  50, 70, 92], bwRef:{m:75,f:60} },
+  'Elevació Bessons Step':    { m:[40, 60,  88,118,152], f:[20, 32,  48, 66, 86], bwRef:{m:75,f:60} },
+  // ── GLUTI ──
+  'Hip Thrust Màquina':       { m:[60, 90, 135,185,240], f:[40, 65, 100,145,195], bwRef:{m:75,f:60} },
+  'Hip Thrust Barra':         { m:[60, 88, 128,172,222], f:[38, 60,  90,128,168], bwRef:{m:75,f:60} },
+  // ── ESPATLLES ──
+  'Press Militar Mancuernes': { m:[20, 30,  46, 62, 80], f:[10, 16,  25, 36, 50], bwRef:{m:75,f:60} },
+  'Press Militar Barra':      { m:[28, 42,  62, 84,108], f:[14, 22,  33, 46, 60], bwRef:{m:75,f:60} },
+  'Arnold Press':             { m:[18, 26,  38, 52, 68], f:[ 9, 14,  20, 28, 38], bwRef:{m:75,f:60} },
+  'Elevació Lateral Politja': { m:[ 8, 12,  18, 24, 32], f:[ 4,  6,  10, 14, 20], bwRef:{m:75,f:60} },
+  'Face Pull':                { m:[20, 30,  44, 60, 78], f:[10, 16,  24, 34, 46], bwRef:{m:75,f:60} },
+  // ── PIT ──
+  'Press Banca Inclinat':     { m:[40, 60,  90,120,150], f:[20, 32,  50, 70, 95], bwRef:{m:75,f:60} },
+  'Press Banca Pla':          { m:[50, 72, 106,142,184], f:[25, 38,  58, 82,108], bwRef:{m:75,f:60} },
+  // ── TRÍCEPS ──
+  'Extensió Tríceps Politja': { m:[18, 26,  38, 52, 68], f:[ 9, 13,  20, 28, 38], bwRef:{m:75,f:60} },
+  'Skull Crushers':           { m:[22, 32,  48, 64, 84], f:[11, 17,  26, 36, 48], bwRef:{m:75,f:60} },
+  'Tríceps Kickback':         { m:[10, 14,  20, 28, 38], f:[ 5,  7,  11, 15, 21], bwRef:{m:75,f:60} },
+  // ── CORE / FUNCIONAL ──
+  'Turkish Get-Up':           { m:[16, 24,  34, 46, 60], f:[ 8, 12,  18, 25, 34], bwRef:{m:75,f:60} },
+  'Suitcase Carry':           { m:[24, 36,  52, 70, 92], f:[12, 18,  28, 38, 52], bwRef:{m:75,f:60} },
+  'Abdominals Russos':        { m:[10, 15,  22, 30, 40], f:[ 5,  8,  12, 17, 24], bwRef:{m:75,f:60} },
+  'Jefferson Curl':           { m:[20, 30,  44, 60, 78], f:[10, 16,  24, 34, 46], bwRef:{m:75,f:60} },
+  // ── KETTLEBELL / FUNCIONAL ──
+  'Swing Kettlebell':         { m:[20, 28,  40, 54, 70], f:[12, 16,  24, 32, 44], bwRef:{m:75,f:60} },
+  'Clean Kettlebell':         { m:[20, 28,  40, 54, 70], f:[10, 14,  20, 28, 38], bwRef:{m:75,f:60} },
+  'Snatch Kettlebell':        { m:[16, 24,  34, 46, 60], f:[ 8, 12,  18, 25, 34], bwRef:{m:75,f:60} },
+  'Farmer Walk Kettlebell':   { m:[28, 40,  58, 78,102], f:[14, 20,  30, 42, 56], bwRef:{m:75,f:60} },
+  // ── CARDIO / HYROX ──
+  'Thruster Barra':           { m:[30, 44,  64, 86,112], f:[15, 22,  34, 46, 60], bwRef:{m:75,f:60} },
+  'Thruster Mancuernes':      { m:[16, 24,  34, 46, 60], f:[ 8, 12,  18, 25, 34], bwRef:{m:75,f:60} },
+  'Slam Ball':                { m:[10, 16,  24, 32, 44], f:[ 6, 10,  14, 20, 28], bwRef:{m:75,f:60} },
+  'Devil Press':              { m:[12, 18,  26, 36, 48], f:[ 6,  9,  14, 20, 28], bwRef:{m:75,f:60} },
+  'Llançament Wallball':      { m:[ 6,  9,  14, 20, 28], f:[ 4,  6,   9, 13, 18], bwRef:{m:75,f:60} },
+  'Press Militar Sandbag':    { m:[20, 30,  44, 60, 78], f:[10, 15,  22, 30, 42], bwRef:{m:75,f:60} },
 };
 
 function getStrengthScore(pr, exName, bw, sex) {
@@ -5210,46 +5461,66 @@ const MEDAL_LEVELS = [
   { id:'elit',    label:'Èlit',     emoji:'👑', minScore:1.75,  color:'#bf5af2' },
 ];
 
-// Targets fixos per a ejercicis de tiempo i bodyweight
+// Targets fixos per a exercicis de tiempo i bodyweight
 // Format: [bronze, plata, or, plati, elit]
 const MEDAL_FIXED = {
-  // TIEMPO — en segons
-  'Hangtime':             { type:'tiempo', unit:'s',    targets:[30,  60,  90,  120, 180] },
-  'Plancha':              { type:'tiempo', unit:'s',    targets:[30,  60,  90,  120, 180] },
-  'Plank Shoulder Taps':  { type:'tiempo', unit:'s',    targets:[20,  40,  60,  90,  120] },
-  'Battle Ropes':         { type:'tiempo', unit:'s',    targets:[20,  40,  60,  90,  120] },
-  'Climbers':             { type:'tiempo', unit:'s',    targets:[20,  40,  60,  90,  120] },
-  'Salts Corda':          { type:'tiempo', unit:'s',    targets:[30,  60, 120, 180,  300] },
-  'Arrossegar Trineu':    { type:'tiempo', unit:'s',    targets:[15,  30,  45,  60,   90] },
-  'Box Jumps':            { type:'tiempo', unit:'s',    targets:[15,  30,  45,  60,   90] },
-  'Skippings':            { type:'tiempo', unit:'s',    targets:[20,  40,  60,  90,  120] },
-  'Squat Jumps':          { type:'tiempo', unit:'s',    targets:[15,  30,  45,  60,   90] },
-  'Lunges Saltant':       { type:'tiempo', unit:'s',    targets:[15,  30,  45,  60,   90] },
-  'Burpees':              { type:'tiempo', unit:'s',    targets:[15,  30,  45,  60,   90] },
-  // BODYWEIGHT — en reps
-  'Dominades':            { type:'bodyweight', unit:'r', targets:[3,   6,  10,  15,   20] },
-  'Nordic Curl':          { type:'bodyweight', unit:'r', targets:[2,   4,   6,  10,   15] },
-  'Dips':                 { type:'bodyweight', unit:'r', targets:[5,  10,  15,  20,   30] },
-  'Flexions Plus':        { type:'bodyweight', unit:'r', targets:[10, 20,  30,  40,   50] },
+  // ── BODYWEIGHT — en reps ──────────────────────────────────────
+  // Dominades: 3 és debutant real, 20 reps és elit indiscutible
+  'Dominades':            { type:'bodyweight', unit:'r', targets:[3,   6,  10,  15,  20] },
+  // Dominades lastrades → es gestiona via STRENGTH_STANDARDS
+  // Nordic Curl: exercici molt difícil, 2 ja és notable
+  'Nordic Curl':          { type:'bodyweight', unit:'r', targets:[2,   4,   6,  10,  15] },
+  // Dips: 5 és bàsic, 30 és molt sòlid
+  'Dips':                 { type:'bodyweight', unit:'r', targets:[5,  10,  15,  20,  30] },
+  // Flexions: populars, 50 reps és elit clar
+  'Flexions Plus':        { type:'bodyweight', unit:'r', targets:[10, 20,  30,  40,  50] },
+  'Flexions Diamant':     { type:'bodyweight', unit:'r', targets:[5,  10,  20,  30,  40] },
+  'Flexions Archer':      { type:'bodyweight', unit:'r', targets:[3,   6,  12,  20,  30] },
+  // Pistol Squat: molt tècnic, 1 ja és bronze
+  'Pistol Squat':         { type:'bodyweight', unit:'r', targets:[1,   3,   6,  10,  15] },
+  // Dragon Flag: un dels exercicis de core més durs
+  'Dragon Flag':          { type:'bodyweight', unit:'r', targets:[1,   3,   5,   8,  12] },
+  // Ab Wheel: fàcil de creuar genolls, difícil des de peu
+  'Ab Wheel Rollout':     { type:'bodyweight', unit:'r', targets:[3,   6,  10,  15,  20] },
+  // V-Ups, Toes to Bar
+  'V-Ups':                { type:'bodyweight', unit:'r', targets:[5,  10,  20,  30,  40] },
+  'Toes to Bar':          { type:'bodyweight', unit:'r', targets:[3,   6,  10,  15,  20] },
+  // Inverted Row
+  'Inverted Row':         { type:'bodyweight', unit:'r', targets:[5,  10,  15,  20,  25] },
+
+  // ── TIEMPO — en segons ────────────────────────────────────────
+  // Planxa i variants: 30s és bàsic, 3min és molt sòlid
+  'Hangtime':             { type:'tiempo', unit:'s', targets:[15,  30,  60,  90, 120] },
+  'Plancha':              { type:'tiempo', unit:'s', targets:[30,  60,  90, 120, 180] },
+  'Plancha Lateral':      { type:'tiempo', unit:'s', targets:[20,  45,  60,  90, 120] },
+  'Hollow Body Hold':     { type:'tiempo', unit:'s', targets:[15,  30,  60,  90, 120] },
+  'L-Sit':                { type:'tiempo', unit:'s', targets:[5,   10,  20,  30,  45] },
+  'Plank Shoulder Taps':  { type:'tiempo', unit:'s', targets:[20,  40,  60,  90, 120] },
+  // Cardio/HIIT per temps
+  'Battle Ropes':         { type:'tiempo', unit:'s', targets:[20,  40,  60,  90, 120] },
+  'Climbers':             { type:'tiempo', unit:'s', targets:[20,  40,  60,  90, 120] },
+  'Salts Corda':          { type:'tiempo', unit:'s', targets:[30,  60, 120, 180, 300] },
+  'Box Jumps':            { type:'tiempo', unit:'s', targets:[15,  30,  45,  60,  90] },
+  'Skippings':            { type:'tiempo', unit:'s', targets:[20,  40,  60,  90, 120] },
+  'Squat Jumps':          { type:'tiempo', unit:'s', targets:[15,  30,  45,  60,  90] },
+  'Lunges Saltant':       { type:'tiempo', unit:'s', targets:[15,  30,  45,  60,  90] },
+  'Burpees':              { type:'tiempo', unit:'s', targets:[15,  30,  45,  60,  90] },
+  'Burpees Box Jump':     { type:'tiempo', unit:'s', targets:[10,  20,  35,  50,  70] },
+  'Arrossegar Trineu':    { type:'tiempo', unit:'s', targets:[15,  30,  45,  60,  90] },
+  // Mobilitat/escalfament per temps
+  'Bear Crawl':           { type:'tiempo', unit:'s', targets:[15,  30,  45,  60,  90] },
+  'Crab Walk':            { type:'tiempo', unit:'s', targets:[15,  30,  45,  60,  90] },
+  'World Greatest Stretch':{ type:'tiempo', unit:'s', targets:[30,  60,  90, 120, 180] },
+  'Inchworm':             { type:'tiempo', unit:'s', targets:[30,  60,  90, 120, 180] },
 };
 
-// Camps de força que NO estan a STRENGTH_STANDARDS → targets relatius al pes corporal
+// Exercicis de força sense dades a Strength Level → targets relatius al pes corporal
 // [bronze, plata, or, plati, elit] com a múltiple del pes corporal
+// Nota: tots els exercicis coberts a STRENGTH_STANDARDS han estat eliminats d'aquí
 const MEDAL_RELATIVE = {
-  'One Arm Row':              [0.2, 0.3, 0.4, 0.5,  0.65],
-  'Pullover Politja':         [0.2, 0.3, 0.4, 0.55, 0.7 ],
-  'Sumo Squat':               [0.5, 0.8, 1.1, 1.4,  1.8 ],
-  'Squat Búlgar':             [0.3, 0.5, 0.7, 0.9,  1.15],
-  'Goblet Squat':             [0.3, 0.5, 0.7, 0.9,  1.1 ],
-  'Elevació Lateral Politja': [0.06,0.1,0.14,0.18,  0.24],
-  'Extensió Tríceps Politja': [0.15,0.25,0.35,0.45, 0.6 ],
-  'Bíceps Mancuernes Martell':[0.12,0.2,0.3, 0.4,   0.5 ],
-  'Abdominals Russos':        [0.1, 0.2,0.3, 0.4,   0.5 ],
-  'Farmer Walk Kettlebell':   [0.3, 0.5,0.7, 0.9,   1.2 ],
-  'Swing Kettlebell':         [0.2, 0.3,0.45,0.6,   0.75],
-  'Press Militar Sandbag':    [0.2, 0.3,0.45,0.6,   0.75],
-  'Llançament Wallball':      [0.1, 0.18,0.26,0.34, 0.45],
-  'Elevació Bessons Step':    [0.4, 0.7,1.0, 1.3,   1.7 ],
+  // Aquests no tenen dades fiables a Strength Level
+  'Inverted Row':             [0.3, 0.5, 0.7, 0.9,  1.1 ],
+  'Cossack Squat':            [0.2, 0.35,0.5, 0.65, 0.85],
 };
 
 // Calcula la medalla actual d'un exercici. Retorna null si no hi ha dades.
